@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import { AppTheme, SplashScreen, NavBar, NavBarLink, NavSearchSuggestion } from 'react-windows-ui'
 import Login from './pages/login'
 import Asignar from './pages/asignar'
@@ -22,6 +22,9 @@ const App = () => {
     <Router>
       <Switch>
         <Route path="/" component={Login}  exact />
+        <Route exact path="/react-windows-ui">
+            <Redirect to="/" />
+        </Route>
         <Route path="/login" component={Login} />
         <Route path="/home" component={Home} />
         <Route path="/asignar" component={Asignar} />

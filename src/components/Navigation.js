@@ -10,9 +10,9 @@ import Img from '../assets/mountain.jpg'
 
 const NavigationWindow = () => {
     return(
-        <>
+    <>
     <AppTheme //added AppTheme to make app reactive with theme
-      scheme="system" // available props - 'light', 'dark' or 'system'
+      scheme="light" // available props - 'light', 'dark' or 'system'
     />
 
     <NavBar 
@@ -27,12 +27,11 @@ const NavigationWindow = () => {
         tooltip="Búsqueda"
         data={[
           {label: 'home', link: '/', icon: <i className="icons10-home"></i>},
-        
-          {label: 'Page 2', link: '/page2'}
+          {label: 'asignar', link: '/asignar', icon: <i className="icons10-link"></i>}
         ]}
       />
 
-      <h1>Pages</h1>
+      <h1>Módulos</h1>
       <div className="app-hr"></div>
 
       <NavBarLink
