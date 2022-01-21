@@ -4,6 +4,7 @@ import { AppTheme, SplashScreen, NavBar, NavBarLink, NavSearchSuggestion } from 
 import Page0 from './pages/page0'
 import Page1 from './pages/page1'
 import Page2 from './pages/page2'
+import Login from './pages/login'
 import Img from './assets/mountain.jpg'
 
 const App = () => {
@@ -15,61 +16,10 @@ const App = () => {
   }, [])
 
   return (
-    <Router basename="react-windows-ui">
-
-      <SplashScreen
-        //duration={1000} // adjust how long it takes after render 
-        isVisible={splash}
-        title={"react-windows-ui-boilerplate"}
-      />
-
-      <AppTheme //added AppTheme to make app reactive with theme
-        scheme="system" // available props - 'light', 'dark' or 'system'
-      />
-
-      <NavBar 
-        title="App Boilderplate"
-      //mobileHasIcons={true}
-        shadowOnScroll={true}>
-
-        {/* Optional component - emphasizes navbar Search funtionality */}
-
-        <NavSearchSuggestion
-          placeholder="Search Your Pages.."
-          tooltip="Search Tooltip"
-          data={[
-            {label: 'home', link: '/', icon: <i className="icons10-home"></i>},
-            {label: 'Page 1', link: '/page1'},
-            {label: 'Page 2', link: '/page2'}
-          ]}
-        />
-
-        <h1>Pages</h1>
-        <div className="app-hr"></div>
-
-        <NavBarLink
-          to="/"
-          exact={true}
-          text="Home"
-          img={Img}
-        />
-
-        <NavBarLink
-          to="/page1"
-          text="Page1"
-          icon={<i className="icons10-grid-2"></i>}
-        />
-
-        <NavBarLink
-          to="/page2"
-          text="Page2"
-          icon={<i className="icons10-columns"></i>}
-        />
-
-      </NavBar>
-
+    <Router basename="kassa">
       <Switch>
-        <Route path="/" component={Page0}  exact />
+        <Route path="/" component={Login}  exact />
+        <Route path="/login" component={Page0} />
         <Route path="/page1" component={Page1} />
         <Route path="/page2" component={Page2} />
       </Switch>
