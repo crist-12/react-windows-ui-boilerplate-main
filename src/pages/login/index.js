@@ -1,10 +1,29 @@
-import React, {Image} from 'react'
+import React, {Image, useState, useEffect} from 'react'
 import login from "../../assets/login.jpg"
-import { AvatarView, InputText, Button } from 'react-windows-ui'
+import { AvatarView, InputText, Button, SplashScreen } from 'react-windows-ui'
 import user from "../../assets/user.png"
+import { useHistory } from 'react-router-dom'
 
 const Login = () => {
+
+    const [splash, setSplash] = useState(true);
+    const history = useHistory();
+
+    useEffect(() => {
+     setSplash(false);
+    }, [])
+
+    const handleLogin = () => {
+        history.push("/home");
+    }
+
     return (
+        <>
+        <SplashScreen
+            //duration={1000} // adjust how long it takes after render 
+            isVisible={splash}
+            title={"Kassa"}
+            />
         <div style={{backgroundImage:`url(${login})`, height: '100vh', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', flex:1, display: 'flex', flexDirection: 'column'}}>
             <div style={{display: 'flex', flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
             <AvatarView
@@ -34,13 +53,14 @@ const Login = () => {
             <Button
                 value="Iniciar Sesión"
                 isLoading={false}
-                onClick={() => {}}
+                onClick={handleLogin}
                 tooltip="Iniciar Sesión"
                 />
             </div>
             
             </div>
         </div>
+        </>
     )
 }
 
