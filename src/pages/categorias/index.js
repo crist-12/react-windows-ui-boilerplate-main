@@ -54,14 +54,14 @@ const [showModal, setShowModal] = useState(false);
             <div style={{width: '100%'}}>
             <TableView
               columns={[
-                { 'title':'Fruits' },
+                { 'title':'Categoría' },
                 { 'title':'Energy (KCal)','showSortIcon': true },
                 { 'title':'Color','showSortIcon': false, 'sortable': false },
               ]}
               rows={[
-                [ "Papaya", 11845, IconsView() ],
-                [ "Grapes", 12867, IconsView()],
-                [ "Apple", 10867, IconsView()]
+                [ "Computadora", 11845, IconsView() ],
+                [ "Impresora", 12867, IconsView()],
+                [ "Cámara de Seguridad", 10867, IconsView()]
               ]}
               style= {{width: '100%', backgroundColor: 'blue'}}
             />

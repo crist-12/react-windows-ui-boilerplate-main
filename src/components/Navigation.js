@@ -11,9 +11,7 @@ import Img from '../assets/mountain.jpg'
 const NavigationWindow = () => {
     return(
     <>
-    <AppTheme //added AppTheme to make app reactive with theme
-      scheme="light" // available props - 'light', 'dark' or 'system'
-    />
+    
 
     <NavBar 
       title="Kassa"
@@ -69,6 +67,12 @@ const NavigationWindow = () => {
         to="/perfil"
         text="Mi Perfil"
         icon={<i className="icons10-user-settings"></i>}
+      />
+
+      <NavBarLink
+        to="/configuraciones"
+        text="Configuraciones"
+        icon={<i className="icons10-settings"></i>}
       />
     </NavBar>
     </>
