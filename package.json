@@ -1,8 +1,8 @@
 {
-  "name": "react-windows-ui-boilerplate",
+  "name": "kassa-app",
   "version": "1.0.0",
   "private": true,
-  "description": "Build full featured Windows fluent UI apps using ReactJS.",
+  "description": "Recarga Veloz",
   "keywords": [
     "react",
     "fluentui",
@@ -15,18 +15,20 @@
   },
   "license": "MIT",
   "author": {
-    "name": "Author",
-    "email": "author@email.com"
+    "name": "Recarga Veloz",
+    "email": "rv@email.com"
   },
-  "main": "public/main.js",
+  "main": "public/electron.js",
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "@hookstate/core": "^3.0.13",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@mui/material": "^5.3.0",
     "@mui/styles": "^5.3.0",
-    "electron": "^16.0.7",
+    "electron-dev": "^1.0.1",
+    "electron-squirrel-startup": "^1.0.0",
     "mui-datatables": "^4.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -44,7 +46,10 @@
     "build": "react-scripts build",
     "predeploy": "npm run build",
     "eject": "react-scripts eject",
-    "electron-dev": "electron ."
+    "electron-dev": "electron .",
+    "dist": "electron-builder",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "eslintConfig": {
     "extends": [
@@ -63,5 +68,52 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "build": {
+    "appId": "com.kassarv.app",
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false
+    }
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.63",
+    "@electron-forge/maker-deb": "^6.0.0-beta.63",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.63",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
+    "@electron-forge/maker-zip": "^6.0.0-beta.63",
+    "electron": "^16.0.7"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "kassa_app"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { AppTheme, SplashScreen, NavBar, NavBarLink, NavSearchSuggestion } from 'react-windows-ui'
 import Page0 from '../pages/page0'
@@ -6,19 +6,20 @@ import Page1 from '../pages/page1'
 import Page2 from '../pages/page2'
 import Login from '../pages/login'
 import Img from '../assets/mountain.jpg'
-
+import {DataContext} from '../context/DataContext'
 
 const NavigationWindow = () => {
+
+  const {theme} = useContext( DataContext );
+
     return(
     <>
-    
-
+    <AppTheme
+      scheme= {theme}/>
     <NavBar 
       title="Kassa"
      // mobileHasIcons={true}
       shadowOnScroll={true}>
-
-      {/* Optional component - emphasizes navbar Search funtionality */}
 
       <NavSearchSuggestion
         placeholder="Buscar en las páginas.."
@@ -43,6 +44,12 @@ const NavigationWindow = () => {
         to="/asignar"
         text="Asignar"
         icon={<i className="icons10-link"></i>}
+      />
+
+      <NavBarLink
+        to="/empleado"
+        text="Empleado"
+        icon={<i className="icons10-user"></i>}
       />
 
       <NavBarLink

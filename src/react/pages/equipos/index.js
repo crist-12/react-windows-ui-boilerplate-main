@@ -1,5 +1,5 @@
 
-import { NavPageContainer, InputText, RadioButton, Select, Button } from 'react-windows-ui'
+import { NavPageContainer, InputText, RadioButton, Select, Button, NavPageContainerRight, LinkCompound } from 'react-windows-ui'
 import React, { useState, useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
 
@@ -96,6 +96,13 @@ const Equipos = () => {
               style={{alignItems: 'right'}}
             />
             </div>
+            <div style={{marginTop: '30px', alignItems: 'center',  width: '100%'}}>
+              <p style={{marginRight: '10px'}}>Factura del equipo:</p>
+              <label htmlFor="filePicker" style={{ background:"grey", padding:"5px 10px" }}>
+                  Explorar archivos
+              </label>
+              <input id="filePicker" style={{visibility:"hidden"}} type={"file"}></input>
+            </div>
             <div style={{marginTop: '30px', marginBottom: '80px'}}>
               <Button
                 value="Registrar equipo"
@@ -109,6 +116,16 @@ const Equipos = () => {
                 <br/>
             </div>
         </NavPageContainer>
+        <NavPageContainerRight style={{marginTop: '40px'}}>
+        <h4 className="m-5">Acciones</h4>
+        <LinkCompound
+          to="#"
+          title="Equipos registrados"
+          subtitle="Ver detalladamente los equipos registrados"
+          icon={<i className="icons10-area-chart color-primary"></i>}
+          
+        />
+      </NavPageContainerRight>
     </>
   );
 }
