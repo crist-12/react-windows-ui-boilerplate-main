@@ -13,7 +13,6 @@ function createWindow () {
       enableRemoteModule:true,
       preload: path.join(__dirname, 'preload.js'),
     },
-    fullscreen: true,
     title: "Kassa RV"
   })
 

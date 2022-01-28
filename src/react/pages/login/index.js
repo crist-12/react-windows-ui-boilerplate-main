@@ -3,22 +3,68 @@ import login from "../../assets/login.jpg"
 import { AvatarView, InputText, Button, SplashScreen } from 'react-windows-ui'
 import user from "../../assets/user.png"
 import { useHistory } from 'react-router-dom'
+import axios from 'axios'
+import { useAuthState, loginUser } from '../../stores/AuthStore'
+import { Alert } from 'react-windows-ui'
 
 const Login = () => {
 
     const [splash, setSplash] = useState(true);
     const history = useHistory();
+    const authState = useAuthState();
+
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+    const [message, setMessage] = useState("Algo salió mal, inténtalo de nuevo")
+
+    const [validate, setValidate] = useState(false);
 
     useEffect(() => {
      setSplash(false);
     }, [])
 
-    const handleLogin = () => {
-        history.push("/home");
+    useEffect(()=> {
+
+    }, [])
+
+    const handleLogin = async() => {
+        if(username == ""){
+           setValidate(true)
+           setMessage("El nombre de usuario no puede estar vacío")
+           return
+        }
+        if(password == ""){
+            setValidate(true)
+            setMessage("La contraseña no puede estar vacía")
+            return
+        }
+       /* if(loginUser(username, password)){
+            history.push("/home")
+            setValidate(false)
+            return
+        }else{
+            setValidate(true)
+            setMessage("Ocurrió un error al tratar de iniciar sesión")
+            return
+        } */
+
+       await loginUser(username, password);
+       if(authState.get().isLoggedIn){
+            history.push("/home")
+            setValidate(false)
+            return
+       }else{
+            setValidate(true)
+            setMessage(authState.me.get().message)
+            return
+       }
+        
     }
 
+    
     return (
         <>
+        
         <SplashScreen
             //duration={1000} // adjust how long it takes after render 
             isVisible={splash}
@@ -26,6 +72,17 @@ const Login = () => {
             />
         <div style={{backgroundImage:`url(${login})`, height: '100vh', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', flex:1, display: 'flex', flexDirection: 'column'}}>
             <div style={{display: 'flex', flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
+            {
+
+            
+            <Alert
+                isVisible={validate}
+                title="Atención"
+                message={message}
+                onBackdropPress={()=>{setValidate(false)}}>
+                <button onClick={()=>{setValidate(false)}}>OK</button>
+            </Alert>
+        }
             <AvatarView
                 src={user}
                 isLoading={false}
@@ -39,6 +96,8 @@ const Login = () => {
             <InputText
                 placeholder="Nombre de Usuario"
                 tooltip="Ingrese nombre de usuario"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 />
                 <br/>
                 <br/>
@@ -46,6 +105,8 @@ const Login = () => {
             <InputText
                 type="password"
                 placeholder="Ingrese su contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 /> 
                 <br/>
                 <br/>

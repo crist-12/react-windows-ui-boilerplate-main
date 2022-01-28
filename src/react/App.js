@@ -11,6 +11,7 @@ import Home from './pages/home'
 import Empleado from './pages/empleados'
 import Configuracion from './pages/configuraciones'
 import {DataContext, DataProvider} from './context/DataContext'
+import axios from 'axios'
 
 import { channels } from '../shared/constants';
 const { ipcRenderer } = window;
@@ -18,8 +19,8 @@ const { ipcRenderer } = window;
 const App = () => {
 
   const [splash, setSplash] = useState(true);
-  const [appName, setAppName] = useState("");
-  const [appVersion, setAppVersion] = useState("");
+  const [prueba, setPrueba] = useState();
+
 
   useEffect(() => {
    setSplash(false);
@@ -30,6 +31,20 @@ const App = () => {
       setAppName(appName);
       setAppVersion(appVersion);
     }); */
+
+    axios.get(process.env.REACT_APP_HOME)
+    .then(res => {
+      const data = res.data;
+
+      setPrueba(data);
+      console.log(prueba)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  
+   console.log(prueba);
+   console.log(process.env.REACT_APP_HOME)
    console.log(process.env.REACT_APP_ELECTRON_START_URL);
   }, [])
 
