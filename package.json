@@ -3,22 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "description": "Recarga Veloz",
-  "keywords": [
-    "react",
-    "fluentui",
-    "windows",
-    "user-interface"
-  ],
-  "homepage": "https://virtualvivek.github.io/react-windows-ui/",
-  "bugs": {
-    "url": "https://github.com/virtualvivek/react-windows-ui/issues"
-  },
+  "keywords": [],
   "license": "MIT",
   "author": {
     "name": "Recarga Veloz",
     "email": "rv@email.com"
   },
-  "main": "public/electron.js",
+  "productName": "Kassa",
+  "main": "electron/main.js",
+  "homepage": "./",
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
@@ -29,6 +22,7 @@
     "@mui/styles": "^5.3.0",
     "electron-dev": "^1.0.1",
     "electron-squirrel-startup": "^1.0.0",
+    "env-cmd": "^10.1.0",
     "mui-datatables": "^4.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -42,14 +36,27 @@
     "url": "git+https://github.com/virtualvivek/react-windows-ui.git"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "env-cmd react-scripts start",
+    "build": "env-cmd react-scripts build",
     "predeploy": "npm run build",
     "eject": "react-scripts eject",
-    "electron-dev": "electron .",
+    "electron-dev": " SET REACT_APP_ELECTRON_START_URL= http://localhost:3000/login && electron .",
     "dist": "electron-builder",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "package2": "electron-forge package",
+    "make": "electron-forge make",
+    "build-electron": "mkdir build/src && robocopy electron build/electron /S & robocopy src/shared build/src/shared /S",
+    "package": "electron-builder build --win -c.extraMetadata.main=build/electron/main.js --publish never"
+  },
+  "build": {
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "publish": {
+      "provider": "github",
+      "repo": "electron-cra-example",
+      "owner": "johndyer24"
+    }
   },
   "eslintConfig": {
     "extends": [
@@ -69,51 +76,13 @@
       "last 1 safari version"
     ]
   },
-  "build": {
-    "appId": "com.kassarv.app",
-    "win": {
-      "target": [
-        "nsis"
-      ]
-    },
-    "nsis": {
-      "oneClick": true,
-      "allowToChangeInstallationDirectory": false
-    }
-  },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.63",
     "@electron-forge/maker-deb": "^6.0.0-beta.63",
     "@electron-forge/maker-rpm": "^6.0.0-beta.63",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
     "@electron-forge/maker-zip": "^6.0.0-beta.63",
-    "electron": "^16.0.7"
-  },
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "kassa_app"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
+    "electron": "^16.0.7",
+    "electron-builder": "^22.14.5"
   }
 }

@@ -18,10 +18,19 @@ const { ipcRenderer } = window;
 const App = () => {
 
   const [splash, setSplash] = useState(true);
-  
+  const [appName, setAppName] = useState("");
+  const [appVersion, setAppVersion] = useState("");
 
   useEffect(() => {
    setSplash(false);
+   /*ipcRenderer.send(channels.APP_INFO);
+    ipcRenderer.on(channels.APP_INFO, (event, arg) => {
+      ipcRenderer.removeAllListeners(channels.APP_INFO);
+      const { appName, appVersion } = arg;
+      setAppName(appName);
+      setAppVersion(appVersion);
+    }); */
+   console.log(process.env.REACT_APP_ELECTRON_START_URL);
   }, [])
 
   return (
