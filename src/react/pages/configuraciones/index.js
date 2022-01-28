@@ -1,12 +1,27 @@
 
-import { NavPageContainer,Link, NavPageContainerRight, ColorPickerItem, ColorPickerPalette, LinkCompound } from 'react-windows-ui'
+import { NavPageContainer, NavPageContainerRight, ColorPickerItem, ColorPickerPalette, LinkCompound } from 'react-windows-ui'
 import React, { useState, useEffect, createContext } from 'react'
 import NavigationWindow from '../../components/Navigation'
 import { DataContext, DataProvider } from '../../context/DataContext'
+import MasterPage from '../../components/MasterPage'
+import {Link} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
+import { useMasterState } from '../../stores/MasterStore'
+
+
+
+
 
 const Configuracion = () => {
 
 const { setColor } = createContext(DataContext);
+const history = useHistory();
+const masterState = useMasterState();
+
+
+const toDetailMasterPage = (name, description) => {
+
+}
 
     return (
       <>
@@ -68,11 +83,20 @@ const { setColor } = createContext(DataContext);
 
                 <LinkCompound
                   style={{margin:'5px 5px 0 0',width:300}}
-                  to="/BlogLayout"
+                  to = "/master"
                   title="Áreas"
                   subtitle="Administrar áreas y departamentos"
                   icon={<i className="icons10-fax"></i>}
-                  focused={true} />
+                  focused={true}
+                  onClick={()=> {
+                   masterState.set({
+                     name: "Area",
+                     description: "Description"
+                   })
+                 } } 
+                >
+                  
+                </LinkCompound>
 
                 <LinkCompound
                   to="/ContactsLayout"

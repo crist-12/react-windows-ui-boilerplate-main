@@ -1,0 +1,3 @@
+ >> Hacer componente reciclable
+ >> Mandar datos desde las configuraciones
+ 
