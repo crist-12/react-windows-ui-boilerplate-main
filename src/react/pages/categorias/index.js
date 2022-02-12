@@ -28,7 +28,24 @@ const IconsView = () => {
 const Categoria = () => {
 
 const [showModal, setShowModal] = useState(false);
+const [categoria, setCategoria] = useState("")
 
+const addItem = async() => {
+
+      try {
+        const response = await fetch(process.env.REACT_APP_HOME+"city/", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(categoria)
+        })
+       await setCategoria("")
+       alert("La categoria se guardo exitosamente")
+    } catch (error) {
+      alert("Ocurrio un error al guardar la categoria")
+    }
+}
     return (
       <>
         <NavigationWindow/>
@@ -39,12 +56,8 @@ const [showModal, setShowModal] = useState(false);
             <h1>Categoría</h1>
             <p>Añada, modifique o elimine categoría de productos</p>
             <div className="app-hr"></div>
+
             <div style={{margin: '20px 0'}}>
-              <p>Nombre de categoría: </p>
-              <InputText
-                placeholder="Ingrese una categoría..."
-                tooltip="Nombre de la categoría"
-              />
               <Button
                   style={{marginLeft: '30px'}}
                   value="Nueva"
@@ -70,8 +83,21 @@ const [showModal, setShowModal] = useState(false);
               isVisible={showModal}
               onBackdropPress={()=> setShowModal(false)}
               showDropShadow={true}>
-                <div style={{height: '30vh'}}>
-
+                <div style={{ padding: '10px'}}>
+                <h3>Nueva Categoría</h3>
+                <div className="app-hr"></div>
+                <div >
+                <p>Nombre de la categoria: </p>
+                <input
+                  value={categoria}
+                  onChange = {e => setCategoria(e.target.value)}
+                />
+                <Button
+                  style={{marginLeft: '30px'}}
+                  value="Guardar"
+                  onClick={addItem}
+                  icon={<i className="icons10-save"></i>} />
+                </div>
                 </div>
               </Dialog>
         </NavPageContainer>

@@ -71,11 +71,13 @@ const toDetailMasterPage = (name, description) => {
                   subtitle="Administrar registros de sucursales"
                   icon={<i className="icons10-location"></i>}
                   focused={true}
-                  margin="5px 5px 0 0" />
+                  margin="5px 5px 0 0" 
+                  
+                  />
 
                 <LinkCompound
                   style={{margin:'5px 5px 0 0',width:300}}
-                  to="/LoginLayout"
+                  to="/ciudades"
                   title="Ciudades"
                   subtitle="Administrar registros de ciudades"
                   icon={<i className="icons10-location-point"></i>}

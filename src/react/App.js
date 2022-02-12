@@ -11,6 +11,7 @@ import Home from './pages/home'
 import Empleado from './pages/empleados'
 import Configuracion from './pages/configuraciones'
 import Areas from './pages/areas'
+import Ciudad from './pages/ciudades'
 import MasterPage from './components/MasterPage'
 import {DataContext, DataProvider} from './context/DataContext'
 import axios from 'axios'
@@ -69,6 +70,7 @@ const App = () => {
         <Route path="/equipo" component={Equipos} />
         <Route path="/perfil" component={Perfil} />
         <Route path="/configuraciones" component={Configuracion} />
+        <Route path="/ciudades" component={Ciudad} />
         <Route path="/master" component={MasterPage} />
       </Switch>
     </Router>
