@@ -29,22 +29,43 @@ const Categoria = () => {
 
 const [showModal, setShowModal] = useState(false);
 const [categoria, setCategoria] = useState("")
+const [listCat, setlistCat] = useState("")
+
+useEffect(()=> {
+  getItems()
+}, [])
 
 const addItem = async() => {
-
       try {
-        const response = await fetch(process.env.REACT_APP_HOME+"city/", {
+        const response = await fetch(process.env.REACT_APP_HOME+"category", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(categoria)
+          body: JSON.stringify({ "DescripcionCategoria" : categoria})
         })
        await setCategoria("")
+       setShowModal(false)
        alert("La categoria se guardo exitosamente")
     } catch (error) {
       alert("Ocurrio un error al guardar la categoria")
     }
+}
+
+const getItems = async() => {
+  try {
+    const response = await fetch(process.env.REACT_APP_HOME + "category", {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    })
+    console.log("Hola")
+    console.log(response)
+    //setlistCat(response.data)
+  } catch (error) {
+    console.log(error)
+  }
 }
     return (
       <>

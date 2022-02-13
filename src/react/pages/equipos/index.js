@@ -4,6 +4,18 @@ import React, { useState, useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
 
 const Equipos = () => {
+
+const [marca, setMarca] = useState("")
+const [modelo, setModelo] = useState("")
+const [serie, setSerie] = useState("")
+const [fechaAd, setFechaAd] = useState()
+const [procesador, setProcesador] = useState("")
+const [tipoD, setTipoD] = useState("")
+const [ram, setRAM] = useState("")
+const [precio, setPrecio] = useState("")
+const [factura, setFactura] = useState("")
+
+
     return (
       <>
         <NavigationWindow/>
@@ -18,6 +30,8 @@ const Equipos = () => {
             <InputText
               placeholder="Marca del equipo"
               tooltip="Ingrese la marca del equipo"
+              value={marca}
+              onChange={e => setMarca(e.target.value)}
             />
             </div>
             <div style={{marginTop: '30px', alignItems: 'center',  width: '100%'}}>
@@ -25,6 +39,8 @@ const Equipos = () => {
             <InputText
               placeholder="Modelo del equipo"
               tooltip="Ingrese el modelo del equipo"
+              value={modelo}
+              onChange={e => setModelo(e.target.value)}
             />
             </div>
             <div style={{marginTop: '30px', alignItems: 'center',  width: '100%'}}>
@@ -32,6 +48,8 @@ const Equipos = () => {
             <InputText
               placeholder="Número de serie"
               tooltip="Ingrese el número de serie"
+              value = {serie}
+              onChange={e => setSerie(e.target.value)}
             />
             </div>
             <div style={{marginTop: '30px', alignItems: 'center',  width: '100%'}}>
@@ -40,6 +58,8 @@ const Equipos = () => {
               type="date"
               placeholder="Selecciona una fecha"
               tooltip="Selecciona la fecha de adquisición del equipo"
+              value={fechaAd}
+              onChange={e => setFechaAd(e.target.value)}
             />
             </div>
             <div style={{marginTop: '30px', alignItems: 'center',  width: '100%'}}>
@@ -47,6 +67,8 @@ const Equipos = () => {
             <InputText
               placeholder="Datos del procesador"
               tooltip="Ingrese los datos del procesador del equipo"
+              value={procesador}
+              onChange={e => setProcesador(e.target.value)}
             />
             </div>
             <p style={{marginRight: '10px', marginTop: '30px'}}>Tipo de disco duro:</p>
@@ -56,6 +78,7 @@ const Equipos = () => {
                 name="disk"
                 value="HDD"
                 label="Hard Disk Drive HDD"
+                onChange={() => setTipoD("HDD")}
               />
               <div style={{marginRight: '30px'}}></div>
               <RadioButton
@@ -63,6 +86,7 @@ const Equipos = () => {
                 name="disk"
                 value="SSD"
                 label="Solid State Drive SSD"
+                onChange={()=> setTipoD("SSD")}
               />
             </div>
             <div style={{marginTop: '30px', alignItems: 'center',  width: '100%'}}>
@@ -71,6 +95,8 @@ const Equipos = () => {
               type="number"
               placeholder="Memoria RAM instalada"
               tooltip="Cantidad de RAM instalada"
+              value={ram}
+              onChange={e => setRAM(e.target.value)}
             />
             </div>
             <div style={{marginTop: '30px', alignItems: 'center',  width: '100%'}}>
@@ -82,7 +108,6 @@ const Equipos = () => {
                 {label: 'DDR3', value: '2'},
                 {label: 'DDR4', value: '3'},
                 {label: 'DDR5', value: '4'},
-
               ]}
             />
             </div>
@@ -94,6 +119,8 @@ const Equipos = () => {
               placeholder="0.00"
               tooltip="Precio más el impuesto del equipo"
               style={{alignItems: 'right'}}
+              value={precio}
+              onChange={e => setPrecio(e.target.value)}
             />
             </div>
             <div style={{marginTop: '30px', alignItems: 'center',  width: '100%'}}>
