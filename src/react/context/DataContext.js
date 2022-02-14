@@ -7,7 +7,7 @@ export const DataContext = createContext();
 
 export const DataProvider = ({children}) => {
 
-    const [theme, setTheme] = useState('system');
+    const [theme, setTheme] = useState('light');
     
     const [color, setColor] = useState('#16ab9c');
 

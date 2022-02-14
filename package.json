@@ -24,6 +24,7 @@
     "electron-dev": "^1.0.1",
     "electron-squirrel-startup": "^1.0.0",
     "env-cmd": "^10.1.0",
+    "material-table": "^1.69.3",
     "mui-datatables": "^4.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

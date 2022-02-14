@@ -15,7 +15,7 @@ const NavigationWindow = () => {
     return(
     <>
     <AppTheme
-      scheme= {theme}/>
+      scheme= {'light'}/>
     <NavBar 
       title="Kassa"
      // mobileHasIcons={true}
