@@ -1,15 +1,12 @@
 
 import { NavPageContainer, NavPageContainerRight, ColorPickerItem, ColorPickerPalette, LinkCompound } from 'react-windows-ui'
-import React, { useState, useEffect, createContext } from 'react'
+import React, { useEffect, createContext } from 'react'
 import NavigationWindow from '../../components/Navigation'
 import { DataContext, DataProvider } from '../../context/DataContext'
 import MasterPage from '../../components/MasterPage'
 import {Link} from 'react-router-dom'
 import { useHistory } from 'react-router-dom'
-import { useMasterState } from '../../stores/MasterStore'
-
-
-
+import { useMasterState, setThemeColor } from '../../stores/MasterStore'
 
 
 const Configuracion = () => {
@@ -18,10 +15,6 @@ const { setColor } = createContext(DataContext);
 const history = useHistory();
 const masterState = useMasterState();
 
-
-const toDetailMasterPage = (name, description) => {
-
-}
 
     return (
       <>
@@ -39,34 +32,34 @@ const toDetailMasterPage = (name, description) => {
                 defaultChecked
                 name="1"
                 color="#0078D7"
-                onChange={ (color) => setColor(color)}/>
+                onChange={ (color) => setThemeColor(color.target.value)}/>
               <ColorPickerItem
                 name="1"
                 color="#6632a8"
-                onChange={ (color) => setColor(color)}/>
+                onChange={ (color) => setThemeColor(color.target.value)}/>
               <ColorPickerItem
                 name="1"
                 color="#881798"
-                onChange={ (color) => setColor(color)}/>
+                onChange={ (color) => setThemeColor(color.target.value)}/>
               
               <ColorPickerItem
                 name="1"
                 color="#00B294"
-                onChange={ (color) => setColor(color)}/>
+                onChange={ (color) => setThemeColor(color.target.value)}/>
               <ColorPickerItem
                 name="1"
                 color="#69797E"
-                onChange={ (color) => setColor(color)}/>
+                onChange={ (color) => setThemeColor(color.target.value)}/>
               <ColorPickerPalette
                 name="1"
                 color="#5ebd06"
-                onChange={ (color) => setColor(color)}/>
+                onChange={ (color) => setThemeColor(color.target.value)}/>
             </div>
             <div>
             <h2>Más configuraciones</h2>
                 <LinkCompound
                   style={{margin:'5px 5px 0 0',width:300}}
-                  to="/AboutLayout"
+                  to="/sucursal"
                   title="Sucursales"
                   subtitle="Administrar registros de sucursales"
                   icon={<i className="icons10-location"></i>}

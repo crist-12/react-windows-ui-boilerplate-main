@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useEffect, useContext } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { AppTheme, SplashScreen, NavBar, NavBarLink, NavSearchSuggestion } from 'react-windows-ui'
 import Page0 from '../pages/page0'
@@ -7,15 +7,22 @@ import Page2 from '../pages/page2'
 import Login from '../pages/login'
 import Img from '../assets/mountain.jpg'
 import {DataContext} from '../context/DataContext'
+import { useMasterState, setThemeColor } from '../stores/MasterStore'
 
 const NavigationWindow = () => {
 
   const {theme} = useContext( DataContext );
 
+  const masterState = useMasterState();
+
     return(
     <>
     <AppTheme
-      scheme= {'light'}/>
+      color = {masterState.get().color}
+      scheme= {'light'}
+      onColorChange={()=> {}}
+      onSchemeChange={()=> {}}
+      />
     <NavBar 
       title="Kassa"
      // mobileHasIcons={true}

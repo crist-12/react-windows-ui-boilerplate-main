@@ -19,7 +19,7 @@ const Empleado = () => {
             animateTransition={true}>
             
             <h1>Empleados</h1>
-            <p>Start adding your fantastic ui here.</p>
+            <p>Gestiona los empleados registrados en tu sistema.</p>
             <div className="app-hr"></div>
 
         </NavPageContainer>

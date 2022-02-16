@@ -3,14 +3,16 @@ import axios from 'axios';
 
 
 const initialState = {
-    columns: {},
-    rows: {},
-    name: "asafsa",
-    description: "asfasfasf",
-    key: ""
+    color: "#16ab9c"
 }
 
 const masterState = createState(initialState);
+
+export const setThemeColor = (color) => {
+    masterState.set({
+        color: color
+    }) 
+}
 
 
 export const useMasterState = () => {
