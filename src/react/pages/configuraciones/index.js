@@ -78,7 +78,7 @@ const masterState = useMasterState();
 
                 <LinkCompound
                   style={{margin:'5px 5px 0 0',width:300}}
-                  to = "/master"
+                  to = "/areas"
                   title="Áreas"
                   subtitle="Administrar áreas y departamentos"
                   icon={<i className="icons10-fax"></i>}

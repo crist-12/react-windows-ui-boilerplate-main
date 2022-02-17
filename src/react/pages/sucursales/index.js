@@ -1,18 +1,25 @@
 
-import { NavPageContainer, Link, SelectBox, Select } from 'react-windows-ui'
-import React, { useState, useEffect } from 'react'
+import { NavPageContainer } from 'react-windows-ui'
+import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
 import { Dialog, Button } from 'react-windows-ui'
 import MaterialTable from 'material-table'
+import useState from 'react-usestateref'
+import Select from 'react-select'
+
 
 const Sucursal = () => {
 
-  const [showModal, setShowModal] = useState(false);
-  const [sucursalName, setSucursalName] = useState("")
-  const [selectedCity, setSelectedCity] = useState("")
-  const [listCat, setlistCat] = useState("")
-  const [loading, setLoading] = useState(true)
-  const [cities, setCities] = useState();
+  const [showModal, setShowModal] = React.useState(false);
+  const [sucursalName, setSucursalName] = React.useState("")
+  const [selectedCity, setSelectedCity] = React.useState("")
+  const [listCat, setlistCat] = React.useState("")
+  const [loading, setLoading] = React.useState(true)
+  const [cities, setCities, citiesRef] = useState();
+  const [label, setLabel] = useState();
+
+  let enumList = []
+
 
   const columnas = [
     {
@@ -107,6 +114,8 @@ const Sucursal = () => {
           label: ele.NombreCiudad
         }
         arre.push(obj)
+        //enumList.push(obj.label)
+        //setLabel([...label, obj.label])
         console.log(obj)
       })
       setCities(arre)
@@ -217,10 +226,16 @@ const Sucursal = () => {
                   <div>
                     <p>Nombre de la ciudad: </p>
                     <Select
-                      //value = {selectedCity}
-                      onChange={(value) => setSelectedCity(value)}
-                      data={cities}
-
+                      options={cities}
+                      theme={(theme)=> ({
+                        ...theme,
+                        colors: {
+                          ...theme.colors,
+                          text: 'white',
+                          primary: 'red'
+                        }
+                      })}
+                      onChange = {(e)=> setSelectedCity(e.value)}
                     />
                   </div>
                   <div>
