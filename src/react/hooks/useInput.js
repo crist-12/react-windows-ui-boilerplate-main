@@ -11,17 +11,17 @@ import { InputText } from 'react-windows-ui';
  * @param {string} [options.width] - Ancho de la etiqueta en la que se mostrará el ícono
  * @param {boolean} [options.disabled] - Establece si está o no habilitado
  */
-export const useInput = ({type, placeholder, tooltip, label, width, disabled}) => {
+export const useInput = ({type, placeholder, tooltip, label, width, disabled, min, required = false}) => {
     const [value, setValue] = useState('');
     const reset = ()=> {
         setValue("")
     }
 
-    const onChangeHandler = (event) => {
+    const onChangeHandler = (e) => {
         setValue(e.target.value);
     }
 
-    const input = <InputText type={type} value={value} placeholder={placeholder} tooltip={tooltip} width={width} label={label} disabled={disabled} onChange={onChangeHandler}/>
+    const input = <InputText type={type} value={value} placeholder={placeholder} tooltip={tooltip} width={width} label={label} disabled={disabled} onChange={onChangeHandler} min={min} required={required}/>
 
     return [value, input, reset]
 

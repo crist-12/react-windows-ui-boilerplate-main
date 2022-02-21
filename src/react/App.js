@@ -14,6 +14,7 @@ import Areas from './pages/areas'
 import Sucursal from './pages/sucursales'
 import Ciudad from './pages/ciudades'
 import MasterPage from './components/MasterPage'
+import Campos from './pages/campos'
 import {DataContext, DataProvider} from './context/DataContext'
 import axios from 'axios'
 
@@ -75,6 +76,7 @@ const App = () => {
         <Route path="/master" component={MasterPage} />
         <Route path="/sucursal" component={Sucursal} />
         <Route path="/areas" component={Areas} />
+        <Route path="/campos" component={Campos} />
       </Switch>
     </Router>
     </DataProvider>

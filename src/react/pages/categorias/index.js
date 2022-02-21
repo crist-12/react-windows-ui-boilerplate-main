@@ -5,6 +5,7 @@ import NavigationWindow from '../../components/Navigation'
 import "../categorias/index.css"
 import { Dialog, Button } from 'react-windows-ui'
 import MaterialTable from 'material-table'
+import { useInput } from '../../hooks/useInput'
 
 const Categoria = () => {
 
@@ -12,6 +13,7 @@ const Categoria = () => {
   const [categoria, setCategoria] = useState("")
   const [listCat, setlistCat] = useState("")
   const [loading, setLoading] = useState(true)
+  const [ejemmplo, ejemploInput,  resetInput] = useInput({type: "number", placeholder:"Texto", tooltip: "Este es un ejemplo", min: 0})
 
   const columnas = [
     {
@@ -90,6 +92,7 @@ const Categoria = () => {
 
               <h1>Categoría</h1>
               <p>Añada, modifique o elimine categoría de productos</p>
+              {ejemploInput}
               <div className="app-hr"></div>
 
               <div style={{ margin: '20px 0' }}>
