@@ -226,14 +226,6 @@ const Empleado = () => {
                     <p>Nombre de la ciudad: </p>
                     <Select
                       options={areas}
-                      theme={(theme)=> ({
-                        ...theme,
-                        colors: {
-                          ...theme.colors,
-                          text: 'white',
-                          primary: 'red'
-                        }
-                      })}
                       onChange = {(e)=> setSelectedArea(e.value)}
                     />
                   </div>
