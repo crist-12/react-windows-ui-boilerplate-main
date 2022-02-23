@@ -15,48 +15,11 @@ import Sucursal from './pages/sucursales'
 import Ciudad from './pages/ciudades'
 import MasterPage from './components/MasterPage'
 import Campos from './pages/campos'
-import {DataContext, DataProvider} from './context/DataContext'
-import axios from 'axios'
-
-
-
-import { channels } from '../shared/constants';
-const { ipcRenderer } = window;
+import Grupo from './pages/grupos'
 
 const App = () => {
 
-  const [splash, setSplash] = useState(true);
-  const [prueba, setPrueba] = useState();
-
-
-  useEffect(() => {
-   setSplash(false);
-   /*ipcRenderer.send(channels.APP_INFO);
-    ipcRenderer.on(channels.APP_INFO, (event, arg) => {
-      ipcRenderer.removeAllListeners(channels.APP_INFO);
-      const { appName, appVersion } = arg;
-      setAppName(appName);
-      setAppVersion(appVersion);
-    }); */
-
-    axios.get(process.env.REACT_APP_HOME)
-    .then(res => {
-      const data = res.data;
-
-      setPrueba(data);
-      console.log(prueba)
-    })
-    .catch(err => {
-      console.log(err)
-    })
-  
-   console.log(prueba);
-   console.log(process.env.REACT_APP_HOME)
-   console.log(process.env.REACT_APP_ELECTRON_START_URL);
-  }, [])
-
   return (
-    <DataProvider>
     <Router>
       <Switch>
         <Route path="/" component={Login}  exact />
@@ -77,9 +40,9 @@ const App = () => {
         <Route path="/sucursal" component={Sucursal} />
         <Route path="/areas" component={Areas} />
         <Route path="/campos" component={Campos} />
+        <Route path="/grupos" component={Grupo} />
       </Switch>
     </Router>
-    </DataProvider>
   )
 }
     

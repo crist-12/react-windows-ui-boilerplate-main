@@ -1,5 +1,11 @@
 import { createState, useState } from '@hookstate/core';
 
+
+
+const savedColor = localStorage.getItem("color");
+const initialValue = JSON.parse(savedColor);
+console.log(initialValue)
+
 const initialState = {
     color: "#16ab9c"
 }

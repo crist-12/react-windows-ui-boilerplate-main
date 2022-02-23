@@ -4,12 +4,8 @@ import React, { useState, useEffect, useContext } from 'react'
 import NavigationWindow from '../../components/Navigation'
 import { AppTheme } from 'react-windows-ui'
 import { ColorPickerItem } from 'react-windows-ui'
-import { DataContext } from '../../context/DataContext'
 
 const Home = () => {
-
-  const {theme, color} = useContext( DataContext );
-
     return (
       <>
         <NavigationWindow/>

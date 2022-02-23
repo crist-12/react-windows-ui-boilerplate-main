@@ -2,7 +2,7 @@
 import { NavPageContainer, NavPageContainerRight, ColorPickerItem, ColorPickerPalette, LinkCompound } from 'react-windows-ui'
 import React, { useEffect, createContext } from 'react'
 import NavigationWindow from '../../components/Navigation'
-import { DataContext, DataProvider } from '../../context/DataContext'
+
 import MasterPage from '../../components/MasterPage'
 import { Link } from 'react-router-dom'
 import { useHistory } from 'react-router-dom'
@@ -11,7 +11,7 @@ import { useMasterState, setThemeColor } from '../../stores/MasterStore'
 
 const Configuracion = () => {
 
-  const { setColor } = createContext(DataContext);
+
   const history = useHistory();
   const masterState = useMasterState();
 
@@ -29,7 +29,7 @@ const Configuracion = () => {
         <div className="home-color-picker">
           <h2>Color del sistema</h2>
           <ColorPickerItem
-            defaultChecked
+            //defaultChecked
             name="1"
             color="#0078D7"
             onChange={(color) => setThemeColor(color.target.value)} />
@@ -107,7 +107,15 @@ const Configuracion = () => {
             subtitle="Añade una nueva entidad al sistema"
             icon={<i className="icons10-puzzle"></i>}
             focused={true}
-            style={{ margin: '5px 5px 0 0', width: 300}} />
+            style={{ margin: '5px 5px 0 0', width: 300 }} />
+
+          <LinkCompound
+            to="/grupos"
+            title="Grupos"
+            subtitle="Añade nuevo grupo de productos"
+            icon={<i className="icons10-file-explorer"></i>}
+            focused={true}
+            style={{ margin: '5px 5px 0 0', width: 300 }} />
         </div>
       </NavPageContainer>
     </>

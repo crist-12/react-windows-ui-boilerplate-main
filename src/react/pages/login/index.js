@@ -38,15 +38,6 @@ const Login = () => {
             setMessage("La contraseña no puede estar vacía")
             return
         }
-       /* if(loginUser(username, password)){
-            history.push("/home")
-            setValidate(false)
-            return
-        }else{
-            setValidate(true)
-            setMessage("Ocurrió un error al tratar de iniciar sesión")
-            return
-        } */
 
        await loginUser(username, password);
        if(authState.get().isLoggedIn){
