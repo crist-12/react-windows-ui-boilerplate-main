@@ -362,7 +362,7 @@ const Campos = () => {
                                                     isVisible={true}
                                                     zIndex={1}
                                                     animationType="fade"
-                                                    style={{ height: 180, width: '90%', margin: '10px 0px', backgroundColor: '#EEE', padding: '10px', position: 'relative' }}>
+                                                    style={{ height: 180, width: '95%', margin: '10px 0px', backgroundColor: '#EEE', padding: '10px', position: 'relative' }}>
                                                     <div>
                                                         <div style={{ width: "100%" }}>
                                                             <span style={{ fontWeight: 'bold' }}>Campo de tipo {item.display.toLowerCase()}</span>

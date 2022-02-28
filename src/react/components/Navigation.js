@@ -60,7 +60,7 @@ const NavigationWindow = () => {
 
       <NavBarLink
         to="/categoria"
-        text="Categorías"
+        text="Entidades"
         icon={<i className="icons10-parallel-tasks"></i>}
       />
 

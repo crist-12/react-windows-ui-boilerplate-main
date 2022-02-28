@@ -90,8 +90,8 @@ const Categoria = () => {
               hasPadding={true}
               animateTransition={true}>
 
-              <h1>Categoría</h1>
-              <p>Añada, modifique o elimine categoría de productos</p>
+              <h1>Entidades</h1>
+              <p>Añada, modifique o elimine sus entidades</p>
               {ejemploInput}
               <div className="app-hr"></div>
 
@@ -114,7 +114,7 @@ const Categoria = () => {
                 <MaterialTable
                   columns={columnas}
                   data={listCat}
-                  title="Categorias"
+                  title="Entidades"
                   style={{ boxShadow: 'none', marginRight: '30px' }}
                   localization={{
                     header: {
