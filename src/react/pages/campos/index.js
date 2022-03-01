@@ -46,7 +46,7 @@ const Campos = () => {
         allData[name][key] = value;
         //allData[name].splice(key, 0, value)
         setPropsCampos(allData)
-        //console.log(propsCampos)
+        console.log(propsCampos)
     }
 
     // Obtiene todos los tipos de campos existentes en la base de datos
@@ -177,7 +177,6 @@ const Campos = () => {
                     return (
                         <textarea className='app-textarea' style={{ resize: 'none', width: '350px', height: '150px' }} placeholder={propsCampos[index][0]} tooltip={propsCampos[index][1]} />
                     )
-
             }
         }
     }
@@ -245,10 +244,9 @@ const Campos = () => {
         let arrayFiltered = []
         camposArrayAux.map((el, index) => {
             if (el[4]) arrayFiltered.push(el)
-            //console.log(el)
         })
-        //console.log(arrayFiltered)
         setAllCampos(arrayFiltered);
+
 
         arrayFiltered.map((item, index) => {
             try {
@@ -260,17 +258,37 @@ const Campos = () => {
                     },
                     body: JSON.stringify({ "IdCategoria": insertedIdRef.current, "CaracteristicaDescripcion": item[1], "Nivel": index, "Requerido": Number(item[2]) ? 1 : 0, "Placeholder": item[0], "Tooltip": item[1], "UsuarioCreo": authState.me.get().username, "CaracteristicaTipo": item[4] })
                 }).then((res) => {
-                    console.log("Campo añadido")
+                    res.json().then((res) => {
+                        if (item[4] == 4) {
+                            var arrayValues = item[3].split('|');
+                            arrayValues.forEach((ele, indice) => {
+                                let responseOptions = fetch(process.env.REACT_APP_HOME + "control/detail", {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ "IdCategoria": insertedIdRef.current, "IdCaracteristica": res.message, "Valores": ele, "Nivel": indice })
+                                }).then((res) => {
+                                    console.log("Campo añadido")
+                                }).catch((err) => {
+                                    console.log("Algo salió mal al agregar el campo" + err)
+                                })
+                            })
+                            
+                        }
+                    })
+                    /*  */
                 }).catch((err) => {
                     console.log("Algo salió mal al agregar el campo" + err)
                 })
 
-                // let obj = { "IdCategoria": selectedCategory || 1, "CaracteristicaDescripcion": item[1], "Nivel": index, "Requerido": item[2], "Placeholder": item[0], "Tooltip": item[1], "UsuarioCreo": authState.me.get().username, "CaracteristicaTipo": item[4] }
-                //console.log(obj)
+
+
             } catch (error) {
                 alert(error)
             }
         })
+
         // alert("Campos añadidos exitosamente")
 
     }
@@ -289,7 +307,7 @@ const Campos = () => {
                 return alert("El campo del nombre es obligatorio")
             } else {
                 if (!selectedCategory) {
-                    return alert("Debes seleccionar un grupo de categoría para tu identidad")
+                    return alert("Debes seleccionar un grupo de categoría para tu entidad")
                 } else {
                     await handleSaveEntity();
                     await handleSaveAllCampos();
