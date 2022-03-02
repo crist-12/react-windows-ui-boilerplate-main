@@ -16,6 +16,8 @@ import Ciudad from './pages/ciudades'
 import MasterPage from './components/MasterPage'
 import Campos from './pages/campos'
 import Grupo from './pages/grupos'
+import Computadora from './pages/computadoras'
+
 
 const App = () => {
 
@@ -41,6 +43,7 @@ const App = () => {
         <Route path="/areas" component={Areas} />
         <Route path="/campos" component={Campos} />
         <Route path="/grupos" component={Grupo} />
+        <Route path="/computadoras" component={Computadora} />
       </Switch>
     </Router>
   )

@@ -1,7 +1,8 @@
 
-import { NavPageContainer, Link, InputText } from 'react-windows-ui'
+import { NavPageContainer, Link, InputText, NavPageContainerRight, LinkCompound } from 'react-windows-ui'
 import React, { useState, useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
+import RightMenu from '../../components/RightMenu'
 import { useInput } from '../../hooks/useInput'
 import { useState as useStateRef } from '@hookstate/core'
 
@@ -59,30 +60,18 @@ const Asignar = () => {
               animateTransition={true}>
 
               <h1>Asignar</h1>
-              <p>Start adding your fantastic ui here.</p>
-              <Link>Components here</Link>
-              {
-                controls.map((item) => {
-                  //  const [{item.CaracteristicaDescripcion},{ item.CaracteristicaDescripcion+"Input"},  {resetInput}] = useInput({type: "number", placeholder:"Texto", tooltip: "Este es un ejemplo", min: 0})
-                  return (<>
-                    <div style={{ marginTop: '30px', alignItems: 'center', width: '100%' }}>
-                      <p style={{ marginRight: '10px' }}>{item.label}:</p>
-                      <InputText
-                        placeholder={item.placeholder}
-                        tooltip={item.tooltip}
-                        //value={modelo}
-                        //onChange={e => setModelo(e.target.value)}
-                        type={item.type}
-                      />
-                    </div>
-                  </>)
-                })
-              }
+              <p>Asigna equipos a colaboradores.</p>
+              <div className="app-hr"></div>
+              
+              <RightMenu />
+
             </NavPageContainer>
           </>
       }
     </>
   );
+
+
 }
 
 export default Asignar

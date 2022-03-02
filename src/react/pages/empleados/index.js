@@ -12,7 +12,7 @@ const Empleado = () => {
   const [showModal, setShowModal] = useState(false);
   const [empleadoName, setEmpleadoName] = useState("")
   const [selectedArea, setSelectedArea] = useState("")
-  const [listCat, setlistCat] = useState("")
+  const [listCat, setlistCat] = useState([])	
   const [loading, setLoading] = useState(true)
   const [areas, setAreas] = useState();
   const [label, setLabel] = useState();
@@ -40,6 +40,7 @@ const Empleado = () => {
   useEffect(() => {
     getItems()
     getAreas()
+    
   }, [])
 
 
@@ -119,6 +120,9 @@ const Empleado = () => {
       })
       setAreas(arre)
       setLoading(false)
+      setLoading(true)
+      setLoading(false)
+     // setLoading(false)
       //console.log(result)
       //setlistCat(response)
 
@@ -150,7 +154,7 @@ const Empleado = () => {
               <div style={{ width: '100%' }}>
                 <MaterialTable
                   columns={columnas}
-                  data={listCat}
+                  data={listCat ?? []}
                   title="Categorias"
                   style={{ boxShadow: 'none', marginRight: '30px' }}
                   localization={{
