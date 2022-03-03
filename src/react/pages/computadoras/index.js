@@ -70,26 +70,37 @@ const Computadora = () => {
         switch (state) {
             case "Sin asignar":
                 return (
-                    <div style={{ padding: "5px", backgroundColor: "#17A2B8", width: "100px", borderRadius: "20px", color: "white", fontWeight: "bold", justifyContent: "center", alignItems: "items", display: "flex" }}>
+                    /*<div style={{ padding: "5px", backgroundColor: "#17A2B8", width: "100px", borderRadius: "20px", color: "white", fontWeight: "bold", justifyContent: "center", alignItems: "items", display: "flex" }}>
+                        <span>{state}</span>
+                    </div>*/
+                    <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                        <div style={{height: "10px", width: "10px", background: "red", borderRadius: "10px", marginRight: "10px"}}>
+                        </div>
                         <span>{state}</span>
                     </div>
                 )
             case "Asignada":
                 return (
-                    <div style={{ padding: "5px", backgroundColor: "#28A745", width: "100px", borderRadius: "20px", color: "white", fontWeight: "bold", justifyContent: "center", alignItems: "items", display: "flex" }}>
+                    <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                        <div style={{height: "10px", width: "10px", background: "green", borderRadius: "10px", marginRight: "10px"}}>
+                        </div>
                         <span>{state}</span>
                     </div>
                 )
             case "En mantenimiento":
                 return (
-                    <div style={{ padding: "5px", backgroundColor: "#FFC107", width: "160px", borderRadius: "20px", color: "white", fontWeight: "bold", justifyContent: "center", alignItems: "items", display: "flex" }}>
-                        <span>{state}</span>
+                    <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                    <div style={{height: "10px", width: "10px", background: "yellow", borderRadius: "10px", marginRight: "10px"}}>
                     </div>
+                    <span>{state}</span>
+                </div>
                 )
             case "No disponible":
                 return (
-                    <div style={{ padding: "5px", backgroundColor: "#DC3545", width: "100px", borderRadius: "20px", color: "white", fontWeight: "bold", justifyContent: "center", alignItems: "items", display: "flex" }}>
-                       <span>{state}</span>
+                    <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                        <div style={{height: "10px", width: "10px", background: "blue", borderRadius: "10px", marginRight: "10px"}}>
+                        </div>
+                        <span>{state}</span>
                     </div>
                 )
         }

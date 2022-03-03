@@ -8,6 +8,8 @@ import { useMasterState } from '../../stores/MasterStore'
 import { useAuthState } from '../../stores/AuthStore'
 import MaterialTableComponent from '../../components/MaterialTable'
 import MaterialTable from 'material-table'
+import "../equipos/index.css"
+import getPivotArray from '../../../shared/arrayToPivot'
 
 const Equipos = () => {
 
@@ -21,10 +23,13 @@ const Equipos = () => {
   const [mode, setMode] = React.useState('R')
   const [tableEquipo, setTableEquipo, tableEquipoRef] = useState([])
   const [lastKey, setLastKey, lastKeyRef] = useState()
+  const [headers, setHeaders, headersRef] = useState([])
+  const [rows, setRows, rowsRef] = useState([])
   // const [dataList, setDataList] = React.useState([])
 
   const masterState = useMasterState();
   const authState = useAuthState();
+
 
 
   const columnas = [
@@ -65,6 +70,34 @@ const Equipos = () => {
     }
   }
 
+  const getHeaders = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "control/headers/" + entityCodeRef.current, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const result = await response.json()
+      var arre = []
+      result.forEach(ele => {
+        var obj = {
+          categoria: ele.IdCategoria,
+          caracteristica: ele.IdCaracteristica,
+          descripcion: ele.CaracteristicaDescripcion
+        }
+        arre.push(obj)
+        // console.log(obj)
+      })
+      //console.log("RESPUESTA HEADERS")
+      //console.log(result)
+      setHeaders(arre)
+      //console.log(headersRef.current)
+      // setLoading(false)
+    } catch (error) {
+      alert(error)
+    }
+  }
   // Cuando seleccionemos una entidad, obtenemos los controles de esa entidad
   const getEntityEntries = async (id) => {
     try {
@@ -135,17 +168,21 @@ const Equipos = () => {
   const handleListChange = async (e) => {
     //setLoading(true)
     //setSelected(e.value)
-    if (mode == 'R')
+    /*if (mode == 'R')
       await getEntityEntries(e.value)
     else if (mode == 'L') {
       setLoading(true)
       await getAllEntriesTable(e.value)
       setLoading(false)
-    }
-
+    }*/
+    await getEntityEntries(e.value)
+    await getAllEntriesTable(e.value)
+    await getHeaders();
+    await getRows();
     //setLoading(false)
   }
 
+  //const handle
 
   const getAllEntriesTable = async (id) => {
     //setLoading(true)
@@ -287,7 +324,7 @@ const Equipos = () => {
 
   const getLastProductKey = async () => {
     try {
-      const response = await fetch(process.env.REACT_APP_HOME + "control/key" , {
+      const response = await fetch(process.env.REACT_APP_HOME + "control/key", {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -307,17 +344,17 @@ const Equipos = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({"IdEquipo": lastKeyRef.current})
+        body: JSON.stringify({ "IdEquipo": lastKeyRef.current })
       })
       const result = await response.json()
-      
+
     } catch (error) {
       alert(error)
     }
   }
 
   const handleSaveNewEntry = async (event) => {
-    event.preventDefault()
+    //event.preventDefault()
     try {
       await getLastProductKey();
 
@@ -325,7 +362,7 @@ const Equipos = () => {
       let llaves = Object.keys(respuesta)
       const entityCode = entityCodeRef.current;
 
-      if(entityCode == 1){
+      if (entityCode == 1) {
         await saveComputerState();
       }
 
@@ -342,13 +379,66 @@ const Equipos = () => {
         })
       }).then((response) => {
         console.log(response);
+      }).catch((error) => {
+        console.log(error);
       })
 
-       
+
     } catch (error) {
-      alert("Ocurrio un error al guardar el empleado" + error)
+      //alert("Ocurrio un error al guardar el empleado" + error)
     }
   }
+
+  const getRows = async (id) => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "control/rows/" + entityCodeRef.current, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const result = await response.json()
+      console.log(result)
+      let array = []
+
+      result.forEach((el) => {
+        let row = [];
+        console.log(el)
+        row[0] = el.IdEquipoIngresado
+        row[1] = el.IdCaracteristica
+        row[2] = el.Respuesta
+        array.push(row)
+      })
+      //console.log(array)
+      setRows(getPivotArray(array, 0, 1, 2))
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  const performSearch = () => {
+    var searchBox = document.getElementById('search-input-table');
+    var table = document.getElementById("table-products");
+    var trs = table.tBodies[0].getElementsByTagName("tr");
+    var filter = searchBox.value.toUpperCase();
+    for (var rowI = 0; rowI < trs.length; rowI++) {
+      var tds = trs[rowI].getElementsByTagName("td");
+      trs[rowI].style.display = "none";
+      for (var cellI = 0; cellI < tds.length; cellI++) {
+        if (tds[cellI].innerHTML.toUpperCase().indexOf(filter) > -1) {
+          trs[rowI].style.display = "";
+          continue;
+        }
+      }
+    }
+
+  }
+
+  // declare elements
+
+
+  // add event listener to search box
+  //searchBox.addEventListener('keyup', performSearch);
 
   return (
     <>
@@ -378,7 +468,8 @@ const Equipos = () => {
               <Select
                 // defaultInputValue='Seleccione una categoria'
                 defaultValue={entities[0]}
-                //value={selected}
+                menuPortalTarget={document.body}
+                styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
                 options={entities}
                 onChange={handleListChange}
                 theme={(theme) => ({
@@ -413,68 +504,48 @@ const Equipos = () => {
                       </div>
                   }
                 </>
-                :
-                !tableEquipo ? <><p>Cargando...</p></> :
-                  <>
-                    <MaterialTable
-                      columns={columnas}
-                      data={tableEquipo}
-                      title="Equipos"
-                      style={{ boxShadow: 'none', marginRight: '30px' }}
-                      localization={{
-                        header: {
-                          actions: 'Acciones'
-                        },
-                        pagination: {
-                          labelDisplayedRows: '{from}-{to} de {count}',
-                          labelRowsSelect: 'filas',
-                          labelRowsPerPage: 'Filas por página',
-                          firstAriaLabel: 'Primera página',
-                          firstTooltip: 'Primera página',
-                          previousAriaLabel: 'Página anterior',
-                          previousTooltip: 'Página anterior',
-                          nextAriaLabel: 'Siguiente página',
-                          nextTooltip: 'Siguiente página',
-                          lastAriaLabel: 'Última página',
-                          lastTooltip: 'Última página'
-                        },
-                        toolbar: {
-                          nRowsSelected: '{0} fila(s) seleccionada(s)',
-                          searchTooltip: 'Buscar...',
-                          searchPlaceholder: 'Buscar...',
-                          exportTitle: "Equipos",
-                          exportPDFName: 'Exportar como PDF',
-                          exportCSVName: 'Exportar como CSV'
-                        },
-                        body: {
-                          emptyDataSourceMessage: 'No hay datos para mostrar',
-                          filterRow: {
-                            searchTooltip: 'Buscar...'
-                          }
-                        }
-                      }}
-                      options={{
-                        actionsColumnIndex: -1,
-                        exportButton: true,
-                        draggable: true
-                      }}
-                      actions={
-                        [
+                : rowsRef.current.length >= 1 ? <>
+                  <div style={{ marginTop: "20px" }}>
+                    <div>
+                      <label>Buscar</label>
+                      <input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={performSearch} />
+                    </div>
+                    <table className="styled-table" id="table-products">
+                      <thead>
+                        <tr>
                           {
-                            icon: 'edit',
-                            tooltip: 'Editar categoria',
-                            onClick: (event, rowData) => alert("Has presionado la categoria: " + rowData.categoria)
-                          },
-                          {
-                            icon: 'delete',
-                            tooltip: 'Eliminar categoria',
-                            onClick: (event, rowData) => alert("Has presionado la categoria: " + rowData.categoria)
+                            headers.map(item => {
+                              return (<th>{item.descripcion}</th>)
+                            })
                           }
-                        ]
-                      }
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {
+                          rowsRef.current.map((elemento, indice) => {
+                            if (indice == 0) return;
+                            return (
+                              <tr>
+                                {
+                                  elemento.map((dato, indiceDato) => {
+                                    if (indiceDato == 0) return;
+                                    //return (<td>{dato}</td>)
+                                    return (
+                                      <td>{dato}</td>
+                                    )
+                                  })
+                                }
+                              </tr>
+                            )
 
-                    />
-                  </>
+                          })
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </> : <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <h3 style={{ color: "lightgray", marginTop: "40px" }}>Selecciona un elemento de la lista para añadir productos</h3>
+                </div>
             }
 
           </NavPageContainer>

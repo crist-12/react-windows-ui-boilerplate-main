@@ -167,7 +167,8 @@ const Campos = () => {
                     })
                     return (
                         <Select
-                            //value={}
+                            menuPortalTarget={document.body}
+                            styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
                             options={objData}
                             defaultValue={objData[0]}
                         />
@@ -274,7 +275,7 @@ const Campos = () => {
                                     console.log("Algo salió mal al agregar el campo" + err)
                                 })
                             })
-                            
+
                         }
                     })
                     /*  */
@@ -339,7 +340,12 @@ const Campos = () => {
                                 <label style={{ margin: ' 0 20px' }}>Categoría:</label>
                             </div>
                             <div style={{ width: '300px' }}>
-                                <Select options={categorias} placeholder="Selecciona una categoría" onChange={(e) => setSelectedCategory(e.value)} styles={{ width: '250px' }} />
+                                <Select options={categorias}
+                                    placeholder="Selecciona una categoría"
+                                    onChange={(e) => setSelectedCategory(e.value)}
+                                    //styles={{ width: '250px' }} 
+                                    menuPortalTarget={document.body}
+                                    styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }} />
                             </div>
                             <div style={{ marginLeft: '20px' }}>
                                 <Button
