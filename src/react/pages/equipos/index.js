@@ -6,8 +6,6 @@ import Select from 'react-select'
 import useState from 'react-usestateref'
 import { useMasterState } from '../../stores/MasterStore'
 import { useAuthState } from '../../stores/AuthStore'
-import MaterialTableComponent from '../../components/MaterialTable'
-import MaterialTable from 'material-table'
 import "../equipos/index.css"
 import getPivotArray from '../../../shared/arrayToPivot'
 
@@ -467,6 +465,7 @@ const Equipos = () => {
             <div style={{ marginRight: "20px" }}>
               <Select
                 // defaultInputValue='Seleccione una categoria'
+                placeholder='Seleccione una categoria'
                 defaultValue={entities[0]}
                 menuPortalTarget={document.body}
                 styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
@@ -505,43 +504,45 @@ const Equipos = () => {
                   }
                 </>
                 : rowsRef.current.length >= 1 ? <>
-                  <div style={{ marginTop: "20px" }}>
+                  <div style={{ marginTop: "20px", marginRight: "30px"}}>
                     <div>
                       <label>Buscar</label>
                       <input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={performSearch} />
                     </div>
-                    <table className="styled-table" id="table-products">
-                      <thead>
-                        <tr>
+                    <div style={{overflow: "auto"}}>
+                      <table className="styled-table" id="table-products">
+                        <thead>
+                          <tr>
+                            {
+                              headers.map(item => {
+                                return (<th>{item.descripcion}</th>)
+                              })
+                            }
+                          </tr>
+                        </thead>
+                        <tbody>
                           {
-                            headers.map(item => {
-                              return (<th>{item.descripcion}</th>)
+                            rowsRef.current.map((elemento, indice) => {
+                              if (indice == 0) return;
+                              return (
+                                <tr>
+                                  {
+                                    elemento.map((dato, indiceDato) => {
+                                      if (indiceDato == 0) return;
+                                      //return (<td>{dato}</td>)
+                                      return (
+                                        <td>{dato}</td>
+                                      )
+                                    })
+                                  }
+                                </tr>
+                              )
+
                             })
                           }
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {
-                          rowsRef.current.map((elemento, indice) => {
-                            if (indice == 0) return;
-                            return (
-                              <tr>
-                                {
-                                  elemento.map((dato, indiceDato) => {
-                                    if (indiceDato == 0) return;
-                                    //return (<td>{dato}</td>)
-                                    return (
-                                      <td>{dato}</td>
-                                    )
-                                  })
-                                }
-                              </tr>
-                            )
-
-                          })
-                        }
-                      </tbody>
-                    </table>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </> : <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <h3 style={{ color: "lightgray", marginTop: "40px" }}>Selecciona un elemento de la lista para añadir productos</h3>
