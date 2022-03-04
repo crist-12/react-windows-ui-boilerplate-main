@@ -1,5 +1,5 @@
 
-import { NavPageContainer, Link, InputText, NavPageContainerRight, LinkCompound, Button } from 'react-windows-ui'
+import { NavPageContainer, Link, InputText, NavPageContainerRight, LinkCompound, Button, RadioButton } from 'react-windows-ui'
 import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
 import RightMenu from '../../components/RightMenu'
@@ -26,8 +26,11 @@ const Asignar = () => {
   const [selectedEmployee, setSelectedEmployee, selectedEmployeeRef] = useState(null);
   const [filteredComputer, setFilteredComputer, filteredComputerRef] = useState(null);
   const [filteredEmployee, setFilteredEmployee, filteredEmployeeRef] = useState(null);
-  const [disableEmployee, setDisableEmployee, disableEmployeeRef] = useState(false);
+  const [disableEmployee, setDisableEmployee, disableEmployeeRef] = useState(true);
   const [modalAsi, setModalAsi] = React.useState(false);
+  const [modalMante, setModalMante] = React.useState(false);
+  const [mantenimientoTipo, setMantenimientoTipo, mantenimientoTipoRef] = useState(null);
+  const [observacionesMantenimiento, setObservacionesMantenimiento, observacionesMantenimientoRef] = useState(null);
 
   const [detallesAsi, setDetallesAsi, detallesAsiRef] = useState("");
   const [incluyeMochila, setIncluyeMochila, incluyeMochilaRef] = useState(false);
@@ -218,6 +221,44 @@ const Asignar = () => {
       const result = await response.json()
       console.log(result)
       alert("Cambio de estado exitoso")
+      window.location.reload()
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  const handleSaveAssignment = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "assignment", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          IdEmpleado: selectedEmployee,
+          IdEquipo: selectedComputadoraRef.current,
+          DetalleAsignacion: detallesAsi,
+          IncluyeMochila: incluyeMochila,
+          IncluyeMouse: incluyeMouse,
+          IncluyeCargador: incluyeCargador,
+          IncluyeTeclado: incluyeTeclado,
+          IncluyeWebCam: incluyeWebcam,
+          UsuarioAsigna: authState.me.get().username
+        })
+      })
+      const result = await response.json()
+      console.log(result)
+      changeComputerStatus(2)
+      getAllComputersRegistered()
+      alert("Asignación exitosa")
+      setModalAsi(false)
+      setDetallesAsi("")
+      setIncluyeCargador(false)
+      setIncluyeMochila(false)
+      setIncluyeMouse(false)
+      setIncluyeTeclado(false)
+      setIncluyeWebcam(false)
+
     } catch (error) {
       alert(error)
     }
@@ -228,6 +269,53 @@ const Asignar = () => {
       setModalAsi(true)
     } else {
       return alert("Debes seleccionar un empleado para asignar el equipo")
+    }
+  }
+
+  const handleRemoveAssignment = async () => {
+    try {
+      await changeComputerStatus(1)
+      const response = await fetch(process.env.REACT_APP_HOME + "assignment/remove/" + selectedComputadoraRef.current, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const result = await response.json()
+      console.log(result)
+      alert("Desasignación exitosa")
+      //changeComputerStatus(1)
+      getAllComputersRegistered()
+      // setModalDes(false)
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  const handleSaveMaintenance = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "maintenance", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          IdEquipo: selectedComputadoraRef.current,
+          ObservacionesMantenimiento: observacionesMantenimiento,
+          IdTipoMantenimiento: mantenimientoTipoRef.current
+        })
+      })
+      const result = await response.json()
+      console.log(result)
+      changeComputerStatus(3)
+      getAllComputersRegistered()
+      alert("Mantenimiento registrados exitosamente")
+      setModalMante(false)
+      setMantenimientoTipo(null)
+      setObservacionesMantenimiento("")
+      window.location.reload()
+    } catch (error) {
+      alert(error)
     }
   }
 
@@ -279,7 +367,7 @@ const Asignar = () => {
                     </div>
                     <div style={{ margin: "10px 0px" }}>
                       <label className='app-checkbox'>
-                      <input type="checkbox" style={{ marginRight: "10px" }} checked={incluyeWebcam} onChange={(e)=> setIncluyeWebcam(e.target.checked)}/>
+                        <input type="checkbox" style={{ marginRight: "10px" }} checked={incluyeWebcam} onChange={(e) => setIncluyeWebcam(e.target.checked)} />
                         Incluye WebCam
                       </label>
                     </div>
@@ -291,13 +379,59 @@ const Asignar = () => {
                   <div style={{ flex: 1, width: "100%" }}>
                     <p>Detalles de la asignacion</p>
                     <div className='app-hr' />
-                    <textarea className="app-textarea" style={{ width: "100%", resize: "none" }} />
+                    <textarea className="app-textarea" style={{ width: "100%", resize: "none" }} onChange={(e) => setDetallesAsi(e.target.value)} />
                   </div>
                 </div>
               </Modal.Body>
               <Modal.Footer>
-                <button className='app-button animate primary' style={{ marginRight: "10px" }}>Asignar</button>
-                <button className='app-button animate primary' style={{ marginRight: "10px" }}>Cancelar</button>
+                <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={handleSaveAssignment}>Asignar</button>
+                <button className='app-button animate primary' style={{ marginRight: "10px" }} >Cancelar</button>
+              </Modal.Footer>
+            </Modal>
+            <Modal showOverlay={true} show={modalMante} onClose={() => setModalMante(false)} size="lg">
+              <Modal.Header>
+                <Modal.Title>Enviar a mantenimiento</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div style={{ display: 'flex' }}>
+                  {/* <i className="icons10-info" style={{ color: '#faca2a', fontSize: "50px" }} /> */}
+                  <div style={{ marginRight: 25, flex: 1 }}>
+                    <p>Datos del Mantenimiento</p>
+                    <div className='app-hr' />
+                    <p>COMPUTADORA: {selectedDataPCRef.current} </p>
+                    <p>FECHA DE ENVIO A MANTENIMIENTO: {new Date().toLocaleDateString()}</p>
+                  </div>
+                </div>
+                <div style={{ display: "flex" }}>
+                  <div style={{ flex: 1 }}>
+                    <div>
+                      <p>TIPO DE MANTENIMIENTO</p>
+                      <div className='app-hr' />
+                    </div>
+                    <div style={{ flex: 1, flexDirection: "row", display: "flex", margin: "10px 0px"}}>
+                      <div style={{ marginRight: "15px" }}>
+                        <RadioButton name='mantenimiento' value={1} label='Preventivo' onChange={(e)=> setMantenimientoTipo(1)} />
+                      </div>
+                      <div style={{ marginRight: "15px" }}>
+                        <RadioButton name='mantenimiento' value={2} label='Correctivo' onChange={(e)=> setMantenimientoTipo(2)} />
+                      </div>
+                      <div style={{ marginRight: "15px" }}>
+                        <RadioButton name='mantenimiento' value={3} label='Predictivo' onChange={(e)=> setMantenimientoTipo(3)} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ display: "flex" }}>
+                  <div style={{ flex: 1, width: "100%" }}>
+                    <p>Escriba las razones del mantenimiento</p>
+                    <div className='app-hr' />
+                    <textarea className="app-textarea" style={{ width: "100%", resize: "none" }} value={observacionesMantenimiento} onChange={(e) => setObservacionesMantenimiento(e.target.value)} placeholder="Detalles del mantenimiento" />
+                  </div>
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={handleSaveMaintenance}>Enviar a mantenimiento</button>
+                <button className='app-button animate primary' style={{ marginRight: "10px" }} >Cancelar</button>
               </Modal.Footer>
             </Modal>
             <NavPageContainer
@@ -349,8 +483,8 @@ const Asignar = () => {
                   </div>
                   <div style={{ marginTop: "20px" }}>
                     <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={disableEmployeeRef.current} onClick={handleShowAsiModal}>Asignar</button>
-                    <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado != 2 ? true : false}>Remover asignación</button>
-                    <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado == 3 ? true : false}>Enviar a mantenimiento</button>
+                    <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado != 2 ? true : false} onClick={handleRemoveAssignment}>Remover asignación</button>
+                    <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado == 3 ? true : false} onClick={() => setModalMante(true)}>Enviar a mantenimiento</button>
                     <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado != 1 ? true : false}>Dar de baja</button>
                   </div>
 
