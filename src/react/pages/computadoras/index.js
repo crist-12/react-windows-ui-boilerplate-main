@@ -39,7 +39,7 @@ const Computadora = () => {
 
     const getTableData = async () => {
         try {
-            const response = await fetch("http://localhost:9000/control/equipos", {
+            const response = await fetch(process.env.REACT_APP_HOME+ "control/equipos", {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

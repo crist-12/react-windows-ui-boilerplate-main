@@ -9,6 +9,7 @@ import { useAuthState } from '../../stores/AuthStore';
 import useState from 'react-usestateref'
 import Modal from '../../components/Modal';
 import '@trendmicro/react-modal/dist/react-modal.css';
+import { triggerBase64Download } from 'react-base64-downloader'
 
 const Asignar = () => {
 
@@ -29,8 +30,11 @@ const Asignar = () => {
   const [disableEmployee, setDisableEmployee, disableEmployeeRef] = useState(true);
   const [modalAsi, setModalAsi] = React.useState(false);
   const [modalMante, setModalMante] = React.useState(false);
+  const [modalCancel, setModalCancel] = React.useState(false);
   const [mantenimientoTipo, setMantenimientoTipo, mantenimientoTipoRef] = useState(null);
   const [observacionesMantenimiento, setObservacionesMantenimiento, observacionesMantenimientoRef] = useState(null);
+  const [modalImg, setModalImg] = useState(false);
+  const [currentImage, setCurrentImage, currentImageRef] = useState(null);
 
   const [detallesAsi, setDetallesAsi, detallesAsiRef] = useState("");
   const [incluyeMochila, setIncluyeMochila, incluyeMochilaRef] = useState(false);
@@ -319,6 +323,7 @@ const Asignar = () => {
     }
   }
 
+
   return (
     <>
       {
@@ -408,15 +413,15 @@ const Asignar = () => {
                       <p>TIPO DE MANTENIMIENTO</p>
                       <div className='app-hr' />
                     </div>
-                    <div style={{ flex: 1, flexDirection: "row", display: "flex", margin: "10px 0px"}}>
+                    <div style={{ flex: 1, flexDirection: "row", display: "flex", margin: "10px 0px" }}>
                       <div style={{ marginRight: "15px" }}>
-                        <RadioButton name='mantenimiento' value={1} label='Preventivo' onChange={(e)=> setMantenimientoTipo(1)} />
+                        <RadioButton name='mantenimiento' value={1} label='Preventivo' onChange={(e) => setMantenimientoTipo(1)} />
                       </div>
                       <div style={{ marginRight: "15px" }}>
-                        <RadioButton name='mantenimiento' value={2} label='Correctivo' onChange={(e)=> setMantenimientoTipo(2)} />
+                        <RadioButton name='mantenimiento' value={2} label='Correctivo' onChange={(e) => setMantenimientoTipo(2)} />
                       </div>
                       <div style={{ marginRight: "15px" }}>
-                        <RadioButton name='mantenimiento' value={3} label='Predictivo' onChange={(e)=> setMantenimientoTipo(3)} />
+                        <RadioButton name='mantenimiento' value={3} label='Predictivo' onChange={(e) => setMantenimientoTipo(3)} />
                       </div>
                     </div>
                   </div>
@@ -432,6 +437,24 @@ const Asignar = () => {
               <Modal.Footer>
                 <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={handleSaveMaintenance}>Enviar a mantenimiento</button>
                 <button className='app-button animate primary' style={{ marginRight: "10px" }} >Cancelar</button>
+              </Modal.Footer>
+            </Modal>
+
+            <Modal showOverlay={true} show={modalCancel}>
+              <Modal.Header>
+                <Modal.Title>Dar de baja</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div style={{ display: 'flex' }}>
+                  <i className="icons10-exclamation-mark" style={{ color: '#faca2a', fontSize: "70px" }} />
+                  <div style={{ marginLeft: 25, justifyContent: "center", alignItems: "center", display: "flex" }}>
+                    <label>Estás a punto de dar de baja esta computadora, ¿estás seguro(a) que deseas continuar?</label>
+                  </div>
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button value='Si, quiero dar de baja' onClick={() => { changeComputerStatus(4); setModalCancel(false) }} />
+                <Button value="No, mantener estado actual" onClick={() => setModalCancel(false)} />
               </Modal.Footer>
             </Modal>
             <NavPageContainer
@@ -485,7 +508,7 @@ const Asignar = () => {
                     <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={disableEmployeeRef.current} onClick={handleShowAsiModal}>Asignar</button>
                     <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado != 2 ? true : false} onClick={handleRemoveAssignment}>Remover asignación</button>
                     <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado == 3 ? true : false} onClick={() => setModalMante(true)}>Enviar a mantenimiento</button>
-                    <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado != 1 ? true : false}>Dar de baja</button>
+                    <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado != 1 ? true : false} onClick={() => setModalCancel(true)}>Dar de baja</button>
                   </div>
 
                   <div style={{ backgroundColor: "#eee", marginTop: "30px", padding: "10px" }}>
@@ -499,6 +522,23 @@ const Asignar = () => {
                               <>
                                 {
                                   filteredComputerRef.current.map(ele => {
+                                    if (ele.CaracteristicaTipo == 3) {
+                                      return (<>
+                                        <p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: <a style={{textDecoration: "underline", color: "blue"}} onClick={()=> setModalImg(true)}>Ver imagen</a></p>
+                                        <Modal showOverlay={true} show={modalImg}  onClose={() => setModalImg(false)}>
+                                              <Modal.Header>
+                                                <Modal.Title>Visualizador de imágenes</Modal.Title>
+                                              </Modal.Header>
+                                              <Modal.Body>
+                                                <img src={currentImageRef.current} width="700px" height="auto" />
+                                              </Modal.Body>
+                                              <Modal.Footer>
+                                                <Button value='Guardar imagen' onClick={() => {triggerBase64Download(currentImageRef.current, "IMG-"+Date.now()) }}  />
+                                                <Button value="Cerrar" onClick={() => setModalImg(false)} />
+                                              </Modal.Footer>
+                                            </Modal>
+                                      </>)
+                                    }
                                     return (
                                       <>
                                         <p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: {ele.Respuesta}</p>
@@ -511,8 +551,6 @@ const Asignar = () => {
                               <>
                               </>
                           }
-                          <p>{selectedComputadoraRef.current ?? ""}</p>
-                          <p>{selectedEmployeeRef.current ?? ""}</p>
                         </>
                     }
                   </div>

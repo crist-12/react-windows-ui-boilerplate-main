@@ -29,6 +29,7 @@
     "material-table": "^1.69.3",
     "mui-datatables": "^4.0.0",
     "react": "^17.0.2",
+    "react-base64-downloader": "^2.1.7",
     "react-bootstrap": "^2.1.2",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",

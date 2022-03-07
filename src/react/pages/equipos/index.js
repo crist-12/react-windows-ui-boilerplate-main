@@ -8,6 +8,9 @@ import { useMasterState } from '../../stores/MasterStore'
 import { useAuthState } from '../../stores/AuthStore'
 import "../equipos/index.css"
 import getPivotArray from '../../../shared/arrayToPivot'
+import { triggerBase64Download } from 'react-base64-downloader'
+import Modal from '../../components/Modal';
+
 
 const Equipos = () => {
 
@@ -23,6 +26,8 @@ const Equipos = () => {
   const [lastKey, setLastKey, lastKeyRef] = useState()
   const [headers, setHeaders, headersRef] = useState([])
   const [rows, setRows, rowsRef] = useState([])
+  const [modalImg, setModalImg] = useState(false)
+  const [currentImage, setCurrentImage, currentImageRef] = useState()
   // const [dataList, setDataList] = React.useState([])
 
   const masterState = useMasterState();
@@ -243,6 +248,8 @@ const Equipos = () => {
                     style={{ resize: 'none', width: '350px', height: '150px' }}
                     placeholder={item.placeholder}
                     tooltip={item.tooltip}
+                    id={item.id}
+                    onChange={handleChangeControlValue}
                     required={req} />
                 </div>
               </div>
@@ -250,15 +257,18 @@ const Equipos = () => {
           case 'file':
             return (
               <div style={{ margin: "15px 0px" }}>
-                <label>{item.name} {req ? <label style={{ color: masterState.get().color }}>*</label> : <></>}</label>
+                {/* 
                 <br />
                 <div style={{ marginTop: "15px" }}>
-                  <label htmlFor="filePicker" style={{ background: "lightgray", padding: "5px 10px" }}>
+                  <label htmlFor={"filePicker"+item.id} style={{ background: "lightgray", padding: "5px 10px" }}>
                     {item.placeholder ?? "Escoge un archivo"}
                   </label>
-                  <input id="filePicker" style={{ visibility: "hidden" }} type={"file"} required={req} />
+                  <input id={"filePicker"+item.id} style={{ visibility: "hidden" }} type={"file"} required={req} onChange={handleInputControlValue} />
                 </div>
+                <br /> */}
+                <label>{item.name} {req ? <label style={{ color: masterState.get().color }}>*</label> : <></>}</label>
                 <br />
+                <input type={item.type} id={item.id} onChange={handleInputControlValue} required={req} style={{ marginTop: "10px" }} />
               </div>)
           case 'select':
             /*getOptions(item.key)*/
@@ -306,6 +316,33 @@ const Equipos = () => {
     } else
       console.log(auxArray)
     setRespuesta(auxArray)
+  }
+
+  const handleInputControlValue = async (e) => {
+    const file = e.target.files[0];
+    const base64 = await convertToBase64(file);
+    console.log(base64)
+    var auxArray = respuesta
+
+    var id = e.target.id;
+    //  var id2 = id.substring(10);
+    var keyName = "CTRL-" + id;
+    console.log(keyName)
+    // if(e?.value){
+    auxArray[keyName] = base64;
+
+    setRespuesta(auxArray)
+    console.log(auxArray)
+  }
+
+
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
   }
 
   const handleChangeSelectValue = (e, { name }) => {
@@ -364,6 +401,8 @@ const Equipos = () => {
         await saveComputerState();
       }
 
+      console.log(llaves)
+
       llaves.forEach((el) => {
         console.log(el)
         var show = el.substring(5)
@@ -377,14 +416,20 @@ const Equipos = () => {
         })
       }).then((response) => {
         console.log(response);
+        alert("Se ha registrado el producto exitosamente");
       }).catch((error) => {
+        alert("Ocurrio un error al registrar el producto");
         console.log(error);
       })
-
-
+      //setRespuesta([])
+      alert("Registro finalizado exitosamente")
+      
     } catch (error) {
       //alert("Ocurrio un error al guardar el empleado" + error)
+      //alert("Ocurrio un error en el proceso "+error)
     }
+    alert("Registro almacenado exitosamente")
+    window.location.reload()
   }
 
   const getRows = async (id) => {
@@ -432,11 +477,6 @@ const Equipos = () => {
 
   }
 
-  // declare elements
-
-
-  // add event listener to search box
-  //searchBox.addEventListener('keyup', performSearch);
 
   return (
     <>
@@ -446,6 +486,7 @@ const Equipos = () => {
           <NavPageContainer
             hasPadding={true}
             animateTransition={true}>
+
             <h1>Equipos</h1>
             <p>Ingrese productos a su stock de inventario.</p>
             <div className="app-hr"></div>
@@ -504,12 +545,12 @@ const Equipos = () => {
                   }
                 </>
                 : rowsRef.current.length >= 1 ? <>
-                  <div style={{ marginTop: "20px", marginRight: "30px"}}>
+                  <div style={{ marginTop: "20px", marginRight: "30px" }}>
                     <div>
                       <label>Buscar</label>
                       <input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={performSearch} />
                     </div>
-                    <div style={{overflow: "auto"}}>
+                    <div style={{ overflow: "auto" }}>
                       <table className="styled-table" id="table-products">
                         <thead>
                           <tr>
@@ -530,6 +571,25 @@ const Equipos = () => {
                                     elemento.map((dato, indiceDato) => {
                                       if (indiceDato == 0) return;
                                       //return (<td>{dato}</td>)
+                                      if (dato.length > 1000) {
+                                        return (
+                                          <>
+                                            <td><a style={{ textDecoration: "underline", color: "blue" }} onClick={() => { setModalImg(true); setCurrentImage(dato); }}>Ver imagen</a></td>
+                                            <Modal showOverlay={true} show={modalImg}  onClose={() => setModalImg(false)}>
+                                              <Modal.Header>
+                                                <Modal.Title>Visualizador de imágenes</Modal.Title>
+                                              </Modal.Header>
+                                              <Modal.Body>
+                                                <img src={currentImageRef.current} width="700px" height="auto" />
+                                              </Modal.Body>
+                                              <Modal.Footer>
+                                                <Button value='Guardar imagen' onClick={() => {triggerBase64Download(currentImageRef.current, "IMG-"+Date.now()) }}  />
+                                                <Button value="Cerrar" onClick={() => setModalImg(false)} />
+                                              </Modal.Footer>
+                                            </Modal>
+                                          </>
+                                        )
+                                      }
                                       return (
                                         <td>{dato}</td>
                                       )

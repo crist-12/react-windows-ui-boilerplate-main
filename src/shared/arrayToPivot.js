@@ -15,7 +15,7 @@ function getPivotArray(dataArray, rowIndex, colIndex, dataIndex) {
         }
     }
 
-    newCols.sort();
+   // comente esto newCols.sort();
     var item = [];
 
     //Add Header Row
@@ -32,7 +32,9 @@ function getPivotArray(dataArray, rowIndex, colIndex, dataIndex) {
         }
         ret.push(item);
     }
+    console.log(ret);
     return ret;
+
 }
 
 export default getPivotArray;
