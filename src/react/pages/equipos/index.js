@@ -140,7 +140,6 @@ const Equipos = () => {
     }
   }
 
-
   // Obtiene las opciones para los controles
   const getOptions = async (id) => {
     try {
@@ -234,6 +233,7 @@ const Equipos = () => {
                     required={req}
                     onChange={handleChangeControlValue}
                     //onChange={change}
+                    step={0.01}
                     id={item.id} />
                 </div>
               </div>
@@ -389,12 +389,12 @@ const Equipos = () => {
   }
 
   const handleSaveNewEntry = async (event) => {
-    //event.preventDefault()
+    event.preventDefault()
     try {
       await getLastProductKey();
 
 
-      let llaves = Object.keys(respuesta)
+      let llaves = Object.keys(respuestaRef.current)
       const entityCode = entityCodeRef.current;
 
       if (entityCode == 1) {
@@ -406,14 +406,15 @@ const Equipos = () => {
       llaves.forEach((el) => {
         console.log(el)
         var show = el.substring(5)
-        console.log(respuesta[el])
+        console.log(respuestaRef.current[el])
         const response = fetch(process.env.REACT_APP_HOME + "control/entries", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ "IdEquipoIngresado": lastKeyRef.current, "IdCategoria": entityCode, "IdCaracteristica": show, "Respuesta": respuesta[el], "UsuarioCreo": authState.me.get().username })
+          body: JSON.stringify({ "IdEquipoIngresado": lastKeyRef.current, "IdCategoria": entityCode, "IdCaracteristica": show, "Respuesta": respuestaRef.current[el], "UsuarioCreo": authState.me.get().username })
         })
+        
       }).then((response) => {
         console.log(response);
         alert("Se ha registrado el producto exitosamente");
@@ -428,7 +429,8 @@ const Equipos = () => {
       //alert("Ocurrio un error al guardar el empleado" + error)
       //alert("Ocurrio un error en el proceso "+error)
     }
-    alert("Registro almacenado exitosamente")
+    alert("Registro finalizado exitosamente")
+    setRespuesta([])
     window.location.reload()
   }
 
@@ -528,14 +530,14 @@ const Equipos = () => {
                 <>
                   {
                     controls.length >= 1 ?
-                      <form>
+                      <form id="form-control-items" onSubmit={handleSaveNewEntry}>
                         <fieldset style={{ borderRadius: "10px", marginTop: "15px", marginRight: "20px", color: "d9d9d9", borderColor: "d9d9d9" }}>
                           {
                             controls.map(item => {
                               return showControls(item)
                             })
                           }
-                          <button type="submit" className='app-button animate primary' onClick={handleSaveNewEntry}>Guardar</button>
+                          <button type="submit" className='app-button animate primary' /*onSubmit={handleSaveNewEntry}*/ /*onClick={handleSaveNewEntry}*/>Guardar</button>
                         </fieldset>
                       </form>
                       :

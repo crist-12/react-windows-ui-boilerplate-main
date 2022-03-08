@@ -225,7 +225,9 @@ const Asignar = () => {
       const result = await response.json()
       console.log(result)
       alert("Cambio de estado exitoso")
-      window.location.reload()
+      if(status == 4 || status == 2) 
+        window.location.reload()
+
     } catch (error) {
       alert(error)
     }
@@ -287,13 +289,16 @@ const Asignar = () => {
       })
       const result = await response.json()
       console.log(result)
-      alert("Desasignación exitosa")
+      //alert("Desasignación exitosa")
       //changeComputerStatus(1)
+      await deleteAssignmentRow()
       getAllComputersRegistered()
       // setModalDes(false)
+
     } catch (error) {
       alert(error)
     }
+    window.location.reload()
   }
 
   const handleSaveMaintenance = async () => {
@@ -318,6 +323,23 @@ const Asignar = () => {
       setMantenimientoTipo(null)
       setObservacionesMantenimiento("")
       window.location.reload()
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  const deleteAssignmentRow = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "assignment/" + selectedComputadoraRef.current, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const result = await response.json()
+      console.log(result)
+     // alert("Asignación eliminada exitosamente")
+      //getAllComputersRegistered()
     } catch (error) {
       alert(error)
     }
@@ -524,7 +546,11 @@ const Asignar = () => {
                                   filteredComputerRef.current.map(ele => {
                                     if (ele.CaracteristicaTipo == 3) {
                                       return (<>
-                                        <p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: <a style={{textDecoration: "underline", color: "blue"}} onClick={()=> setModalImg(true)}>Ver imagen</a></p>
+                                        {
+                                        ele.Respuesta.length > 1000 ?
+                                        <p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: <a style={{textDecoration: "underline", color: "blue"}} onClick={()=> {setModalImg(true); setCurrentImage(ele.Respuesta)}}>Ver imagen</a></p>
+                                       :<p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: ---</p>
+                                      }
                                         <Modal showOverlay={true} show={modalImg}  onClose={() => setModalImg(false)}>
                                               <Modal.Header>
                                                 <Modal.Title>Visualizador de imágenes</Modal.Title>
