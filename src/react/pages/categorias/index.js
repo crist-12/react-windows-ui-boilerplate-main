@@ -13,7 +13,6 @@ const Categoria = () => {
   const [categoria, setCategoria] = useState("")
   const [listCat, setlistCat] = useState("")
   const [loading, setLoading] = useState(true)
-  const [ejemmplo, ejemploInput,  resetInput] = useInput({type: "number", placeholder:"Texto", tooltip: "Este es un ejemplo", min: 0})
 
   const columnas = [
     {
@@ -53,7 +52,7 @@ const Categoria = () => {
 
   const getItems = async () => {
     try {
-      const response = await fetch("http://localhost:9000/category", {
+      const response = await fetch(process.env.REACT_APP_HOME + "category", {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -79,7 +78,24 @@ const Categoria = () => {
       console.log(error)
     }
   }
-  
+
+  const searchTableAll = () => {
+    var searchBox = document.getElementById('search-input-table');
+    var table = document.getElementById("table-products");
+    var trs = table.tBodies[0].getElementsByTagName("tr");
+    var filter = searchBox.value.toUpperCase();
+    for (var rowI = 0; rowI < trs.length; rowI++) {
+        var tds = trs[rowI].getElementsByTagName("td");
+        trs[rowI].style.display = "none";
+        for (var cellI = 0; cellI < tds.length; cellI++) {
+            if (tds[cellI].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                trs[rowI].style.display = "";
+                continue;
+            }
+        }
+    }
+}
+
   return (
     <>
       {
@@ -92,17 +108,34 @@ const Categoria = () => {
 
               <h1>Entidades</h1>
               <p>Añada, modifique o elimine sus entidades</p>
-              {ejemploInput}
               <div className="app-hr"></div>
-
+              {/* 
               <div style={{ margin: '20px 0' }}>
                 <Button
                   style={{ marginLeft: '30px' }}
                   value="Nueva"
                   onClick={() => setShowModal(true)}
                   icon={<i className="icons10-plus"></i>} />
+              </div> */}
+              <div style={{ marginTop: "15px" }}>
+                <label>Buscar</label>
+                <input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
               </div>
-              <div style={{ width: '100%' }}>
+              <div style={{ display: "flex", flex: 1, marginRight: "30px" }}>
+                <table style={{ width: '100%' }} className="styled-table" id="table-products">
+                  <thead>
+                    <tr>
+                      <th>Entidad</th>
+                      <th>Estado</th>
+                      <th>Fecha de Creación</th>
+                      <th>Creada por</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                  </tbody>
+                </table>
                 {/*            <TableView
               columns={[
                 { 'title':'Categoría', 'showSortIcon': true },
@@ -111,7 +144,7 @@ const Categoria = () => {
               rows={listCat}
               style= {{width: '100%', backgroundColor: 'blue'}}
             /> */}
-                <MaterialTable
+                {/*  <MaterialTable
                   columns={columnas}
                   data={listCat}
                   title="Entidades"
@@ -168,7 +201,7 @@ const Categoria = () => {
                     ]
                   }
 
-                />
+                /> */}
               </div>
               <Dialog
                 isVisible={showModal}

@@ -344,6 +344,15 @@ const Campos = () => {
                                     placeholder="Selecciona una categoría"
                                     onChange={(e) => setSelectedCategory(e.value)}
                                     //styles={{ width: '250px' }} 
+                                    theme={(theme) => ({
+                                        ...theme,
+                                        borderRadius: 0,
+                                        colors: {
+                                            ...theme.colors,
+                                            primary: masterState.get().color,
+                                            primary25: masterState.get().color
+                                        },
+                                    })}
                                     menuPortalTarget={document.body}
                                     styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }} />
                             </div>
@@ -387,7 +396,7 @@ const Campos = () => {
                                                     zIndex={1}
                                                     animationType="fade"
                                                     style={{ height: 180, width: '95%', margin: '10px 0px', backgroundColor: '#EEE', padding: '10px', position: 'relative' }}>
-                                                    <div>
+                                                    <div className='view-container'>
                                                         <div style={{ width: "100%" }}>
                                                             <span style={{ fontWeight: 'bold' }}>Campo de tipo {item.display.toLowerCase()}</span>
                                                             <ButtonIcon
@@ -419,7 +428,7 @@ const Campos = () => {
                                                                 <input className='app-input-text' placeholder='Nombre' name={index} a_key={1} onChange={onChangeHandler} value={propsCampos[index]?.[1] ?? ""} />
                                                             </div>
                                                             <div style={{ flex: '1 0 auto', alignSelf: 'auto', marginTop: '20px' }}>
-                                                                <span style={{ marginRight: '10px' }}>Placeholder: </span>
+                                                                <span style={{ margin: '0 10px' }}>Placeholder: </span>
                                                                 <input className='app-input-text' placeholder='Placeholder' name={index} a_key={0} onChange={onChangeHandler} value={propsCampos[index]?.[0] ?? ""} />
                                                             </div>
                                                         </div>

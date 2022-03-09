@@ -414,7 +414,8 @@ const Computadora = () => {
                             <Select
                                 id={item.IdCaracteristica}
                                 defaultValue={dvalue}
-
+                                menuPortalTarget={document.body}
+                                styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
                                 options={arrayAux}
                                 onChange={handleSelectHasChanged}
                                 theme={(theme) => ({
