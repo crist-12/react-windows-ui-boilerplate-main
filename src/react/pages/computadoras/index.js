@@ -5,14 +5,19 @@ import NavigationWindow from '../../components/Navigation'
 import RightMenu from '../../components/RightMenu'
 import { useInput } from '../../hooks/useInput'
 import useState from 'react-usestateref'
+import { useMasterState } from '../../stores/MasterStore'
 import MaterialTable from 'material-table'
 import { Table } from 'react-bootstrap'
 import "../computadoras/index.css"
 import Modal from '../../components/Modal';
 import { triggerBase64Download } from 'react-base64-downloader'
+import Select from 'react-select'
 //import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 const Computadora = () => {
+
+    var initialArr = [20][7];
 
     const [controls, setControls] = React.useState([]);
     const [loading, setLoading] = React.useState(true)
@@ -30,6 +35,8 @@ const Computadora = () => {
     const [currentImage, setCurrentImage] = useState()
     const [modalActualizar, setModalActualizar] = React.useState(false)
     const [infoRaw, setInfoRaw, infoRawRef] = useState()
+    const [computerObject, setComputerObject, computerObjectRef] = useState()
+    const [options, setOptions, optionsRef] = useState()
 
     const columnas = [
         {
@@ -46,6 +53,8 @@ const Computadora = () => {
             field: 'estado'
         }
     ]
+
+    const masterState = useMasterState();
 
     useEffect(() => {
         getTableData()
@@ -71,10 +80,7 @@ const Computadora = () => {
                 }
                 arre.push(obj)
             })
-            console.log(arre)
             setTableData(arre)
-            console.log(controls)
-
         } catch (error) {
             console.log(error)
         }
@@ -221,67 +227,235 @@ const Computadora = () => {
 
     const deleteAssignmentRow = async () => {
         try {
-          const response = await fetch(process.env.REACT_APP_HOME + "assignment/" + idRef.current, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-          const result = await response.json()
-          console.log(result)
-         // alert("Asignación eliminada exitosamente")
-          //getAllComputersRegistered()
+            const response = await fetch(process.env.REACT_APP_HOME + "assignment/" + idRef.current, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            const result = await response.json()
+            console.log(result)
+            // alert("Asignación eliminada exitosamente")
+            //getAllComputersRegistered()
         } catch (error) {
-          alert(error)
-        }
-      }
-
-    const getComputerDetails = async () => {
-        try {
-          const response = await fetch(process.env.REACT_APP_HOME + "machines/" + idRef.current, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-          const result = await response.json()
-          setFilteredComputer(result);
-          console.log(result)
-        } catch (error) {
-          alert(error)
+            alert(error)
         }
     }
 
-    const handleDetailsVisualization = async(id) => {
+    const getComputerDetails = async () => {
+        try {
+            const response = await fetch(process.env.REACT_APP_HOME + "machines/" + idRef.current, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            const result = await response.json()
+            setFilteredComputer(result);
+            console.log(result)
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+    const handleDetailsVisualization = async (id) => {
         setId(id)
         await getComputerDetails()
         setModalInfo(true)
     }
 
-    const updateComputerInfo = async()=>{
-    }
-
-    const getComputerInfoRaw = async() => {
+    const updateComputerInfo = async (answer, caracteristica) => {
         try {
-          const response = await fetch(process.env.REACT_APP_HOME + "machines/update/" + idRef.current, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-          const result = await response.json()
-          setInfoRaw(result);
-          console.log(result)
+            const response = await fetch(process.env.REACT_APP_HOME + "machines/" + caracteristica, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    Respuesta: answer,
+                    IdEquipoIngresado: idRef.current
+                })
+            })
         } catch (error) {
-          alert(error)
+            alert(error)
         }
     }
 
-    const handleUpdateClick = async(id) => {
+    const handleUpdateProcess = async () => {
+        try {
+            infoRawRef.current.map((elemento) => {
+             updateComputerInfo(elemento.Respuesta, elemento.IdCaracteristica)
+            })
+        } catch (error) {
+            return alert(error)
+        }
+        alert("Se ha actualizado la información del equipo");
+        window.location.reload()
+    }
+
+    const getComputerInfoRaw = async () => {
+        try {
+            const response = await fetch(process.env.REACT_APP_HOME + "machines/update/" + idRef.current, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            const result = await response.json()
+            setInfoRaw(result);
+            //console.log(result)
+            var arrayObj = [];
+            result.map((item) => {
+                var indice = item.IdCaracteristica
+                var auxArray = []
+                for (const [key, value] of Object.entries(item)) {
+                    auxArray[key] = value;
+                }
+                arrayObj.push(auxArray);
+            })
+            setComputerObject(arrayObj)
+            console.log(computerObjectRef.current)
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+    const handleUpdateClick = async (id) => {
         setId(id)
         setModalActualizar(true);
+        await getOptions()
         await getComputerInfoRaw();
-        console.log(infoRawRef.current)
+        // console.log(infoRawRef.current)
+    }
+
+    const handleChangeInputValue = (e) => {
+        var auxArray = [...infoRaw]
+        auxArray[e.target.id]["Respuesta"] = e.target.value;
+        setInfoRaw(auxArray);
+        console.log(computerObjectRef.current)
+    }
+
+    const handleInputControlValueAct = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await convertToBase64(file);
+        var auxArray = [...infoRaw]
+        auxArray[e.target.id]["Respuesta"] = base64;
+        setInfoRaw(auxArray);
+        console.log(computerObjectRef.current)
+        console.log(e)
+    }
+
+    const handleSelectHasChanged = (e) => {
+        var auxArray = [...infoRaw]
+        auxArray[e.key]["Respuesta"] = e.value;
+        setInfoRaw(auxArray);
+        console.log(infoRawRef.current[e.key])
+        console.log(e)
+        //console.log(e)
+    }
+
+
+    const showControls = (item, index) => {
+        var req = item.Requerido.data[0];
+        if (req == 1) req = true; else req = false;
+        switch (item.caracteristicatipo) {
+            case 1: //El elemento es un campo texto
+                return (
+                    <div>
+                        <p>{item.CaracteristicaDescripcion}{req ? <label style={{ color: "red" }}>*</label> : <></>}</p>
+                        <input className='app-input-text' value={infoRawRef.current[index].Respuesta} id={index} onChange={handleChangeInputValue} required={req} />
+                    </div>
+                )
+            case 2: //El elemento es un campo numérico
+                return (
+                    <div>
+                        <p>{item.CaracteristicaDescripcion}{req ? <label style={{ color: "red" }}>*</label> : <></>}</p>
+                        <input className='app-input-text' type="number" step={0.01} value={infoRawRef.current[index].Respuesta} onChange={handleChangeInputValue} id={item.IdCaracteristica} required={req} />
+                    </div>
+                )
+            case 5: //El elemento es un campo de fecha
+                return (
+                    <div>
+                        <p>{item.CaracteristicaDescripcion}{req ? <label style={{ color: "red" }}>*</label> : <></>}</p>
+                        <input className='app-input-text' type="date" value={infoRawRef.current[index].Respuesta} onChange={handleChangeInputValue} id={item.IdCaracteristica} required={req} />
+                    </div>
+                )
+            case 6: //El elemento es un campo de texto largo
+                return (
+                    <div>
+                        <p>{item.CaracteristicaDescripcion}{req ? <label style={{ color: "red" }}>*</label> : <></>}</p>
+                        <textarea className='app-textarea' type="date" value={infoRawRef.current[index].Respuesta} onChange={handleChangeInputValue} id={item.IdCaracteristica} required={req} />
+                    </div>
+                )
+            case 3: //El elemento es un campo de imagen
+                return (
+                    <div style={{ margin: "20px 0px" }}>
+                        <p>{item.CaracteristicaDescripcion}{req ? <label style={{ color: "red" }}>*</label> : <></>}</p>
+                        <input type="file" id={index} required={req} onChange={handleInputControlValueAct} accept="image/*" />
+                        {
+                            infoRawRef.current[index].Respuesta.length > 1 ?
+                                <img src={infoRawRef.current[index].Respuesta} width="100px" height="auto" style={{ marginLeft: "20px" }} /> :
+                                <p>Sin información</p>
+                        }
+
+                    </div>
+                )
+            case 4: //El elemento es un campo de seleccion
+                var arrayAux = options.filter(ele => ele.key == item.IdCaracteristica)
+                //ar value = 
+                var dvalue = {
+                    value: parseInt(infoRawRef.current[index].Respuesta),
+                    label: infoRawRef.current[index].OpcionDescripcion
+                }
+                return (
+                    <div style={{ margin: "15px 0px" }}>
+                        <p>{item.CaracteristicaDescripcion}{req ? <label style={{ color: "red" }}>*</label> : <></>}</p>
+                        <div style={{ margin: "10px 0" }}>
+                            <Select
+                                id={item.IdCaracteristica}
+                                defaultValue={dvalue}
+
+                                options={arrayAux}
+                                onChange={handleSelectHasChanged}
+                                theme={(theme) => ({
+                                    ...theme,
+                                    borderRadius: 0,
+                                    colors: {
+                                        ...theme.colors,
+                                        primary: masterState.get().color,
+                                        primary25: masterState.get().color
+                                    },
+                                })}
+                            />
+                        </div>
+                    </div>
+                )
+        }
+    }
+
+    const getOptions = async (id) => {
+        try {
+            const response = await fetch(process.env.REACT_APP_HOME + "control/options/" + 1, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            const result = await response.json()
+            var arre = []
+            result.forEach(ele => {
+                var obj = {
+                    value: ele.IdOpcion,
+                    label: ele.OpcionDescripcion,
+                    key: ele.IdCaracteristica
+                }
+                arre.push(obj)
+                //console.log(obj)
+            })
+            setOptions(arre)
+        } catch (error) {
+            alert(error)
+        }
     }
 
     return (
@@ -322,32 +496,32 @@ const Computadora = () => {
                                     {
                                         filteredComputerRef.current?.map(ele => {
                                             if (ele.CaracteristicaTipo == 3) {
-                                              return (<>
-                                                {
-                                                ele.Respuesta.length > 1000 ?
-                                                <p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: <a style={{textDecoration: "underline", color: "blue"}} onClick={()=> {setModalImg(true); setCurrentImage(ele.Respuesta)}}>Ver imagen</a></p>
-                                               :<p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: ---</p>
-                                              }
-                                                <Modal showOverlay={true} show={modalImg}  onClose={() => setModalImg(false)}>
-                                                      <Modal.Header>
-                                                        <Modal.Title>Visualizador de imágenes</Modal.Title>
-                                                      </Modal.Header>
-                                                      <Modal.Body>
-                                                        <img src={currentImage} width="700px" height="auto" />
-                                                      </Modal.Body>
-                                                      <Modal.Footer>
-                                                        <Button value='Guardar imagen' onClick={() => {triggerBase64Download(currentImage, "IMG-"+Date.now()) }}  />
-                                                        <Button value="Cerrar" onClick={() => setModalImg(false)} />
-                                                      </Modal.Footer>
+                                                return (<>
+                                                    {
+                                                        ele.Respuesta.length > 1000 ?
+                                                            <p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: <a style={{ textDecoration: "underline", color: "blue" }} onClick={() => { setModalImg(true); setCurrentImage(ele.Respuesta) }}>Ver imagen</a></p>
+                                                            : <p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: ---</p>
+                                                    }
+                                                    <Modal showOverlay={true} show={modalImg} onClose={() => setModalImg(false)}>
+                                                        <Modal.Header>
+                                                            <Modal.Title>Visualizador de imágenes</Modal.Title>
+                                                        </Modal.Header>
+                                                        <Modal.Body>
+                                                            <img src={currentImage} width="700px" height="auto" />
+                                                        </Modal.Body>
+                                                        <Modal.Footer>
+                                                            <Button value='Guardar imagen' onClick={() => { triggerBase64Download(currentImage, "IMG-" + Date.now()) }} />
+                                                            <Button value="Cerrar" onClick={() => setModalImg(false)} />
+                                                        </Modal.Footer>
                                                     </Modal>
-                                              </>)
+                                                </>)
                                             }
                                             return (
-                                              <>
-                                                <p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: {ele.Respuesta}</p>
-                                              </>
+                                                <>
+                                                    <p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: {ele.Respuesta}</p>
+                                                </>
                                             )
-                                          })
+                                        })
                                     }
                                 </Modal.Body>
                                 <Modal.Footer>
@@ -356,7 +530,7 @@ const Computadora = () => {
                             </Modal>
 
 
-                            <Modal showOverlay={true} show={modalCancel} onClose={()=> setModalCancel(false)}>
+                            <Modal showOverlay={true} show={modalCancel} onClose={() => setModalCancel(false)}>
                                 <Modal.Header>
                                     <Modal.Title>Dar de baja</Modal.Title>
                                 </Modal.Header>
@@ -374,19 +548,32 @@ const Computadora = () => {
                                 </Modal.Footer>
                             </Modal>
 
-                            <Modal showOverlay={true} show={modalActualizar} onClose={()=> setModalActualizar(false)} size={"lg"}>
+                            <Modal showOverlay={true} show={modalActualizar} onClose={() => setModalActualizar(false)} size={"lg"}>
                                 <Modal.Header>
                                     <Modal.Title>Actualizar equipo</Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
                                     <div style={{ display: 'flex', flexDirection: "column" }}>
                                         <p>DATOS DEL EQUIPO</p>
-                                        <div className='app-hr'/>
-                                        
+                                        <div className='app-hr' />
+                                        {
+                                            infoRawRef.current?.map((item, index) => {
+                                                return showControls(item, index)
+                                                //  if(item.Respuesta.length > 1000) return;
+                                                // return (
+                                                //     <>
+                                                //         {/* <p><span style={{ fontWeight: "bold" }}>{item.CaracteristicaDescripcion}</span>: {item.Respuesta}</p> */}
+                                                //         {
+                                                //             showControls(item)
+                                                //         }
+                                                //     </>
+                                                // )
+                                            })
+                                        }
                                     </div>
                                 </Modal.Body>
                                 <Modal.Footer>
-                                    <Button value="Actualizar" />
+                                    <Button value="Actualizar" onClick={handleUpdateProcess} />
                                     <Button value="Cancelar" onClick={() => setModalActualizar(false)} />
                                 </Modal.Footer>
                             </Modal>
@@ -442,18 +629,18 @@ const Computadora = () => {
                                                                         {
                                                                             //  ele.estado === "En mantenimiento" ?
                                                                             <div style={{ display: "flex", justifyContent: 'center' }}>
-                                                                                <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={()=> handleDetailsVisualization(ele.id)}>Ver detalles</button>
-                                                                                <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={()=> handleUpdateClick(ele.id)}>Actualizar</button>
+                                                                                <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={() => handleDetailsVisualization(ele.id)}>Ver detalles</button>
+                                                                                <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={() => handleUpdateClick(ele.id)}>Actualizar</button>
                                                                                 {ele.estado === "En mantenimiento" ?
                                                                                     <>
                                                                                         <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={() => { setShowModal(true); setId(ele.id) }}>Recibir de Mantenimiento</button>
                                                                                     </> : <></>}
-                                                                                    {
-                                                                                        ele.estado != "No disponible" ? 
+                                                                                {
+                                                                                    ele.estado != "No disponible" ?
                                                                                         <>
-                                                                                        <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={()=> setModalCancel(true)}>Dar de baja</button>
-                                                                                    </> : <></>
-                                                                                    }
+                                                                                            <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={() => setModalCancel(true)}>Dar de baja</button>
+                                                                                        </> : <></>
+                                                                                }
                                                                             </div>
                                                                         }
                                                                     </td>

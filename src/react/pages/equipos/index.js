@@ -268,7 +268,7 @@ const Equipos = () => {
                 <br /> */}
                 <label>{item.name} {req ? <label style={{ color: masterState.get().color }}>*</label> : <></>}</label>
                 <br />
-                <input type={item.type} id={item.id} onChange={handleInputControlValue} required={req} style={{ marginTop: "10px" }} />
+                <input type={item.type} id={item.id} onChange={handleInputControlValue} required={req} style={{ marginTop: "10px" }} accept="image/*" />
               </div>)
           case 'select':
             /*getOptions(item.key)*/
