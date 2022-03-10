@@ -458,7 +458,7 @@ const Asignar = () => {
               </Modal.Body>
               <Modal.Footer>
                 <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={handleSaveMaintenance}>Enviar a mantenimiento</button>
-                <button className='app-button animate primary' style={{ marginRight: "10px" }} >Cancelar</button>
+                <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={()=> setModalMante(false)}>Cancelar</button>
               </Modal.Footer>
             </Modal>
 

@@ -1,34 +1,36 @@
 
 import { NavPageContainer } from 'react-windows-ui'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
 import "../categorias/index.css"
 import { Dialog, Button } from 'react-windows-ui'
 import MaterialTable from 'material-table'
 import { useInput } from '../../hooks/useInput'
+import useState from 'react-usestateref'
+import Modal from '../../components/Modal';
+import Select from 'react-select';
 
 const Categoria = () => {
 
   const [showModal, setShowModal] = useState(false);
+  const [modalCancel, setModalCancel] = useState(false);
   const [categoria, setCategoria] = useState("")
-  const [listCat, setlistCat] = useState("")
+  const [listCat, setlistCat, listCatRef] = useState([])
   const [loading, setLoading] = useState(true)
+  const [keyEdit, setKeyEdit, keyEditRef] = useState(null)
+  const [modalActualizar, setModalActualizar] = useState(false)
+  const [infoRaw, setInfoRaw, infoRawRef] = useState()
+  const [modalCategory, setModalCategory] = useState(false)
+  const [newItems, setNewItems, newItemsRef] = useState("")
+  const [itemsModal, setItemsModal] = useState(false)
+  const [items, setItems, itemsRef] = useState()
+  const [itemsSelect, setItemsSelect, itemsSelectRef] = useState([])
 
-  const columnas = [
-    {
-      title: 'Id',
-      field: 'id',
-      hidden: true
-    },
-    {
-      title: 'Categoria',
-      field: 'categoria'
-    }
-  ]
 
   useEffect(() => {
     getItems()
   }, [])
+
 
   const addItem = async () => {
     try {
@@ -52,7 +54,7 @@ const Categoria = () => {
 
   const getItems = async () => {
     try {
-      const response = await fetch(process.env.REACT_APP_HOME + "category", {
+      const response = await fetch(process.env.REACT_APP_HOME + "category/table", {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -60,22 +62,14 @@ const Categoria = () => {
       })
 
       const result = await response.json()
-      var arre = []
-      result.forEach(ele => {
-        var obj = {
-          id: ele.IdCategoria,
-          categoria: ele.DescripcionCategoria ?? "No hay"
-        }
-        arre.push(obj)
-        console.log(obj)
-      })
-      setlistCat(arre)
+      setlistCat(result)
       setLoading(false)
       //console.log(result)
       //setlistCat(response)
-
+      // console.log(result)
     } catch (error) {
       console.log(error)
+      alert("Ocurrio un error al obtener las categorias " + error)
     }
   }
 
@@ -85,16 +79,224 @@ const Categoria = () => {
     var trs = table.tBodies[0].getElementsByTagName("tr");
     var filter = searchBox.value.toUpperCase();
     for (var rowI = 0; rowI < trs.length; rowI++) {
-        var tds = trs[rowI].getElementsByTagName("td");
-        trs[rowI].style.display = "none";
-        for (var cellI = 0; cellI < tds.length; cellI++) {
-            if (tds[cellI].innerHTML.toUpperCase().indexOf(filter) > -1) {
-                trs[rowI].style.display = "";
-                continue;
-            }
+      var tds = trs[rowI].getElementsByTagName("td");
+      trs[rowI].style.display = "none";
+      for (var cellI = 0; cellI < tds.length; cellI++) {
+        if (tds[cellI].innerHTML.toUpperCase().indexOf(filter) > -1) {
+          trs[rowI].style.display = "";
+          continue;
         }
+      }
     }
-}
+  }
+
+  const changeEntityStatus = async (key, action) => {
+    setKeyEdit(key);
+    if (action == "UPD") {
+      await getEntityInfoRaw();
+      setModalActualizar(true);
+    }
+    if (action == "STA") {
+      setModalCancel(true);
+    }
+  }
+
+  const handleEntityStatus = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "category/changestatus/" + keyEditRef.current, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const result = await response.json()
+      window.location.reload()
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al cambiar el estado de la entidad " + error)
+    }
+  }
+
+  const getEntityInfoRaw = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "category/update/" + keyEditRef.current, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const result = await response.json()
+      setInfoRaw(result)
+      console.log(infoRawRef.current)
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al obtener la entidad " + error)
+    }
+  }
+
+  const handleCaracteristicaNameChange = (e) => {
+    var auxArray = [...infoRaw];
+    auxArray[e.target.id].CaracteristicaDescripcion = e.target.value;
+    setInfoRaw(auxArray);
+  }
+
+  const handlePlaceholderChange = (e) => {
+    var auxArray = [...infoRaw];
+    auxArray[e.target.id].Placeholder = e.target.value;
+    setInfoRaw(auxArray);
+  }
+
+  const handleIsRequiredItem = (e) => {
+    var auxArray = [...infoRaw];
+    var value = auxArray[e.target.id].Requerido.data[0];
+    //if(e.target.value == 0) value = 1; else value = 0;
+    if (value == 0) value = 1; else value = 0;
+    auxArray[e.target.id].Requerido.data[0] = value;
+    setInfoRaw(auxArray);
+    console.log(infoRawRef.current)
+  }
+
+  const handleNewItemsChange = async (e) => {
+    setItemsSelect(e.target.id)
+    await getItemsByRow();
+    setItemsModal(true)
+  }
+
+  const getItemsByRow = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "category/items/" + keyEditRef.current, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const result = await response.json()
+      setItems(result)
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al obtener las categorias " + error)
+    }
+  }
+
+  const updateCaracteristicaInfo = async (index) => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "category/update/" + keyEditRef.current, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          CaracteristicaDescripcion: infoRawRef.current[index].CaracteristicaDescripcion,
+          Placeholder: infoRawRef.current[index].Placeholder,
+          Requerido: infoRawRef.current[index].Requerido.data[0],
+          IdCaracteristica: infoRawRef.current[index].IdCaracteristica
+        })
+      })
+      const result = await response.json()
+      console.log(result)
+    } catch (error) {
+      console.log(error)
+      //alert("Ocurrio un error al obtener la entidad " + error)
+    }
+  }
+
+  const handleUpdateEntity = async (e) => {
+    try {
+      infoRawRef.current.forEach((item, index) => {
+        updateCaracteristicaInfo(index);
+      })
+      alert("Datos actualizados exitosamente")
+      window.location.reload()
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al actualizar la entidad " + error)
+    }
+  }
+
+  const saveNewItem = async (e) => {
+    if(newItemsRef.current.length < 1) return alert("El campo no puede estar vacio");
+    try {
+      const lastLevel = parseInt(itemsRef.current?.filter(x => x.IdCaracteristica == itemsSelectRef.current)[0].MaxNivel) + 1;
+      const response = await fetch(process.env.REACT_APP_HOME + "category/items/", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          IdCategoria: keyEditRef.current,
+          IdCaracteristica: itemsSelectRef.current,
+          OpcionDescripcion: newItemsRef.current,
+          Nivel: lastLevel
+        })
+      })
+      const result = await response.json()
+      console.log(result)
+      alert("Item guardado exitosamente")
+      window.location.reload()
+      //window.location.reload()
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al guardar la entidad " + error)
+    }
+  }
+
+  const handleChangeItemsState = async(e) => {
+    var auxArray = [...items];
+    console.log(auxArray)
+    var value = auxArray[e.target.id].Estado.data[0];
+    console.log(value)
+    if (value == 0) value = 1; else value = 0;
+    auxArray[e.target.id].Estado.data[0] = value;
+    setItems(auxArray);
+  }
+
+  const handleChangeItemsName = async(e) => {
+    var auxArray = [...items];
+    var id = e.target.id;
+    auxArray.filter(x=> x.IdCaracteristica == itemsSelectRef.current)[e.target.id].OpcionDescripcion = e.target.value;
+    setItems(auxArray);
+  }
+
+  const updateAllMyItems = async(e) => {
+    try {
+      itemsRef.current.forEach((item, index) => {
+        updateItems(index);
+      })
+      alert("Datos actualizados exitosamente")
+      window.location.reload()
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al actualizar la entidad " + error)
+    }
+  }
+
+  const updateItems= async(index) =>{
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "category/updateitems", {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          Estado: itemsRef.current[index].Estado.data[0],
+          OpcionDescripcion: itemsRef.current[index].OpcionDescripcion,
+          IdCategoria: keyEditRef.current,
+          IdCaracteristica: itemsSelectRef.current,
+          IdOpcion: itemsRef.current[index].IdOpcion
+        })
+      })
+      const result = await response.json()
+      console.log(result)
+    } catch (error) {
+      console.log(error)
+      //alert("Ocurrio un error al obtener la entidad " + error)
+    }
+  }
+
+  //const
 
   return (
     <>
@@ -105,18 +307,171 @@ const Categoria = () => {
             <NavPageContainer
               hasPadding={true}
               animateTransition={true}>
+              <Modal showOverlay={true} show={modalCancel} onClose={() => setModalCancel(false)}>
+                <Modal.Header>
+                  <Modal.Title>Cambiar estado</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div style={{ display: 'flex' }}>
+                    <i className="icons10-exclamation-mark" style={{ color: '#faca2a', fontSize: "70px" }} />
+                    <div style={{ marginLeft: 25, justifyContent: "center", alignItems: "center", display: "flex" }}>
+                      <label>Estás a punto de cambiar el estado de esta entidad, ¿estás seguro(a) que deseas continuar?</label>
+                    </div>
+                  </div>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button value='Si, cambiar estado' onClick={() => { handleEntityStatus() }} />
+                  <Button value="No, mantener estado actual" onClick={() => setModalCancel(false)} />
+                </Modal.Footer>
+              </Modal>
+              <Modal showOverlay={true} show={modalActualizar} onClose={() => setModalActualizar(false)}>
+                <Modal.Header>
+                  <Modal.Title>Actualizar entidad</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div style={{ display: 'flex' }}>
+                    {/* <i className="icons10-info" style={{ color: '#faca2a', fontSize: "50px" }} /> */}
+                    <div style={{ marginRight: 25, flex: 1 }}>
 
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <i className="icons10-exclamation-mark" style={{ color: '#faca2a', fontSize: "35px" }} />
+                        <p>Cualquier cambio en esta ventana afectará directamente a los registros de esta entidad.</p>
+                      </div>
+                      <div>
+                        <table style={{ width: '100%' }} className="styled-table" id="table-products">
+                          <thead>
+                            <tr>
+                              <th>Caracteristica</th>
+                              <th>Placeholder</th>
+                              <th>Tipo</th>
+                              <th>Requerido</th>
+                              <th>Valores</th>
+                              <th>Nuevos Items</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {
+                              infoRaw ? infoRawRef.current?.map((item, index) => {
+
+                                return (
+                                  <tr>
+                                    <td>
+                                      <input type="text" className='app-input-text' id={index} value={infoRawRef.current[index].CaracteristicaDescripcion} onChange={handleCaracteristicaNameChange} />
+                                    </td>
+                                    <td>
+                                      <input type="text" className='app-input-text' id={index} value={infoRawRef.current[index].Placeholder} onChange={handlePlaceholderChange} />
+                                    </td>
+                                    <td>
+                                      {infoRawRef.current[index].DisplayText}
+                                    </td>
+                                    <td>{
+                                      infoRawRef.current[index].Requerido.data[0] === 1 ?
+                                        <div style={{ display: "flex", justifyContent: "center" }}>
+                                          <input type="checkbox" id={index} checked onChange={handleIsRequiredItem} />
+                                        </div>
+                                        :
+                                        <div style={{ display: "flex", justifyContent: "center" }}>
+                                          <input type="checkbox" id={index} onChange={handleIsRequiredItem} />
+                                        </div>
+                                    }
+
+                                    </td>
+                                    <td>
+                                      {infoRawRef.current[index].Campos}
+                                    </td>
+                                    <td>
+                                      {
+                                        infoRawRef.current[index].DescripcionTipo === "select" ?
+                                          <button className='app-button animate primary' style={{ marginRight: "10px" }} id={item.IdCaracteristica} onClick={handleNewItemsChange}>Actualizar items</button>
+                                          :
+                                          <p>N/A</p>
+                                      }
+
+                                    </td>
+                                  </tr>
+                                )
+                              }) : <></>
+                            }
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex" }}>
+                    <Modal showOverlay={true} show={itemsModal} size={"lg"}>
+                      <Modal.Header>
+                        <Modal.Title>Actualizacion de ítems</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <div style={{ display: "flex", flex: 1, justifyContent: "flex-end" }}>
+                          <button className="app-button animate primary" onClick={() => setModalCategory(true)}>Nuevo item</button>
+                        </div>
+                        <div style={{ display: 'flex' }}>
+                          <table style={{ width: '100%' }} className="styled-table" id="table-products">
+                            <thead>
+                              <tr>
+                                <th>Item</th>
+                                <th>Estado</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {
+                                itemsRef.current?.filter(x => x.IdCaracteristica == itemsSelectRef.current).map((item, index) => {
+                                  return (
+                                    <tr>
+                                      <td> <input className='app-input-text' type="text" id={index} value={itemsRef.current.filter(x=> x.IdCaracteristica == itemsSelectRef.current)[index].OpcionDescripcion} onChange={handleChangeItemsName}/></td>
+                                      {
+                                        <td style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                          {
+                                            itemsRef.current[index].Estado.data[0] == 1 ?
+                                              <input type="checkbox" checked id={index} onChange={handleChangeItemsState}/> :
+                                              <input type="checkbox" id={index} onChange={handleChangeItemsState}/>
+                                          }
+                                        </td>
+                                      }
+                                    </tr>
+                                  )
+                                })
+                              }
+                            </tbody>
+                          </table>
+                        </div>
+
+
+                        <Modal showOverlay={true} show={modalCategory} size={"xs"} onClose={()=> setModalCategory(false)}>
+                          <Modal.Header>
+                            <Modal.Title>Nuevo Item</Modal.Title>
+                          </Modal.Header>
+                          <Modal.Body>
+                            <p>Ingrese el valor del nuevo item</p>
+                            <input className='app-input-text' placeholder='Nuevo item' value={newItems} onChange={(e)=> setNewItems(e.target.value)}/>
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button value='Agregar item' onClick={() => { saveNewItem() }} />
+                            <Button value="Cancelar" onClick={() => setModalCategory(false)} />
+                          </Modal.Footer>
+                        </Modal>
+
+
+
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button value='Actualizar items' onClick={updateAllMyItems} />
+                        <Button value="Cancelar" onClick={() => setItemsModal(false)} />
+                      </Modal.Footer>
+                    </Modal>
+
+
+                  </div>
+                </Modal.Body>
+                <Modal.Footer>
+                  <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={() => handleUpdateEntity()}>Actualizar</button>
+                  <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={() => setModalActualizar(false)} >Cancelar</button>
+                </Modal.Footer>
+              </Modal>
               <h1>Entidades</h1>
               <p>Añada, modifique o elimine sus entidades</p>
               <div className="app-hr"></div>
-              {/* 
-              <div style={{ margin: '20px 0' }}>
-                <Button
-                  style={{ marginLeft: '30px' }}
-                  value="Nueva"
-                  onClick={() => setShowModal(true)}
-                  icon={<i className="icons10-plus"></i>} />
-              </div> */}
               <div style={{ marginTop: "15px" }}>
                 <label>Buscar</label>
                 <input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
@@ -128,80 +483,33 @@ const Categoria = () => {
                       <th>Entidad</th>
                       <th>Estado</th>
                       <th>Fecha de Creación</th>
+                      <th>Grupo</th>
                       <th>Creada por</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-
+                    {
+                      listCatRef?.current?.map(item => {
+                        return (
+                          <tr>
+                            <td>{item.DescripcionCategoria}</td>
+                            <td>{item.EstadoCategoria == "Activo" ? <span style={{ color: "green" }}>■</span> : <span style={{ color: "red" }}>■</span>} {item.EstadoCategoria}</td>
+                            <td>{item.FechaCreacion}</td>
+                            <td>{item.DescripcionGrupo}</td>
+                            <td>{item.UsuarioCreo}</td>
+                            <td>
+                              <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={() => changeEntityStatus(item.IdCategoria, "STA")}>Cambiar estado</button>
+                                <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={() => changeEntityStatus(item.IdCategoria, "UPD")}>Actualizar</button>
+                              </div>
+                            </td>
+                          </tr>
+                        )
+                      })
+                    }
                   </tbody>
                 </table>
-                {/*            <TableView
-              columns={[
-                { 'title':'Categoría', 'showSortIcon': true },
-                { 'title':'Acciones','showSortIcon': false, 'sortable': false },
-              ]}
-              rows={listCat}
-              style= {{width: '100%', backgroundColor: 'blue'}}
-            /> */}
-                {/*  <MaterialTable
-                  columns={columnas}
-                  data={listCat}
-                  title="Entidades"
-                  style={{ boxShadow: 'none', marginRight: '30px' }}
-                  localization={{
-                    header: {
-                      actions: 'Acciones'
-                    },
-                    pagination: {
-                      labelDisplayedRows: '{from}-{to} de {count}',
-                      labelRowsSelect: 'filas',
-                      labelRowsPerPage: 'Filas por página',
-                      firstAriaLabel: 'Primera página',
-                      firstTooltip: 'Primera página',
-                      previousAriaLabel: 'Página anterior',
-                      previousTooltip: 'Página anterior',
-                      nextAriaLabel: 'Siguiente página',
-                      nextTooltip: 'Siguiente página',
-                      lastAriaLabel: 'Última página',
-                      lastTooltip: 'Última página'
-                    },
-                    toolbar: {
-                      nRowsSelected: '{0} fila(s) seleccionada(s)',
-                      searchTooltip: 'Buscar...',
-                      searchPlaceholder: 'Buscar...',
-                      exportTitle: "Categrorias",
-                      exportPDFName: 'Exportar como PDF',
-                      exportCSVName: 'Exportar como CSV'
-                    },
-                    body: {
-                      emptyDataSourceMessage: 'No hay datos para mostrar',
-                      filterRow: {
-                        searchTooltip: 'Buscar...'
-                      }
-                    }
-                  }}
-                  options={{
-                    actionsColumnIndex: -1,
-                    exportButton: true,
-                    draggable: true
-                  }}
-                  actions={
-                    [
-                      {
-                        icon: 'edit',
-                        tooltip: 'Editar categoria',
-                        onClick: (event, rowData) => alert("Has presionado la categoria: " + rowData.categoria)
-                      },
-                      {
-                        icon: 'delete',
-                        tooltip: 'Eliminar categoria',
-                        onClick: (event, rowData) => alert("Has presionado la categoria: " + rowData.categoria)
-                      }
-                    ]
-                  }
-
-                /> */}
               </div>
               <Dialog
                 isVisible={showModal}
