@@ -4,11 +4,10 @@ import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
 import "../categorias/index.css"
 import { Dialog, Button } from 'react-windows-ui'
-import MaterialTable from 'material-table'
-import { useInput } from '../../hooks/useInput'
 import useState from 'react-usestateref'
 import Modal from '../../components/Modal';
-import Select from 'react-select';
+import Select from 'react-select'
+import { useAuthState } from '../../stores/AuthStore';
 
 const Categoria = () => {
 
@@ -25,9 +24,20 @@ const Categoria = () => {
   const [itemsModal, setItemsModal] = useState(false)
   const [items, setItems, itemsRef] = useState()
   const [itemsSelect, setItemsSelect, itemsSelectRef] = useState([])
+  const [modalNew, setModalNew] = useState(false)
+  const [types, setTypes, typesRef] = useState()
+  const [selectedType, setSelectedType, selectedTypeRef] = useState();
+  const [nombreCaracteristica, setNombreCaracteristica, nombreCaracteristicaRef] = useState()
+  const [placeholderR, setPlaceholderR, placeholderRRef] = useState()
+  const [isRequired, setIsRequired, isRequiredRef] = useState(0)
+  const [selectValues, setSelectValues, selectValuesRef] = useState()
+  const [lastLevel, setLastLevel, lastLevelRef] = useState()
 
+
+  const AuthStore = useAuthState();
 
   useEffect(() => {
+    getAllTypes()
     getItems()
   }, [])
 
@@ -73,6 +83,23 @@ const Categoria = () => {
     }
   }
 
+  const getAllTypes = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "machines/types", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const result = await response.json()
+      setTypes(result)
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al obtener los tipos de datos " + error)
+    }
+  }
+
   const searchTableAll = () => {
     var searchBox = document.getElementById('search-input-table');
     var table = document.getElementById("table-products");
@@ -92,6 +119,7 @@ const Categoria = () => {
 
   const changeEntityStatus = async (key, action) => {
     setKeyEdit(key);
+    await getLastLevelByEntity();
     if (action == "UPD") {
       await getEntityInfoRaw();
       setModalActualizar(true);
@@ -217,7 +245,7 @@ const Categoria = () => {
   }
 
   const saveNewItem = async (e) => {
-    if(newItemsRef.current.length < 1) return alert("El campo no puede estar vacio");
+    if (newItemsRef.current.length < 1) return alert("El campo no puede estar vacio");
     try {
       const lastLevel = parseInt(itemsRef.current?.filter(x => x.IdCaracteristica == itemsSelectRef.current)[0].MaxNivel) + 1;
       const response = await fetch(process.env.REACT_APP_HOME + "category/items/", {
@@ -243,7 +271,7 @@ const Categoria = () => {
     }
   }
 
-  const handleChangeItemsState = async(e) => {
+  const handleChangeItemsState = async (e) => {
     var auxArray = [...items];
     console.log(auxArray)
     var value = auxArray[e.target.id].Estado.data[0];
@@ -253,14 +281,14 @@ const Categoria = () => {
     setItems(auxArray);
   }
 
-  const handleChangeItemsName = async(e) => {
+  const handleChangeItemsName = async (e) => {
     var auxArray = [...items];
     var id = e.target.id;
-    auxArray.filter(x=> x.IdCaracteristica == itemsSelectRef.current)[e.target.id].OpcionDescripcion = e.target.value;
+    auxArray.filter(x => x.IdCaracteristica == itemsSelectRef.current)[e.target.id].OpcionDescripcion = e.target.value;
     setItems(auxArray);
   }
 
-  const updateAllMyItems = async(e) => {
+  const updateAllMyItems = async (e) => {
     try {
       itemsRef.current.forEach((item, index) => {
         updateItems(index);
@@ -273,7 +301,7 @@ const Categoria = () => {
     }
   }
 
-  const updateItems= async(index) =>{
+  const updateItems = async (index) => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "category/updateitems", {
         method: 'PUT',
@@ -296,6 +324,62 @@ const Categoria = () => {
     }
   }
 
+  const handleRequiredNewItem = (e) => {
+    if(e.target.value == "on"){
+      setIsRequired(1);
+    }else{
+      setIsRequired(0);
+    }
+  }
+
+  const getLastLevelByEntity = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "control/lastlevel/" + keyEditRef.current, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const result = await response.json()
+      console.log("RESULTADO O.O")
+      console.log(result)
+      setLastLevel(result[0].LastNivel)
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al obtener las categorias " + error)
+    }
+  }
+
+  const addCaracteristica = async () => {
+    try {
+      
+      const response = await fetch(process.env.REACT_APP_HOME + "control", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+          "IdCategoria": keyEditRef.current,
+          "CaracteristicaDescripcion": nombreCaracteristicaRef.current,
+          "Estado": 1,
+          "Nivel" : parseInt(lastLevelRef.current) + 1,
+          "Requerido" : isRequiredRef.current,
+          "Placeholder" : placeholderRRef.current,
+          "Tooltip": nombreCaracteristicaRef.current,
+          "UsuarioCreo": AuthStore.me.get().username,
+          "CaracteristicaTipo": selectedTypeRef.current
+        })
+      })
+      alert("La categoria se guardo exitosamente")
+      const result = await response.json()
+      console.log(result)
+      //window.location.reload()
+    } catch (error) {
+      alert("Ocurrio un error al guardar la categoria")
+    }
+  }
+
   //const
 
   return (
@@ -307,6 +391,8 @@ const Categoria = () => {
             <NavPageContainer
               hasPadding={true}
               animateTransition={true}>
+
+
               <Modal showOverlay={true} show={modalCancel} onClose={() => setModalCancel(false)}>
                 <Modal.Header>
                   <Modal.Title>Cambiar estado</Modal.Title>
@@ -324,6 +410,81 @@ const Categoria = () => {
                   <Button value="No, mantener estado actual" onClick={() => setModalCancel(false)} />
                 </Modal.Footer>
               </Modal>
+
+              <Modal showOverlay={true} show={modalNew} onClose={() => setModalNew(false)} size={"md"}>
+                <Modal.Header>
+                  <Modal.Title>Nueva Caracteristica</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div style={{ display: 'flex', flex: 1 }}>
+                    <table style={{ width: '100%' }} className="styled-table" id="table-products">
+                      <thead>
+                        <tr>
+                          <th>Elemento</th>
+                          <th>Valor</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <p>Nombre de la Caracteristica</p>
+                          </td>
+                          <td>
+                            <input type="text" className='app-input-text' placeholder='Nombre de la caracteristica' value={nombreCaracteristica} onChange={(e)=> setNombreCaracteristica(e.target.value)}/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <p>Placeholder</p>
+                          </td>
+                          <td>
+                            <input type="text" className='app-input-text' placeholder='Nombre de la caracteristica' value={placeholderR} onChange={(e)=> setPlaceholderR(e.target.value)}/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <p>Tipo</p>
+                          </td>
+                          <td>
+                          <Select
+                              options={typesRef.current}
+                              onChange={(e) => setSelectedType(e.value)}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <p>
+                              Opciones (separadas por barra |)
+                            </p>
+                          </td>
+                          <td>
+                            <input type="text" className='app-input-text' placeholder='Item 1|Item2|Item3' value={selectValues} onChange={(e)=> setSelectValues(e.target.value)} disabled={selectedTypeRef.current == 4 ? false : true}/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <p>
+                              ¿Es requerido?
+                            </p>
+                          </td>
+                          <td>
+                            <div style={{display: "flex", justifyContent: "center"}}>
+                            <input type="checkbox" placeholder='Nombre de la caracteristica' onChange={handleRequiredNewItem}/>
+                            </div>  
+                          </td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+                  </div>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button value='Guardar nuevo campo' onClick={addCaracteristica} />
+                  <Button value="Cancelar" onClick={() => setModalNew(false)} />
+                </Modal.Footer>
+              </Modal>
+
               <Modal showOverlay={true} show={modalActualizar} onClose={() => setModalActualizar(false)}>
                 <Modal.Header>
                   <Modal.Title>Actualizar entidad</Modal.Title>
@@ -333,9 +494,8 @@ const Categoria = () => {
                     {/* <i className="icons10-info" style={{ color: '#faca2a', fontSize: "50px" }} /> */}
                     <div style={{ marginRight: 25, flex: 1 }}>
 
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <i className="icons10-exclamation-mark" style={{ color: '#faca2a', fontSize: "35px" }} />
-                        <p>Cualquier cambio en esta ventana afectará directamente a los registros de esta entidad.</p>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+                        <button className="app-button animate primary" onClick={() => setModalNew(true)}>Nuevo campo</button>
                       </div>
                       <div>
                         <table style={{ width: '100%' }} className="styled-table" id="table-products">
@@ -419,13 +579,13 @@ const Categoria = () => {
                                 itemsRef.current?.filter(x => x.IdCaracteristica == itemsSelectRef.current).map((item, index) => {
                                   return (
                                     <tr>
-                                      <td> <input className='app-input-text' type="text" id={index} value={itemsRef.current.filter(x=> x.IdCaracteristica == itemsSelectRef.current)[index].OpcionDescripcion} onChange={handleChangeItemsName}/></td>
+                                      <td> <input className='app-input-text' type="text" id={index} value={itemsRef.current.filter(x => x.IdCaracteristica == itemsSelectRef.current)[index].OpcionDescripcion} onChange={handleChangeItemsName} /></td>
                                       {
                                         <td style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                                           {
                                             itemsRef.current[index].Estado.data[0] == 1 ?
-                                              <input type="checkbox" checked id={index} onChange={handleChangeItemsState}/> :
-                                              <input type="checkbox" id={index} onChange={handleChangeItemsState}/>
+                                              <input type="checkbox" checked id={index} onChange={handleChangeItemsState} /> :
+                                              <input type="checkbox" id={index} onChange={handleChangeItemsState} />
                                           }
                                         </td>
                                       }
@@ -438,13 +598,13 @@ const Categoria = () => {
                         </div>
 
 
-                        <Modal showOverlay={true} show={modalCategory} size={"xs"} onClose={()=> setModalCategory(false)}>
+                        <Modal showOverlay={true} show={modalCategory} size={"xs"} onClose={() => setModalCategory(false)}>
                           <Modal.Header>
                             <Modal.Title>Nuevo Item</Modal.Title>
                           </Modal.Header>
                           <Modal.Body>
                             <p>Ingrese el valor del nuevo item</p>
-                            <input className='app-input-text' placeholder='Nuevo item' value={newItems} onChange={(e)=> setNewItems(e.target.value)}/>
+                            <input className='app-input-text' placeholder='Nuevo item' value={newItems} onChange={(e) => setNewItems(e.target.value)} />
                           </Modal.Body>
                           <Modal.Footer>
                             <Button value='Agregar item' onClick={() => { saveNewItem() }} />

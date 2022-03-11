@@ -614,7 +614,7 @@ const Computadora = () => {
                                                 </thead>
                                                 <tbody>
                                                     {
-                                                        tableData.map(ele => {
+                                                        tableData ? tableData.map(ele => {
                                                             return (
                                                                 <tr>
                                                                     <td>
@@ -650,6 +650,7 @@ const Computadora = () => {
                                                                 </tr>
                                                             )
                                                         })
+                                                        : <></>
                                                     }
                                                 </tbody>
                                             </table>
