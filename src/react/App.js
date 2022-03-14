@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React from 'react'
 import { Switch, Route, Redirect, HashRouter as Router } from 'react-router-dom'
-import { AppTheme, SplashScreen, NavBar, NavBarLink, NavSearchSuggestion } from 'react-windows-ui'
+import { useAuth } from './hooks/useIsAuth'
 import Login from './pages/login'
 import Asignar from './pages/asignar'
 import Bitacora from './pages/bitacora'
@@ -17,9 +17,14 @@ import MasterPage from './components/MasterPage'
 import Campos from './pages/campos'
 import Grupo from './pages/grupos'
 import Computadora from './pages/computadoras'
+import Historial from './pages/historial'
+import Mantenimiento from './pages/mantenimientos'
+
 
 
 const App = () => {
+  
+
 
   return (
     <Router>
@@ -29,24 +34,42 @@ const App = () => {
             <Redirect to="/" />
         </Route>
         <Route path="/login" component={Login} />
-        <Route path="/home" component={Home} />
-        <Route path="/asignar" component={Asignar} />
-        <Route path="/empleado" component={Empleado} />
-        <Route path="/bitacora" component={Bitacora} />
-        <Route path="/categoria" component={Categoria} />
-        <Route path="/equipo" component={Equipos} />
-        <Route path="/perfil" component={Perfil} />
-        <Route path="/configuraciones" component={Configuracion} />
-        <Route path="/ciudades" component={Ciudad} />
-        <Route path="/master" component={MasterPage} />
-        <Route path="/sucursal" component={Sucursal} />
-        <Route path="/areas" component={Areas} />
-        <Route path="/campos" component={Campos} />
-        <Route path="/grupos" component={Grupo} />
-        <Route path="/computadoras" component={Computadora} />
+        <PrivateRoute path="/home" component={Home} />
+        <PrivateRoute path="/asignar" component={Asignar} />
+        <PrivateRoute path="/empleado" component={Empleado} />
+        <PrivateRoute path="/bitacora" component={Bitacora} />
+        <PrivateRoute path="/categoria" component={Categoria} />
+        <PrivateRoute path="/equipo" component={Equipos} />
+        <PrivateRoute path="/perfil" component={Perfil} />
+        <PrivateRoute path="/configuraciones" component={Configuracion} />
+        <PrivateRoute path="/ciudades" component={Ciudad} />
+        <PrivateRoute path="/master" component={MasterPage} />
+        <PrivateRoute path="/sucursal" component={Sucursal} />
+        <PrivateRoute path="/areas" component={Areas} />
+        <PrivateRoute path="/campos" component={Campos} />
+        <PrivateRoute path="/grupos" component={Grupo} />
+        <PrivateRoute path="/computadoras" component={Computadora} />
+        <PrivateRoute path="/historial" component={Historial} />
+        <PrivateRoute path="/mantenimientos" component={Mantenimiento} />
       </Switch>
     </Router>
   )
 }
+
+
+const PrivateRoute=({ component: Component, ...rest })=> {
+  // useAuth es un hook personalizado para obtener el estado de autenticación del usuario actual
+  const isAuth = useAuth();
+
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        isAuth ? <Component {...props} /> : <Redirect to="/" />
+      }
+    />
+  );
+}
+
     
 export default App;

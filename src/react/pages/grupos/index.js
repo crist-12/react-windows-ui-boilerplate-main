@@ -1,56 +1,78 @@
 
-import { NavPageContainer } from 'react-windows-ui'
-import React, { useState, useEffect } from 'react'
+import { NavPageContainer, Link } from 'react-windows-ui'
+import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
-
 import { Dialog, Button } from 'react-windows-ui'
 import MaterialTable from 'material-table'
-
+import Modal from '../../components/Modal';
+import useState from 'react-usestateref'
 
 const Grupo = () => {
 
   const [showModal, setShowModal] = useState(false);
-  const [categoria, setCategoria] = useState("")
-  const [listCat, setlistCat] = useState("")
+  const [listAreas, setListAreas] = useState()
   const [loading, setLoading] = useState(true)
-
-  const columnas = [
-    {
-      title: 'Id',
-      field: 'id',
-      hidden: true
-    },
-    {
-      title: 'Categoria',
-      field: 'categoria'
-    }
-  ]
+  const [defaultName, setDefaultName, defaultNameRef] = useState()
+  const [selectedIndex, setSelectedIndex, selectedIndexRef] = useState()
+  const [addModal, setAddModal] = useState(false)
 
   useEffect(() => {
-    getItems()
+    getAreasData()
   }, [])
 
-  const addItem = async () => {
-    try {
-      setLoading(true)
-      const response = await fetch(process.env.REACT_APP_HOME + "groups", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ "DescripcionGrupo": categoria })
-      })
-      setCategoria("")
-      await getItems()
-      setShowModal(false)
-      setLoading(false)
-      alert("La categoria se guardo exitosamente")
-    } catch (error) {
-      alert("Ocurrio un error al guardar la categoria")
+  const addNewArea = async () => {
+    if (defaultName) {
+      try {
+        setLoading(true)
+        const response = await fetch(process.env.REACT_APP_HOME + "groups", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ "DescripcionGrupo": defaultNameRef.current })
+        })
+        const result = await response.json()
+        console.log(result)
+        await getAreasData()
+        setAddModal(false)
+        setLoading(false)
+        setDefaultName()
+        alert("El area se guardo exitosamente")
+      } catch (error) {
+        alert("Ocurrio un error al guardar el area")
+      }
+    } else {
+      alert("El nombre del area no puede ir vacio")
     }
   }
 
-  const getItems = async () => {
+  const updateCityRow = async () => {
+    if(defaultName){
+      try {
+        setLoading(true)
+        const response = await fetch(process.env.REACT_APP_HOME + "groups/"+selectedIndexRef.current, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ "DescripcionGrupo": defaultNameRef.current })
+        })
+        const result = await response.json();
+        console.log(result)
+        await getAreasData()
+        setShowModal(false)
+        setLoading(false)
+        setDefaultName()
+        alert("El area se actualizó exitosamente")
+      } catch (error) {
+        alert("Ocurrio un error al actualizar la categoria")
+      }
+    }else{
+      alert("El nombre del area no puede ir vacio")
+    }
+  }
+
+  const getAreasData = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "groups", {
         method: 'GET',
@@ -60,25 +82,38 @@ const Grupo = () => {
       })
 
       const result = await response.json()
-      var arre = []
-      result.forEach(ele => {
-        var obj = {
-          id: ele.IdCategoria,
-          categoria: ele.DescripcionGrupo ?? "No hay"
-        }
-        arre.push(obj)
-        console.log(obj)
-      })
-      setlistCat(arre)
-      setLoading(false)
-      //console.log(result)
-      //setlistCat(response)
 
+      setListAreas(result)
+      setLoading(false)
     } catch (error) {
       console.log(error)
     }
   }
-  
+
+
+  const searchTableAll = () => {
+    var searchBox = document.getElementById('search-input-table');
+    var table = document.getElementById("table-products");
+    var trs = table.tBodies[0].getElementsByTagName("tr");
+    var filter = searchBox.value.toUpperCase();
+    for (var rowI = 0; rowI < trs.length; rowI++) {
+      var tds = trs[rowI].getElementsByTagName("td");
+      trs[rowI].style.display = "none";
+      for (var cellI = 0; cellI < tds.length; cellI++) {
+        if (tds[cellI].innerHTML.toUpperCase().indexOf(filter) > -1) {
+          trs[rowI].style.display = "";
+          continue;
+        }
+      }
+    }
+  }
+
+  const handleUpdateCity = async(nombre, codigo) => {
+    setDefaultName(nombre); 
+    setSelectedIndex(codigo); 
+    setShowModal(true)
+  }
+
   return (
     <>
       {
@@ -89,106 +124,102 @@ const Grupo = () => {
               hasPadding={true}
               animateTransition={true}>
 
+              <Modal showOverlay={true} show={showModal} onClose={() => setShowModal(false)} size={"md"}>
+                <Modal.Header>
+                  <Modal.Title>Actualizar Grupo</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  {/* <img src={currentImageRef.current} width="700px" height="auto" /> */}
+                  <table style={{ width: '100%' }} className="styled-table" id="table-products">
+                    <thead>
+                      <tr>
+                        <th>Caracteristica</th>
+                        <th>Valor</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Nombre del Grupo</td>
+                        <td>
+                          <input type="text" className='app-input-text' value={defaultName} onChange={(e) => setDefaultName(e.target.value)} />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button value="Aceptar" onClick={updateCityRow} />
+                  <Button value="Cerrar" onClick={() => setShowModal(false)} />
+                </Modal.Footer>
+              </Modal>
+
+              <Modal showOverlay={true} show={addModal} onClose={() => setAddModal(false)} size={"md"}>
+                <Modal.Header>
+                  <Modal.Title>Nuevo Grupo</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  {/* <img src={currentImageRef.current} width="700px" height="auto" /> */}
+                  <table style={{ width: '100%' }} className="styled-table" id="table-products">
+                    <thead>
+                      <tr>
+                        <th>Caracteristica</th>
+                        <th>Valor</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Nombre del Grupo</td>
+                        <td>
+                          <input type="text" className='app-input-text' value={defaultName} onChange={(e) => setDefaultName(e.target.value)} />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button value="Aceptar" onClick={addNewArea} />
+                  <Button value="Cerrar" onClick={() => setAddModal(false)} />
+                </Modal.Footer>
+              </Modal>
+
+
               <h1>Grupos</h1>
-              <p>Añada, modifique o elimine grupos de productos</p>
+              <p>Añada, modifique o elimine registro de grupos de productos</p>
               <div className="app-hr"></div>
-
-              <div style={{ margin: '20px 0' }}>
-                <Button
-                  style={{ marginLeft: '30px' }}
-                  value="Nueva"
-                  onClick={() => setShowModal(true)}
-                  icon={<i className="icons10-plus"></i>} />
-              </div>
-              <div style={{ width: '100%' }}>
-                {/*            <TableView
-              columns={[
-                { 'title':'Categoría', 'showSortIcon': true },
-                { 'title':'Acciones','showSortIcon': false, 'sortable': false },
-              ]}
-              rows={listCat}
-              style= {{width: '100%', backgroundColor: 'blue'}}
-            /> */}
-                <MaterialTable
-                  columns={columnas}
-                  data={listCat}
-                  title="Categorias"
-                  style={{ boxShadow: 'none', marginRight: '30px' }}
-                  localization={{
-                    header: {
-                      actions: 'Acciones'
-                    },
-                    pagination: {
-                      labelDisplayedRows: '{from}-{to} de {count}',
-                      labelRowsSelect: 'filas',
-                      labelRowsPerPage: 'Filas por página',
-                      firstAriaLabel: 'Primera página',
-                      firstTooltip: 'Primera página',
-                      previousAriaLabel: 'Página anterior',
-                      previousTooltip: 'Página anterior',
-                      nextAriaLabel: 'Siguiente página',
-                      nextTooltip: 'Siguiente página',
-                      lastAriaLabel: 'Última página',
-                      lastTooltip: 'Última página'
-                    },
-                    toolbar: {
-                      nRowsSelected: '{0} fila(s) seleccionada(s)',
-                      searchTooltip: 'Buscar...',
-                      searchPlaceholder: 'Buscar...',
-                      exportTitle: "Categrorias",
-                      exportPDFName: 'Exportar como PDF',
-                      exportCSVName: 'Exportar como CSV'
-                    },
-                    body: {
-                      emptyDataSourceMessage: 'No hay datos para mostrar',
-                      filterRow: {
-                        searchTooltip: 'Buscar...'
-                      }
-                    }
-                  }}
-                  options={{
-                    actionsColumnIndex: -1,
-                    exportButton: true,
-                    draggable: true
-                  }}
-                  actions={
-                    [
-                      {
-                        icon: 'edit',
-                        tooltip: 'Editar categoria',
-                        onClick: (event, rowData) => alert("Has presionado la categoria: " + rowData.categoria)
-                      },
-                      {
-                        icon: 'delete',
-                        tooltip: 'Eliminar categoria',
-                        onClick: (event, rowData) => alert("Has presionado la categoria: " + rowData.categoria)
-                      }
-                    ]
-                  }
-
-                />
-              </div>
-              <Dialog
-                isVisible={showModal}
-                onBackdropPress={() => setShowModal(false)}
-                showDropShadow={true}>
-                <div style={{ padding: '10px' }}>
-                  <h3>Nueva Categoría</h3>
-                  <div className="app-hr"></div>
-                  <div >
-                    <p>Nombre de la categoria: </p>
-                    <input
-                      value={categoria}
-                      onChange={e => setCategoria(e.target.value)}
-                    />
-                    <Button
-                      style={{ marginLeft: '30px' }}
-                      value="Guardar"
-                      onClick={addItem}
-                      icon={<i className="icons10-save"></i>} />
+              <div style={{ marginTop: "20px", marginRight: "30px", display: "flex", flex: 1, flexDirection: "column" }}>
+              <div style={{ marginTop: "15px", display: "flex" }}>
+                  <div style={{flex: 1}}>
+                  <label>Buscar</label>
+                  <input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
+                  </div>
+                  <div style={{flex: 1, justifyContent: "flex-end", display: "flex"}}>
+                  <button className='app-button primary animate' onClick={()=> setAddModal(true)}>Nuevo Grupo</button>
                   </div>
                 </div>
-              </Dialog>
+                <table style={{ width: '100%' }} className="styled-table" id="table-products">
+                  <thead>
+                    <tr>
+                      <th>Ciudad</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      listAreas?.map((item, index) => {
+                        return (
+                          <tr>
+                            <td>{item.DescripcionGrupo}</td>
+                            <td style={{ display: "flex", justifyContent: "center" }}>
+                              <button className='app-button primary animate' onClick={() => handleUpdateCity(item.DescripcionGrupo, item.IdGrupo)}>Actualizar</button>
+                            </td>
+                          </tr>
+                        )
+                      })
+                    }
+                  </tbody>
+                </table>
+              </div>
+
             </NavPageContainer>
           </>
       }

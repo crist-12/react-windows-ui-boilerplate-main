@@ -3,7 +3,6 @@ import login from "../../assets/login.jpg"
 import { AvatarView, InputText, Button, SplashScreen } from 'react-windows-ui'
 import user from "../../assets/user.png"
 import { useHistory } from 'react-router-dom'
-import axios from 'axios'
 import { useAuthState, loginUser } from '../../stores/AuthStore'
 import { Alert } from 'react-windows-ui'
 
@@ -41,6 +40,7 @@ const Login = () => {
 
        await loginUser(username, password);
        if(authState.get().isLoggedIn){
+            //await postLoginLog(" ingresó al sistema");
             history.push("/home")
             setValidate(false)
             return
@@ -51,6 +51,7 @@ const Login = () => {
        }
         
     }
+
 
     
     return (

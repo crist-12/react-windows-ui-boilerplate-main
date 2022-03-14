@@ -32,6 +32,7 @@ const Categoria = () => {
   const [isRequired, setIsRequired, isRequiredRef] = useState(0)
   const [selectValues, setSelectValues, selectValuesRef] = useState()
   const [lastLevel, setLastLevel, lastLevelRef] = useState()
+  const [insertedId, setInsertedId, insertedIdRef] = useState()
 
 
   const AuthStore = useAuthState();
@@ -139,7 +140,9 @@ const Categoria = () => {
       })
 
       const result = await response.json()
-      window.location.reload()
+      await getAllTypes()
+      await getItems()
+      //window.location.reload()
     } catch (error) {
       console.log(error)
       alert("Ocurrio un error al cambiar el estado de la entidad " + error)
@@ -237,7 +240,8 @@ const Categoria = () => {
         updateCaracteristicaInfo(index);
       })
       alert("Datos actualizados exitosamente")
-      window.location.reload()
+      await getAllTypes()
+      await getItems()
     } catch (error) {
       console.log(error)
       alert("Ocurrio un error al actualizar la entidad " + error)
@@ -263,7 +267,8 @@ const Categoria = () => {
       const result = await response.json()
       console.log(result)
       alert("Item guardado exitosamente")
-      window.location.reload()
+      await getAllTypes()
+      await getItems()
       //window.location.reload()
     } catch (error) {
       console.log(error)
@@ -294,7 +299,8 @@ const Categoria = () => {
         updateItems(index);
       })
       alert("Datos actualizados exitosamente")
-      window.location.reload()
+      await getAllTypes()
+      await getItems()
     } catch (error) {
       console.log(error)
       alert("Ocurrio un error al actualizar la entidad " + error)
@@ -325,9 +331,9 @@ const Categoria = () => {
   }
 
   const handleRequiredNewItem = (e) => {
-    if(e.target.value == "on"){
+    if (e.target.value == "on") {
       setIsRequired(1);
-    }else{
+    } else {
       setIsRequired(0);
     }
   }
@@ -342,8 +348,6 @@ const Categoria = () => {
       })
 
       const result = await response.json()
-      console.log("RESULTADO O.O")
-      console.log(result)
       setLastLevel(result[0].LastNivel)
     } catch (error) {
       console.log(error)
@@ -353,25 +357,53 @@ const Categoria = () => {
 
   const addCaracteristica = async () => {
     try {
-      
+
       const response = await fetch(process.env.REACT_APP_HOME + "control", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           "IdCategoria": keyEditRef.current,
           "CaracteristicaDescripcion": nombreCaracteristicaRef.current,
           "Estado": 1,
-          "Nivel" : parseInt(lastLevelRef.current) + 1,
-          "Requerido" : isRequiredRef.current,
-          "Placeholder" : placeholderRRef.current,
+          "Nivel": parseInt(lastLevelRef.current) + 1,
+          "Requerido": isRequiredRef.current,
+          "Placeholder": placeholderRRef.current,
           "Tooltip": nombreCaracteristicaRef.current,
           "UsuarioCreo": AuthStore.me.get().username,
           "CaracteristicaTipo": selectedTypeRef.current
         })
       })
+      const result = await response.json()
+      console.log(result)
+      setInsertedId(result.message)
+      
+      if(selectedTypeRef.current != 4)
       alert("La categoria se guardo exitosamente")
+      else
+      await handleNewSelectionSave();
+
+    } catch (error) {
+      alert("Ocurrio un error al guardar la categoria")
+    }
+  }
+
+  const addItemsOptions = async (description, level) => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "control/detail", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "IdCategoria": keyEditRef.current,
+          "IdCaracteristica": insertedIdRef.current,
+          "Valores": description,
+          "Nivel": level,
+          "Estado": 1
+        })
+      })
       const result = await response.json()
       console.log(result)
       //window.location.reload()
@@ -379,8 +411,25 @@ const Categoria = () => {
       alert("Ocurrio un error al guardar la categoria")
     }
   }
+  
+  const handleNewSelectionSave = async() => {
+    try {
+      const stringValues = selectValuesRef.current;
+      const stringValuesArray = stringValues.split("|");
+      stringValuesArray.forEach((item, index)=> {
+        console.log(item)
+        addItemsOptions(item, index).then((result) => {
+          //console.log(result)
+        })
+      })
+      alert("La categoria se guardo exitosamente");
+      await getAllTypes()
+      await getItems()
+    } catch (error) {
+      alert("Algo salió mal durante se guardaba la categoría");
+    }
 
-  //const
+  }
 
   return (
     <>
@@ -430,7 +479,7 @@ const Categoria = () => {
                             <p>Nombre de la Caracteristica</p>
                           </td>
                           <td>
-                            <input type="text" className='app-input-text' placeholder='Nombre de la caracteristica' value={nombreCaracteristica} onChange={(e)=> setNombreCaracteristica(e.target.value)}/>
+                            <input type="text" className='app-input-text' placeholder='Nombre de la caracteristica' value={nombreCaracteristica} onChange={(e) => setNombreCaracteristica(e.target.value)} />
                           </td>
                         </tr>
                         <tr>
@@ -438,7 +487,7 @@ const Categoria = () => {
                             <p>Placeholder</p>
                           </td>
                           <td>
-                            <input type="text" className='app-input-text' placeholder='Nombre de la caracteristica' value={placeholderR} onChange={(e)=> setPlaceholderR(e.target.value)}/>
+                            <input type="text" className='app-input-text' placeholder='Nombre de la caracteristica' value={placeholderR} onChange={(e) => setPlaceholderR(e.target.value)} />
                           </td>
                         </tr>
                         <tr>
@@ -446,7 +495,7 @@ const Categoria = () => {
                             <p>Tipo</p>
                           </td>
                           <td>
-                          <Select
+                            <Select
                               options={typesRef.current}
                               onChange={(e) => setSelectedType(e.value)}
                             />
@@ -459,7 +508,7 @@ const Categoria = () => {
                             </p>
                           </td>
                           <td>
-                            <input type="text" className='app-input-text' placeholder='Item 1|Item2|Item3' value={selectValues} onChange={(e)=> setSelectValues(e.target.value)} disabled={selectedTypeRef.current == 4 ? false : true}/>
+                            <input type="text" className='app-input-text' placeholder='Item 1|Item2|Item3' value={selectValues} onChange={(e) => setSelectValues(e.target.value)} disabled={selectedTypeRef.current == 4 ? false : true} />
                           </td>
                         </tr>
                         <tr>
@@ -469,9 +518,9 @@ const Categoria = () => {
                             </p>
                           </td>
                           <td>
-                            <div style={{display: "flex", justifyContent: "center"}}>
-                            <input type="checkbox" placeholder='Nombre de la caracteristica' onChange={handleRequiredNewItem}/>
-                            </div>  
+                            <div style={{ display: "flex", justifyContent: "center" }}>
+                              <input type="checkbox" placeholder='Nombre de la caracteristica' onChange={handleRequiredNewItem} />
+                            </div>
                           </td>
                         </tr>
 

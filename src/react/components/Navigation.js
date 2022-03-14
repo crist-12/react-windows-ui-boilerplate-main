@@ -1,13 +1,20 @@
 import React from 'react'
 import { AppTheme, NavBar, NavBarLink, NavSearchSuggestion } from 'react-windows-ui'
-
+import { useHistory } from 'react-router-dom'
 import { useMasterState } from '../stores/MasterStore'
+import { useAuthState, logout } from '../stores/AuthStore'
 
 const NavigationWindow = () => {
 
-
+  const history = useHistory();
 
   const masterState = useMasterState();
+  const authState = useAuthState();
+
+  const handlerSignOut = async () => {
+    logout();
+    history.push("/");
+  }
 
   return (
     <>
@@ -83,10 +90,26 @@ const NavigationWindow = () => {
         />
 
         <NavBarLink
+          to="/historial"
+          text="Historial de Asignaciones"
+          icon={<i className="icons10-clock"></i>}
+        />
+
+        <NavBarLink
           to="/configuraciones"
           text="Configuraciones"
           icon={<i className="icons10-settings"></i>}
         />
+
+        <div>
+          <li className='app-nav-list-item' onClick={handlerSignOut} >
+            <a aria-current="page">
+              <i class="icons10-shutdown">
+              </i>
+              <span>Cerrar sesión</span></a>
+          </li>
+        </div>
+
       </NavBar>
     </>
   )

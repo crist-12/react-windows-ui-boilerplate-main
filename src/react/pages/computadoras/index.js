@@ -198,7 +198,8 @@ const Computadora = () => {
             alert("Ha ocurrido un error")
         }
         setShowModal(false)
-        window.location.reload()
+        await getTableData()
+        await getAllAssignmentData()
     }
 
     const changeComputerStatus = async (status) => {
@@ -218,7 +219,9 @@ const Computadora = () => {
             if (status == 4 || status == 1) {
                 await deleteAssignmentRow()
                 setModalCancel(false);
-                window.location.reload()
+                await getAllAssignmentData()
+                await getTableData()
+               // window.location.reload()
             }
         } catch (error) {
             alert(error)
@@ -290,7 +293,8 @@ const Computadora = () => {
             return alert(error)
         }
         alert("Se ha actualizado la información del equipo");
-        window.location.reload()
+        await getAllAssignmentData()
+        await getTableData()
     }
 
     const getComputerInfoRaw = async () => {
@@ -532,7 +536,6 @@ const Computadora = () => {
                                 </Modal.Footer>
                             </Modal>
 
-
                             <Modal showOverlay={true} show={modalCancel} onClose={() => setModalCancel(false)}>
                                 <Modal.Header>
                                     <Modal.Title>Dar de baja</Modal.Title>
@@ -580,6 +583,7 @@ const Computadora = () => {
                                     <Button value="Cancelar" onClick={() => setModalActualizar(false)} />
                                 </Modal.Footer>
                             </Modal>
+
                             <h1>Computadoras</h1>
                             <p>Asigna equipos a colaboradores.</p>
                             <div className="app-hr"></div>

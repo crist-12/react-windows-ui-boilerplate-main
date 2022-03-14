@@ -431,7 +431,9 @@ const Equipos = () => {
     }
     alert("Registro finalizado exitosamente")
     setRespuesta([])
-    window.location.reload()
+    setLoading(true);
+    setLoading(false);
+    await getAllCategories();
   }
 
   const getRows = async (id) => {

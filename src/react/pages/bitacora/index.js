@@ -71,7 +71,7 @@ const getBitacoraRecords = async() => {
                             <tr>
                               <td>{ele.Accion}</td>
                               <td>{ele.Modulo}</td>
-                              <td>{ele.Fecha}</td>
+                              <td>{ele.FechaF}</td>
                             </tr>
                           )
                         }) : <></>

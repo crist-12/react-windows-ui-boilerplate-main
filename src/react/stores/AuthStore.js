@@ -9,6 +9,21 @@ const initialState = {
 
 const authState = createState(initialState);
 
+const postLoginLog = async(user, action)=> {
+    const data = {
+        Accion: `${user} ${action}`,
+        Modulo: "Login"
+    }
+    const result = await fetch(process.env.REACT_APP_HOME + "bitacora", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    const response = await result.json();
+    console.log(response);
+}
 
 export const loginUser = async(user, password) => {
 
@@ -35,6 +50,7 @@ export const loginUser = async(user, password) => {
                     },
                     isLoggedIn: true
                 })
+                 postLoginLog(user, " ingresó al sistema").then(()=>{})
             }
         })
         .catch((err)=> {
@@ -57,10 +73,12 @@ export const amILogged = () => {
     })
 }
 
-export const logout = () => {
+export const logout = async() => {
     // set authState to initial state
+    await postLoginLog(authState.me.get().username, " cerró su sesión en el sistema");	
     authState.set(initialState);
-  };
+    
+};
 
 export const useAuthState = () => {
     return useState(authState);

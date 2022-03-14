@@ -15,6 +15,10 @@ const Asignar = () => {
 
   const masterState = useMasterState();
   const authState = useAuthState();
+  const dValue = {
+    value: 0,
+    label: ""
+  }
 
   const [controls, setControls] = React.useState([]);
   const [loading, setLoading] = React.useState(true)
@@ -42,12 +46,15 @@ const Asignar = () => {
   const [incluyeTeclado, setIncluyeTeclado, incluyeTecladoRef] = useState(false);
   const [incluyeCargador, setIncluyeCargador, incluyeCargadorRef] = useState(false);
   const [incluyeWebcam, setIncluyeWebcam, incluyeWebcamRef] = useState(false);
+  const [defaultValue, setDefaultValue, defaultValueRef] = useState(dValue);
 
+
+  const [dummy, setDummy] = React.useState(false);
 
   useEffect(() => {
     getAllComputersRegistered()
     getAllEmployeeDetails()
-  }, [])
+  }, [dummy])
 
   const getControls = async () => {
     try {
@@ -225,9 +232,13 @@ const Asignar = () => {
       const result = await response.json()
       console.log(result)
       alert("Cambio de estado exitoso")
-      if(status == 4 || status == 2) 
-        window.location.reload()
-
+      if(status == 4 || status == 2) {
+        getAllComputersRegistered()
+        getAllEmployeeDetails()
+      }
+        //window.location.reload()
+      setDummy(!dummy)
+      setDefaultValue(dValue);
     } catch (error) {
       alert(error)
     }
@@ -298,7 +309,9 @@ const Asignar = () => {
     } catch (error) {
       alert(error)
     }
-    window.location.reload()
+    setDummy(!dummy)
+    setDefaultValue(dValue)
+    //window.location.reload()
   }
 
   const handleSaveMaintenance = async () => {
@@ -322,7 +335,9 @@ const Asignar = () => {
       setModalMante(false)
       setMantenimientoTipo(null)
       setObservacionesMantenimiento("")
-      window.location.reload()
+      setDummy(!dummy)
+      setDefaultValue(dValue)
+      //window.location.reload()
     } catch (error) {
       alert(error)
     }
@@ -494,6 +509,7 @@ const Asignar = () => {
                       <Select
                         options={computadoras}
                         onChange={handleChangeComputadora}
+                        defaultValue={defaultValueRef.current}
                         theme={(theme) => ({
                           ...theme,
                           borderRadius: 0,

@@ -94,7 +94,7 @@ const Configuracion = () => {
           </LinkCompound>
 
           <LinkCompound
-            to="/ContactsLayout"
+            to="/mantenimientos"
             title="Mantenimientos"
             subtitle="Registrar mantenimientos de equipos"
             icon={<i className="icons10-services"></i>}

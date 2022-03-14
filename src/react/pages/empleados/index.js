@@ -33,26 +33,6 @@ const Empleado = () => {
   const [employeeName, setEmployeeName, employeeRefName] = useState()
   const [employeeEmail, setEmployeeEmail, employeeRefEmail] = useState()
 
-  let enumList = []
-
-
-  const columnas = [
-    {
-      title: 'Id',
-      field: 'id',
-      hidden: true
-    },
-    {
-      title: 'Empleado',
-      field: 'empleado'
-    },
-    {
-      title: 'Area',
-      field: 'area'
-    }
-
-  ]
-
   useEffect(() => {
     getEmployeesData()
     getCities()
@@ -73,7 +53,8 @@ const Empleado = () => {
             body: JSON.stringify({ "NombreEmpleado": employeeRefName.current, "IdArea": selectedArea, "Email": employeeRefEmail.current, "IdSucursal": selectedSucursal })
           })
           alert("El empleado se guardó exitosamente")
-          window.location.reload()
+          await getEmployeesData()
+          setModalAdd(false)
         } catch (error) {
           alert("Ocurrio un error al guardar el empleado")
         }
@@ -107,7 +88,8 @@ const Empleado = () => {
       // setLoading(true)
       //console.log(result)
       //setListEmployees(response)
-
+    setLoading(true);
+    setLoading(false);
     } catch (error) {
       console.log(error)
     }
@@ -191,7 +173,8 @@ const Empleado = () => {
       })
 
       const result = await response.json()
-      window.location.reload()
+      setModalCancel(false)
+      await getEmployeesData()
     } catch (error) {
       console.log(error)
       alert("Ocurrio un error al cambiar el estado de la entidad " + error)
@@ -292,7 +275,8 @@ const Empleado = () => {
       const result = await response.json()
       console.log(result)
       alert("Empleado actualizado exitosamente")
-      window.location.reload()
+      setModalActualizar(false);
+      await getEmployeesData()
     } catch (error) {
       console.log(error)
       alert("Ocurrio un error al actualizar el empleado " + error)
@@ -545,7 +529,7 @@ const Empleado = () => {
                               <td>{ele.EstadoEmpleado.data[0] == 1 ? <><span style={{ color: "green" }}>■ </span><span>ACTIVO</span></> : <><span style={{ color: "red" }}>■ </span><span>INACTIVO</span></>}</td>
                               <td style={{ display: "flex", justifyContent: "center" }}>
                                 <button className='app-button animate primary' id={ele.IdEmpleado} style={{ marginRight: "10px" }} onClick={handleChangeStatus}>Cambiar estado</button>
-                                <button className='app-button animate primary' id={ele.IdEmpleado} style={{ marginRight: "10px" }} onClick={handleActualizarStatus}>Actualizar información</button>
+                                <button className='app-button animate primary' id={ele.IdEmpleado} style={{ marginRight: "10px" }} onClick={handleActualizarStatus}>Actualizar</button>
                               </td>
                             </tr>
                           )

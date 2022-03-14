@@ -4,39 +4,24 @@ import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
 import { Dialog, Button } from 'react-windows-ui'
 import MaterialTable from 'material-table'
+import Modal from '../../components/Modal';
 import useState from 'react-usestateref'
 import Select from 'react-select'
-
+import "../sucursales/index.css"
 
 const Sucursal = () => {
 
   const [showModal, setShowModal] = React.useState(false);
-  const [sucursalName, setSucursalName] = React.useState("")
-  const [selectedCity, setSelectedCity] = React.useState("")
-  const [listCat, setlistCat] = React.useState("")
+  const [addModal, setAddModal] = React.useState(false);
+  const [selectedCity, setSelectedCity] = React.useState()
+  const [listSucursales, setListSucursales, listSucursalesRef] = useState()
   const [loading, setLoading] = React.useState(true)
   const [cities, setCities, citiesRef] = useState();
-  const [label, setLabel] = useState();
 
-  let enumList = []
+  const [defaultValue, setDefaultValue, defaultValueRef] = useState();
+  const [defaultName, setDefaultName, defaultNameRef] = useState();
+  const [selectedSucursal, setSelectedSucursal, selectedSucursalRef] = useState();
 
-
-  const columnas = [
-    {
-      title: 'Id',
-      field: 'id',
-      hidden: true
-    },
-    {
-      title: 'Sucursal',
-      field: 'sucursal'
-    },
-    {
-      title: 'Ciudad',
-      field: 'ciudad'
-    }
-
-  ]
 
   useEffect(() => {
     getItems()
@@ -46,6 +31,7 @@ const Sucursal = () => {
 
 
   const addItem = async () => {
+    if(defaultNameRef.current?.length > 0 && selectedCity){
     try {
       setLoading(true)
       const response = await fetch(process.env.REACT_APP_HOME + "sucursales", {
@@ -53,17 +39,16 @@ const Sucursal = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ "NombreSucursal": sucursalName, "IdCiudad": selectedCity })
+        body: JSON.stringify({ "NombreSucursal": defaultNameRef.current, "IdCiudad": selectedCity })
       })
-      console.log(sucursalName)
-      console.log(selectedCity)
-      setSucursalName("")
       await getItems()
-      setShowModal(false)
       setLoading(false)
+      setAddModal(false)
       alert("La categoria se guardo exitosamente")
     } catch (error) {
       alert("Ocurrio un error al guardar la categoria")
+    }}else{
+      alert("Asegurate de llenar todos los campos")
     }
   }
 
@@ -77,20 +62,10 @@ const Sucursal = () => {
       })
 
       const result = await response.json()
-      var arre = []
-      result.forEach(ele => {
-        var obj = {
-          id: ele.IdSucursal,
-          ciudad: ele.NombreCiudad ?? "No hay",
-          sucursal: ele.NombreSucursal
-        }
-        arre.push(obj)
-        console.log(obj)
-      })
-      setlistCat(arre)
+      setListSucursales(result)
       setLoading(true)
       //console.log(result)
-      //setlistCat(response)
+      //setListSucursales(response)
 
     } catch (error) {
       console.log(error)
@@ -121,12 +96,63 @@ const Sucursal = () => {
       setCities(arre)
       setLoading(false)
       //console.log(result)
-      //setlistCat(response)
+      //setListSucursales(response)
 
     } catch (error) {
       console.log(error)
     }
   }
+
+  const searchTableAll = () => {
+    var searchBox = document.getElementById('search-input-table');
+    var table = document.getElementById("table-products");
+    var trs = table.tBodies[0].getElementsByTagName("tr");
+    var filter = searchBox.value.toUpperCase();
+    for (var rowI = 0; rowI < trs.length; rowI++) {
+      var tds = trs[rowI].getElementsByTagName("td");
+      trs[rowI].style.display = "none";
+      for (var cellI = 0; cellI < tds.length; cellI++) {
+        if (tds[cellI].innerHTML.toUpperCase().indexOf(filter) > -1) {
+          trs[rowI].style.display = "";
+          continue;
+        }
+      }
+    }
+  }
+
+  const handleUpdateSucursal = (element) => {
+    setShowModal(true);
+    const objCity = {
+      value: element.IdCiudad,
+      label: element.NombreCiudad
+    }
+    setSelectedSucursal(element.IdSucursal)
+    setDefaultName(element.NombreSucursal)
+    setDefaultValue(objCity);
+  }
+
+  const updateSucursalData = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch(process.env.REACT_APP_HOME + "sucursales/" + selectedSucursalRef.current, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "NombreSucursal": defaultNameRef.current, "IdCiudad": selectedCity || defaultValueRef.current.value })
+      })
+      const result = await response.json();
+      console.log(result)
+      await getItems()
+      setShowModal(false)
+      setLoading(false)
+      alert("La sucursal se actualizó exitosamente");
+    } catch (error) {
+      alert("Ocurrio un error al actualizar la sucursal "+error)
+    }
+  }
+
+
   return (
     <>
       {
@@ -137,116 +163,122 @@ const Sucursal = () => {
               hasPadding={true}
               animateTransition={true}>
 
+              <Modal showOverlay={true} show={showModal} onClose={() => setShowModal(false)} size={"md"}>
+                <Modal.Header>
+                  <Modal.Title>Actualizacion de Sucursal</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  {/* <img src={currentImageRef.current} width="700px" height="auto" /> */}
+                  <table style={{ width: '100%' }} className="styled-table" id="table-products">
+                    <thead>
+                      <tr>
+                        <th>Caracteristica</th>
+                        <th>Valor</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Nombre de la Sucursal</td>
+                        <td>
+                          <input type="text" className='app-input-text' value={defaultName} onChange={(e) => setDefaultName(e.target.value)} />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Ciudad</td>
+                        <td>
+                          <Select
+                            options={cities}
+                            defaultValue={defaultValueRef.current}
+                            onChange={(e) => setSelectedCity(e.value)}
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button value="Aceptar" onClick={updateSucursalData} />
+                  <Button value="Cerrar" onClick={() => setShowModal(false)} />
+                </Modal.Footer>
+              </Modal>
+
+              <Modal showOverlay={true} show={addModal} onClose={() => setAddModal(false)} size={"md"}>
+                <Modal.Header>
+                  <Modal.Title>Nueva Sucursal</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  {/* <img src={currentImageRef.current} width="700px" height="auto" /> */}
+                  <table style={{ width: '100%' }} className="styled-table" id="table-products">
+                    <thead>
+                      <tr>
+                        <th>Caracteristica</th>
+                        <th>Valor</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Nombre de la Sucursal</td>
+                        <td>
+                          <input type="text" className='app-input-text' value={defaultName} onChange={(e) => setDefaultName(e.target.value)} />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Ciudad</td>
+                        <td>
+                          <Select
+                            options={cities}
+                            defaultValue={defaultValueRef.current}
+                            onChange={(e) => setSelectedCity(e.value)}
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button value="Aceptar" onClick={addItem} />
+                  <Button value="Cerrar" onClick={() => setAddModal(false)} />
+                </Modal.Footer>
+              </Modal>
+
               <h1>Sucursales</h1>
               <p>Añada, modifique o elimine sucursales</p>
               <div className="app-hr"></div>
-
-              <div style={{ margin: '20px 0' }}>
-                <Button
-                  style={{ marginLeft: '30px' }}
-                  value="Nueva"
-                  onClick={() => setShowModal(true)}
-                  icon={<i className="icons10-plus"></i>} />
-              </div>
-              <div style={{ width: '100%' }}>
-                <MaterialTable
-                  columns={columnas}
-                  data={listCat}
-                  title="Categorias"
-                  style={{ boxShadow: 'none', marginRight: '30px' }}
-                  localization={{
-                    header: {
-                      actions: 'Acciones'
-                    },
-                    pagination: {
-                      labelDisplayedRows: '{from}-{to} de {count}',
-                      labelRowsSelect: 'filas',
-                      labelRowsPerPage: 'Filas por página',
-                      firstAriaLabel: 'Primera página',
-                      firstTooltip: 'Primera página',
-                      previousAriaLabel: 'Página anterior',
-                      previousTooltip: 'Página anterior',
-                      nextAriaLabel: 'Siguiente página',
-                      nextTooltip: 'Siguiente página',
-                      lastAriaLabel: 'Última página',
-                      lastTooltip: 'Última página'
-                    },
-                    toolbar: {
-                      nRowsSelected: '{0} fila(s) seleccionada(s)',
-                      searchTooltip: 'Buscar...',
-                      searchPlaceholder: 'Buscar...',
-                      exportTitle: "Categrorias",
-                      exportPDFName: 'Exportar como PDF',
-                      exportCSVName: 'Exportar como CSV'
-                    },
-                    body: {
-                      emptyDataSourceMessage: 'No hay datos para mostrar',
-                      filterRow: {
-                        searchTooltip: 'Buscar...'
-                      }
-                    }
-                  }}
-                  options={{
-                    actionsColumnIndex: -1,
-                    exportButton: true,
-                    draggable: true
-                  }}
-                  actions={
-                    [
-                      {
-                        icon: 'edit',
-                        tooltip: 'Editar categoria',
-                        onClick: (event, rowData) => alert("Has presionado la categoria: " + rowData.categoria)
-                      },
-                      {
-                        icon: 'delete',
-                        tooltip: 'Eliminar categoria',
-                        onClick: (event, rowData) => alert("Has presionado la categoria: " + rowData.categoria)
-                      }
-                    ]
-                  }
-
-                />
-              </div>
-              <Dialog
-                isVisible={showModal}
-                onBackdropPress={() => setShowModal(false)}
-                showDropShadow={true}>
-                <div style={{ padding: '10px' }}>
-                  <h3>Nueva Sucursal</h3>
-                  <div className="app-hr"></div>
-                  <div >
-                    <p>Nombre de sucursal: </p>
-                    <input
-                      value={sucursalName}
-                      onChange={e => setSucursalName(e.target.value)}
-                      style={{ width: '70%', height: '30px' }}
-                    />
+              <div style={{ display: "flex", flex: 1, marginRight: "30px", flexDirection: "column" }}>
+                <div style={{ marginTop: "15px", display: "flex" }}>
+                  <div style={{flex: 1}}>
+                  <label>Buscar</label>
+                  <input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
                   </div>
-                  <div>
-                    <p>Nombre de la ciudad: </p>
-                    <Select
-                      options={cities}
-                      theme={(theme)=> ({
-                        ...theme,
-                        colors: {
-                          ...theme.colors,
-                          text: 'white',
-                          primary: 'red'
-                        }
-                      })}
-                      onChange = {(e)=> setSelectedCity(e.value)}
-                    />
-                  </div>
-                  <div>
-                    <Button
-                      style={{ marginTop: '30px', marginLeft: '0px' }}
-                      value="Guardar"
-                      onClick={addItem}
-                      icon={<i className="icons10-save"></i>} />
+                  <div style={{flex: 1, justifyContent: "flex-end", display: "flex"}}>
+                  <button className='app-button primary animate' onClick={()=> setAddModal(true)}>Nueva Sucursal</button>
                   </div>
                 </div>
-              </Dialog>
+                <table style={{ width: '100%' }} className="styled-table" id="table-products">
+                  <thead>
+                    <tr>
+                      <th>Sucursal</th>
+                      <th>Ciudad</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      listSucursalesRef.current?.map(ele => {
+                        return (
+                          <tr>
+                            <td>{ele.NombreSucursal}</td>
+                            <td>{ele.NombreCiudad}</td>
+                            <td style={{ display: "flex", justifyContent: "center" }}>
+                              <button className='app-button primary animate' onClick={() => handleUpdateSucursal(ele)}>Actualizar</button>
+                            </td>
+                          </tr>
+                        )
+                      })
+                    }
+                  </tbody>
+                </table>
+              </div>
             </NavPageContainer>
           </>
       }
