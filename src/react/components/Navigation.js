@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { AppTheme, NavBar, NavBarLink, NavSearchSuggestion } from 'react-windows-ui'
 import { useHistory } from 'react-router-dom'
 import { useMasterState } from '../stores/MasterStore'
 import { useAuthState, logout } from '../stores/AuthStore'
+import useState from 'react-usestateref'
 
 const NavigationWindow = () => {
+
+  const [color, setColor, colorRef] = useState();
 
   const history = useHistory();
 
@@ -16,10 +19,28 @@ const NavigationWindow = () => {
     history.push("/");
   }
 
+  useEffect(() => {
+    getColorPreference();
+  },[])
+
+  const getColorPreference = async()=> {
+    const response = await fetch(process.env.REACT_APP_HOME + "auth/color/" + authState.me.get().username, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    const data = await response.json()
+    setColor(data[0].Color);
+    masterState.set({color : colorRef.current});
+    console.log(data)
+}
+
   return (
     <>
       <AppTheme
-        color={masterState.get().color}
+        color={color}
         scheme={'light'}
         onColorChange={() => { }}
         onSchemeChange={() => { }}

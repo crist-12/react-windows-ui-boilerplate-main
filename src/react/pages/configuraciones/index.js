@@ -7,6 +7,7 @@ import MasterPage from '../../components/MasterPage'
 import { Link } from 'react-router-dom'
 import { useHistory } from 'react-router-dom'
 import { useMasterState, setThemeColor } from '../../stores/MasterStore'
+import { useAuthState } from '../../stores/AuthStore'
 
 
 const Configuracion = () => {
@@ -14,6 +15,30 @@ const Configuracion = () => {
 
   const history = useHistory();
   const masterState = useMasterState();
+  const authState = useAuthState();
+
+
+  const handleColorHasChanged = (color) => {
+    setThemeColor(color);
+    updateUserPreference(color);
+  }
+
+  const updateUserPreference = (color) => {
+    try {
+      fetch(process.env.REACT_APP_HOME + "auth/color/" + authState.me.get().username, {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          Color: color
+        })
+      })
+    } catch (error) {
+      alert("Error al actualizar la configuración");
+    }
+  }
 
 
   return (
@@ -32,28 +57,28 @@ const Configuracion = () => {
             //defaultChecked
             name="1"
             color="#0078D7"
-            onChange={(color) => setThemeColor(color.target.value)} />
+            onChange={(color) => handleColorHasChanged(color.target.value)} />
           <ColorPickerItem
             name="1"
             color="#6632a8"
-            onChange={(color) => setThemeColor(color.target.value)} />
+            onChange={(color) => handleColorHasChanged(color.target.value)} />
           <ColorPickerItem
             name="1"
             color="#881798"
-            onChange={(color) => setThemeColor(color.target.value)} />
+            onChange={(color) => handleColorHasChanged(color.target.value)} />
 
           <ColorPickerItem
             name="1"
             color="#00B294"
-            onChange={(color) => setThemeColor(color.target.value)} />
+            onChange={(color) => handleColorHasChanged(color.target.value)} />
           <ColorPickerItem
             name="1"
             color="#69797E"
-            onChange={(color) => setThemeColor(color.target.value)} />
+            onChange={(color) => handleColorHasChanged(color.target.value)} />
           <ColorPickerPalette
             name="1"
             color="#5ebd06"
-            onChange={(color) => setThemeColor(color.target.value)} />
+            onChange={(color) => handleColorHasChanged(color.target.value)} />
         </div>
         <div>
           <h2>Más configuraciones</h2>
