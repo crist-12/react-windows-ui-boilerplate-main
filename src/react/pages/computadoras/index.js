@@ -190,7 +190,7 @@ const Computadora = () => {
             const result = await response.json()
             //setAssignmentData(result)
             // setLoading(false)
-            await changeComputerStatus(2);
+            await updateReceivedFromMaitenance();
             //alert("Se ha actualizado el estado del equipo")
 
         } catch (error) {
@@ -221,8 +221,26 @@ const Computadora = () => {
                 setModalCancel(false);
                 await getAllAssignmentData()
                 await getTableData()
-               // window.location.reload()
+                // window.location.reload()
             }
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+    const updateReceivedFromMaitenance = async () => {
+        try {
+            const response = await fetch(process.env.REACT_APP_HOME + "machines/receivedcheck/" + idRef.current, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            const result = await response.json()
+            console.log(result)
+            alert("Se ha actualizado el estado del equipo")
+            await getAllAssignmentData()
+            await getTableData()
         } catch (error) {
             alert(error)
         }
@@ -287,7 +305,7 @@ const Computadora = () => {
     const handleUpdateProcess = async () => {
         try {
             infoRawRef.current.map((elemento) => {
-             updateComputerInfo(elemento.Respuesta, elemento.IdCaracteristica)
+                updateComputerInfo(elemento.Respuesta, elemento.IdCaracteristica)
             })
         } catch (error) {
             return alert(error)
@@ -295,6 +313,7 @@ const Computadora = () => {
         alert("Se ha actualizado la información del equipo");
         await getAllAssignmentData()
         await getTableData()
+        setModalActualizar(false)
     }
 
     const getComputerInfoRaw = async () => {
@@ -654,7 +673,7 @@ const Computadora = () => {
                                                                 </tr>
                                                             )
                                                         })
-                                                        : <></>
+                                                            : <></>
                                                     }
                                                 </tbody>
                                             </table>

@@ -62,7 +62,7 @@ const Login = () => {
             isVisible={splash}
             title={"Kassa"}
             />
-        <div style={{backgroundImage:`url(${login})`, height: '100vh', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', flex:1, display: 'flex', flexDirection: 'column'}}>
+        <div id="login-screen" style={{backgroundImage:`url(${login})`, height: '100vh', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', flex:1, display: 'flex', flexDirection: 'column'}}>
             <div style={{display: 'flex', flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
             {
 
@@ -85,30 +85,34 @@ const Login = () => {
             <div style={{flex:2, display:'flex', alignItems: 'flex-start', justifyContent:'center', flex:2}}>
             <div style={{display:'block', textAlign: 'center'}}>
             <h2 style={{color: 'white'}}>Iniciar Sesión</h2>
-            <InputText
+            <input
+                className='app-input-text'
                 placeholder="Nombre de Usuario"
                 tooltip="Ingrese nombre de usuario"
                 value={username}
+                id="input-username"
                 onChange={(e) => setUsername(e.target.value)}
                 />
                 <br/>
                 <br/>
                 <br/>
-            <InputText
+            <input
                 type="password"
+                className='app-input-text'
                 placeholder="Ingrese su contraseña"
                 value={password}
+                id="input-password"
                 onChange={(e) => setPassword(e.target.value)}
                 /> 
                 <br/>
                 <br/>
                 <br/>
-            <Button
-                value="Iniciar Sesión"
-                isLoading={false}
+            <button
+                className='app-button animate'
                 onClick={handleLogin}
+                id="button-login"
                 tooltip="Iniciar Sesión"
-                />
+                >Iniciar Sesión</button>
             </div>
             
             </div>

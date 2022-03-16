@@ -92,9 +92,9 @@ const Mantenimiento = () => {
                                     return (
                                         <tr key={item.IdMantenimiento}>
                                             <td>{item.Equipo}</td>
+                                            <td>{item.DescripcionTipoMantenimiento}</td>
                                             <td>{item.FechaMantenimiento}</td>
                                             <td>{item.FechaRecibida}</td>
-                                            <td>{item.DescripcionTipoMantenimiento}</td>
                                             <td><a style={{textDecoration: "underline", color: "blue"}} onClick={()=> {setCurrentImage(item.FacturaMantenimiento); setModalImg(true)}}>Ver imagen</a></td>
                                         </tr>
                                     )

@@ -24,6 +24,7 @@
     "axios": "^0.25.0",
     "bootstrap": "^5.1.3",
     "chart.js": "^3.7.1",
+    "cypress": "^9.5.2",
     "electron-dev": "^1.0.1",
     "electron-squirrel-startup": "^1.0.0",
     "env-cmd": "^10.1.0",
@@ -59,7 +60,8 @@
     "package2": "electron-forge package",
     "make": "electron-forge make",
     "build-electron": "mkdir build/src && robocopy electron build/electron /S & robocopy src/shared build/src/shared /S",
-    "package": "electron-builder build --win -c.extraMetadata.main=build/electron/main.js --publish never"
+    "package": "electron-builder build --win -c.extraMetadata.main=build/electron/main.js --publish never",
+    "cypress": "cypress open"
   },
   "build": {
     "files": [

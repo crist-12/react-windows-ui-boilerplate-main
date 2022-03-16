@@ -147,6 +147,7 @@ const Categoria = () => {
       console.log(error)
       alert("Ocurrio un error al cambiar el estado de la entidad " + error)
     }
+    setModalCancel(false);
   }
 
   const getEntityInfoRaw = async () => {
@@ -235,6 +236,7 @@ const Categoria = () => {
   }
 
   const handleUpdateEntity = async (e) => {
+    setModalActualizar(false)
     try {
       infoRawRef.current.forEach((item, index) => {
         updateCaracteristicaInfo(index);
@@ -299,6 +301,7 @@ const Categoria = () => {
         updateItems(index);
       })
       alert("Datos actualizados exitosamente")
+      setModalActualizar(false)
       await getAllTypes()
       await getItems()
     } catch (error) {
@@ -378,11 +381,11 @@ const Categoria = () => {
       const result = await response.json()
       console.log(result)
       setInsertedId(result.message)
-      
-      if(selectedTypeRef.current != 4)
-      alert("La categoria se guardo exitosamente")
+
+      if (selectedTypeRef.current != 4)
+        alert("La categoria se guardo exitosamente")
       else
-      await handleNewSelectionSave();
+        await handleNewSelectionSave();
 
     } catch (error) {
       alert("Ocurrio un error al guardar la categoria")
@@ -411,12 +414,12 @@ const Categoria = () => {
       alert("Ocurrio un error al guardar la categoria")
     }
   }
-  
-  const handleNewSelectionSave = async() => {
+
+  const handleNewSelectionSave = async () => {
     try {
       const stringValues = selectValuesRef.current;
       const stringValuesArray = stringValues.split("|");
-      stringValuesArray.forEach((item, index)=> {
+      stringValuesArray.forEach((item, index) => {
         console.log(item)
         addItemsOptions(item, index).then((result) => {
           //console.log(result)
@@ -607,7 +610,7 @@ const Categoria = () => {
                     </div>
                   </div>
                   <div style={{ display: "flex" }}>
-                    <Modal showOverlay={true} show={itemsModal} size={"lg"}>
+                    <Modal showOverlay={true} show={itemsModal} onClose={() => setItemsModal(false)} size={"lg"}>
                       <Modal.Header>
                         <Modal.Title>Actualizacion de ítems</Modal.Title>
                       </Modal.Header>

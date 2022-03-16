@@ -5,6 +5,7 @@ const RightMenu =() => {
     return <NavPageContainerRight style={{ marginTop: "30px" }}>
       <h4>Mas acciones</h4>
       <LinkCompound
+      id="linkCompound"
         to="/grupos"
         title="Mis grupos"
         subtitle="Gestiona tus grupos de productos"

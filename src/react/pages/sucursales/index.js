@@ -44,6 +44,8 @@ const Sucursal = () => {
       await getItems()
       setLoading(false)
       setAddModal(false)
+      setDefaultName()
+      setDefaultValue()
       alert("La categoria se guardo exitosamente")
     } catch (error) {
       alert("Ocurrio un error al guardar la categoria")
@@ -147,6 +149,8 @@ const Sucursal = () => {
       setShowModal(false)
       setLoading(false)
       alert("La sucursal se actualizó exitosamente");
+      setDefaultName()
+      setDefaultValue()
     } catch (error) {
       alert("Ocurrio un error al actualizar la sucursal "+error)
     }

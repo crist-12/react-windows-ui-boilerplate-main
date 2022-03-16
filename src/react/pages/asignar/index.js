@@ -48,6 +48,8 @@ const Asignar = () => {
   const [incluyeWebcam, setIncluyeWebcam, incluyeWebcamRef] = useState(false);
   const [defaultValue, setDefaultValue, defaultValueRef] = useState(dValue);
 
+  const [selectEq, setSelectEq, selectEqRef] = useState(null);
+  const [selectEm, setSelectEm, selectEmRef] = useState(null);
 
   const [dummy, setDummy] = React.useState(false);
 
@@ -130,6 +132,7 @@ const Asignar = () => {
     //var auxArray = [];
     //auxArray = computadoras.filter(ele => ele.value == e.value)
     setSelectedComputadora(e.value)
+    setSelectEq(e)
     console.log(e)
     var label = e.label
     var label2 = label.substring(0, label.length - 1);
@@ -141,6 +144,7 @@ const Asignar = () => {
 
   const handleChangeEmployee = async (e) => {
     var label = e.label
+    setSelectEm(e)
     setFilteredEmployee(label)
     setSelectedEmployee(e.value)
   }
@@ -231,12 +235,16 @@ const Asignar = () => {
       })
       const result = await response.json()
       console.log(result)
-      alert("Cambio de estado exitoso")
-      if(status == 4 || status == 2) {
+      setSelectEm(dValue);
+      setSelectEq(dValue);
+      setFilteredComputer(null)
+      if (status == 1 || status == 4)
+        alert("Cambio de estado exitoso")
+      if (status == 4 || status == 2) {
         getAllComputersRegistered()
         getAllEmployeeDetails()
       }
-        //window.location.reload()
+      //window.location.reload()
       setDummy(!dummy)
       setDefaultValue(dValue);
     } catch (error) {
@@ -267,6 +275,9 @@ const Asignar = () => {
       console.log(result)
       changeComputerStatus(2)
       getAllComputersRegistered()
+      setSelectEm(dValue);
+      setSelectEq(dValue);
+      setFilteredComputer(null)
       alert("Asignación exitosa")
       setModalAsi(false)
       setDetallesAsi("")
@@ -315,31 +326,42 @@ const Asignar = () => {
   }
 
   const handleSaveMaintenance = async () => {
-    try {
-      const response = await fetch(process.env.REACT_APP_HOME + "maintenance", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          IdEquipo: selectedComputadoraRef.current,
-          ObservacionesMantenimiento: observacionesMantenimiento,
-          IdTipoMantenimiento: mantenimientoTipoRef.current
-        })
-      })
-      const result = await response.json()
-      console.log(result)
-      changeComputerStatus(3)
-      getAllComputersRegistered()
-      alert("Mantenimiento registrados exitosamente")
-      setModalMante(false)
-      setMantenimientoTipo(null)
-      setObservacionesMantenimiento("")
-      setDummy(!dummy)
-      setDefaultValue(dValue)
-      //window.location.reload()
-    } catch (error) {
-      alert(error)
+    if (observacionesMantenimientoRef.current) {
+      if (mantenimientoTipoRef.current) {
+        try {
+          const response = await fetch(process.env.REACT_APP_HOME + "maintenance", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              IdEquipo: selectedComputadoraRef.current,
+              ObservacionesMantenimiento: observacionesMantenimiento,
+              IdTipoMantenimiento: mantenimientoTipoRef.current
+            })
+          })
+          const result = await response.json()
+          console.log(result)
+          changeComputerStatus(3)
+          setSelectEm(dValue);
+          setSelectEq(dValue);
+          getAllComputersRegistered()
+          alert("Mantenimiento registrados exitosamente")
+          setModalMante(false)
+          setStatusComputadora(3);
+          setMantenimientoTipo(null)
+          setObservacionesMantenimiento("")
+          setDummy(!dummy)
+          setDefaultValue(dValue)
+          //window.location.reload()
+        } catch (error) {
+          alert(error)
+        }
+      } else {
+        alert("Debes escoger el tipo de mantenimiento")
+      }
+    } else {
+      alert("Debes escribir la razón del mantenimiento")
     }
   }
 
@@ -353,7 +375,7 @@ const Asignar = () => {
       })
       const result = await response.json()
       console.log(result)
-     // alert("Asignación eliminada exitosamente")
+      // alert("Asignación eliminada exitosamente")
       //getAllComputersRegistered()
     } catch (error) {
       alert(error)
@@ -426,8 +448,8 @@ const Asignar = () => {
                 </div>
               </Modal.Body>
               <Modal.Footer>
-                <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={handleSaveAssignment}>Asignar</button>
-                <button className='app-button animate primary' style={{ marginRight: "10px" }} >Cancelar</button>
+                <button id="btn-asi" className='app-button animate primary' style={{ marginRight: "10px" }} onClick={handleSaveAssignment}>Asignar</button>
+                <button id="btn-cnl" className='app-button animate primary' style={{ marginRight: "10px" }} onClick={() => setModalAsi(false)}>Cancelar</button>
               </Modal.Footer>
             </Modal>
             <Modal showOverlay={true} show={modalMante} onClose={() => setModalMante(false)} size="lg">
@@ -473,7 +495,7 @@ const Asignar = () => {
               </Modal.Body>
               <Modal.Footer>
                 <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={handleSaveMaintenance}>Enviar a mantenimiento</button>
-                <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={()=> setModalMante(false)}>Cancelar</button>
+                <button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={() => setModalMante(false)}>Cancelar</button>
               </Modal.Footer>
             </Modal>
 
@@ -510,6 +532,7 @@ const Asignar = () => {
                         options={computadoras}
                         onChange={handleChangeComputadora}
                         defaultValue={defaultValueRef.current}
+                        value={selectEqRef.current}
                         theme={(theme) => ({
                           ...theme,
                           borderRadius: 0,
@@ -519,6 +542,7 @@ const Asignar = () => {
                             primary25: masterState.get().color
                           },
                         })}
+                        inputId="select-equipos"
                       />
                     </div>
                   </div>
@@ -527,9 +551,11 @@ const Asignar = () => {
                     <label>Seleccione el empleado: </label>
                     <div style={{ width: "450px", marginTop: "10px" }}>
                       <Select
+                        inputId="select-empleados"
                         options={employeeDatos}
                         isDisabled={disableEmployeeRef.current}
                         onChange={handleChangeEmployee}
+                        value={selectEmRef.current}
                         theme={(theme) => ({
                           ...theme,
                           borderRadius: 0,
@@ -543,10 +569,10 @@ const Asignar = () => {
                     </div>
                   </div>
                   <div style={{ marginTop: "20px" }}>
-                    <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={disableEmployeeRef.current} onClick={handleShowAsiModal}>Asignar</button>
-                    <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado != 2 ? true : false} onClick={handleRemoveAssignment}>Remover asignación</button>
-                    <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado == 3 ? true : false} onClick={() => setModalMante(true)}>Enviar a mantenimiento</button>
-                    <button className='app-button animate primary' style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado != 1 ? true : false} onClick={() => setModalCancel(true)}>Dar de baja</button>
+                    <button className='app-button animate primary' id="asi-asi" style={{ marginRight: "10px" }} disabled={disableEmployeeRef.current} onClick={handleShowAsiModal}>Asignar</button>
+                    <button className='app-button animate primary' id="asi-rem" style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado != 2 ? true : false} onClick={handleRemoveAssignment}>Remover asignación</button>
+                    <button className='app-button animate primary' id="asi-mnt" style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado == 3 ? true : false} onClick={() => setModalMante(true)}>Enviar a mantenimiento</button>
+                    <button className='app-button animate primary' id="asi-baj" style={{ marginRight: "10px" }} disabled={statusComputadoraRef.current?.TipoEstado != 1 ? true : false} onClick={() => setModalCancel(true)}>Dar de baja</button>
                   </div>
 
                   <div style={{ backgroundColor: "#eee", marginTop: "30px", padding: "10px" }}>
@@ -563,22 +589,22 @@ const Asignar = () => {
                                     if (ele.CaracteristicaTipo == 3) {
                                       return (<>
                                         {
-                                        ele.Respuesta.length > 1000 ?
-                                        <p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: <a style={{textDecoration: "underline", color: "blue"}} onClick={()=> {setModalImg(true); setCurrentImage(ele.Respuesta)}}>Ver imagen</a></p>
-                                       :<p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: ---</p>
-                                      }
-                                        <Modal showOverlay={true} show={modalImg}  onClose={() => setModalImg(false)}>
-                                              <Modal.Header>
-                                                <Modal.Title>Visualizador de imágenes</Modal.Title>
-                                              </Modal.Header>
-                                              <Modal.Body>
-                                                <img src={currentImageRef.current} width="700px" height="auto" />
-                                              </Modal.Body>
-                                              <Modal.Footer>
-                                                <Button value='Guardar imagen' onClick={() => {triggerBase64Download(currentImageRef.current, "IMG-"+Date.now()) }}  />
-                                                <Button value="Cerrar" onClick={() => setModalImg(false)} />
-                                              </Modal.Footer>
-                                            </Modal>
+                                          ele.Respuesta.length > 1000 ?
+                                            <p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: <a style={{ textDecoration: "underline", color: "blue" }} onClick={() => { setModalImg(true); setCurrentImage(ele.Respuesta) }}>Ver imagen</a></p>
+                                            : <p><span style={{ fontWeight: "bold" }}>{ele.CaracteristicaDescripcion}</span>: ---</p>
+                                        }
+                                        <Modal showOverlay={true} id="mdl-img" show={modalImg} onClose={() => setModalImg(false)}>
+                                          <Modal.Header>
+                                            <Modal.Title>Visualizador de imágenes</Modal.Title>
+                                          </Modal.Header>
+                                          <Modal.Body>
+                                            <img src={currentImageRef.current} width="700px" height="auto" />
+                                          </Modal.Body>
+                                          <Modal.Footer>
+                                            <Button value='Guardar imagen' onClick={() => { triggerBase64Download(currentImageRef.current, "IMG-" + Date.now()) }} />
+                                            <Button value="Cerrar" onClick={() => setModalImg(false)} />
+                                          </Modal.Footer>
+                                        </Modal>
                                       </>)
                                     }
                                     return (
