@@ -60,7 +60,7 @@ const Asignar = () => {
 
   const getControls = async () => {
     try {
-      const response = await fetch("http://localhost:9000/control", {
+      const response = await fetch(process.env.REACT_APP_HOME +"control", {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
