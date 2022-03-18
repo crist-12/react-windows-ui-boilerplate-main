@@ -1,4 +1,10 @@
-
+/**
+ * @file Componente - Área
+ * @author Christopher Ortiz
+ * @namespace Area
+ * @description Las áreas de la empresa son los departamentos con las que esta cuenta, administra las áreas de la empresa en esta pantalla.
+ * @version 1.0.0
+ */
 import { NavPageContainer, Link } from 'react-windows-ui'
 import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
@@ -7,19 +13,70 @@ import MaterialTable from 'material-table'
 import Modal from '../../components/Modal';
 import useState from 'react-usestateref'
 
-const Ciudad = () => {
+const Area = () => {
 
+/**
+ * setShowModal Hook que maneja el modal para actualizar los datos
+ * @function setShowModal
+ * @memberof Area
+ * @return showModal {boolean}
+ * @inner
+ */
   const [showModal, setShowModal] = useState(false);
+/**
+ * setListAreas Hook que maneja un listado de áreas registradas en la base de datos
+ * @function setListAreas
+ * @memberof Area
+ * @return listAreas {Object}
+ * @inner
+ */
   const [listAreas, setListAreas] = useState()
+/**
+ * setLoading Hook encargado de manejar el loading de la pantalla
+ * @function setLoading
+ * @memberof Area
+ * @return loading {boolean}
+ * @inner
+ */
   const [loading, setLoading] = useState(true)
+/**
+ * setDefaultName Hook que maneja el nombre que se está ingresando/actualizando en el modal
+ * @function setDefaultName
+ * @memberof Area
+ * @return defaultName {string}
+ * @inner
+ */
   const [defaultName, setDefaultName, defaultNameRef] = useState()
+/**
+ * setSelectedIndex Hook que maneja el índice seleccionado en el select de las áreas
+ * @function setSelectedIndex
+ * @memberof Area
+ * @return selectedIndex {int}
+ * @inner
+ */
   const [selectedIndex, setSelectedIndex, selectedIndexRef] = useState()
+/**
+ * setAddModal Hook que maneja el estado del modal para agregar los ítems
+ * @function setAddModal
+ * @memberof Area
+ * @return addModal {boolean}
+ * @inner
+ */
   const [addModal, setAddModal] = useState(false)
 
   useEffect(() => {
     getAreasData()
   }, [])
 
+/**
+ * Agrega una nueva área al sistema
+ * @name addNewArea
+ * @function
+ * @async
+ * @memberof Area
+ * @inner
+ * @return {void}
+*/
   const addNewArea = async () => {
     if (defaultName) {
       try {
@@ -46,6 +103,15 @@ const Ciudad = () => {
     }
   }
 
+/**
+ * Maneja la API para actualizar el área que se ha mostrado en el modal
+ * @name updateCityRow
+ * @function
+ * @async
+ * @memberof Area
+ * @inner
+ * @return {void}
+*/
   const updateCityRow = async () => {
     if(defaultName){
       try {
@@ -72,6 +138,15 @@ const Ciudad = () => {
     }
   }
 
+/**
+ * Función que trae los datos de las áreas registradas en la base de datos
+ * @name getAreasData
+ * @function
+ * @async
+ * @memberof Area
+ * @inner
+ * @return {void}
+*/
   const getAreasData = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "area", {
@@ -90,7 +165,14 @@ const Ciudad = () => {
     }
   }
 
-
+/**
+ * Maneja la búsqueda en la tabla, función que se encarga de filtrar los datos de la tabla
+ * @name searchTableAll
+ * @function
+ * @memberof Area
+ * @inner
+ * @return {void}
+*/
   const searchTableAll = () => {
     var searchBox = document.getElementById('search-input-table');
     var table = document.getElementById("table-products");
@@ -108,6 +190,15 @@ const Ciudad = () => {
     }
   }
 
+/**
+ * Al momento de actualizar, se deben gestionar varios procesos, primero debe setear el nombre del área en el modal, el código de la selección y mostrar el modal
+ * @name handleUpdateCity
+ * @function
+ * @async
+ * @memberof Area
+ * @inner
+ * @return {void}
+*/
   const handleUpdateCity = async(nombre, codigo) => {
     setDefaultName(nombre); 
     setSelectedIndex(codigo); 
@@ -227,4 +318,4 @@ const Ciudad = () => {
   );
 }
 
-export default Ciudad
+export default Area

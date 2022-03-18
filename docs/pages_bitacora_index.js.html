@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Global - Documentation</title>
+    <title>pages/bitacora/index.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,165 +32,134 @@
 
 <div id="main">
     
-    <h1 class="page-title">Global</h1>
+    <h1 class="page-title">pages/bitacora/index.js</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>
-        
-        </h2>
-        
-    
-</header>
-
-<article>
-    
-        <div class="container-overview">
-        
-            
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-            
-
-            
-        
-        </div>
-    
-
-    
-
-    
-
-    
-    
-    
-
-     
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id="useInput"><span class="type-signature">(constant) </span>useInput<span class="type-signature"></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="hooks_useInput.js.html">hooks/useInput.js</a>, <a href="hooks_useInput.js.html#line14">line 14</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    <p>Hook de uso de input personalizado</p>
-</div>
-
-
-
-
-
-
-
-
-        
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file Componente - Bitácpra
+ * @author Christopher Ortiz
+ * @namespace Bitácora
+ * @description Componente que contiene la bitácora de los movimientos realizados en el sistema.
+ * @version 1.0.0
+ */
+import { NavPageContainer,Link } from 'react-windows-ui'
+import React, { useState, useEffect } from 'react'
+import NavigationWindow from '../../components/Navigation'
+
+const Bitacora = () => {
+/**
+ * setLogs Obtiene los registros de la bitácora
+ * @function setLogs
+ * @memberof Bitácora
+ * @return logs {Object}
+ * @inner
+ */
+const [logs, setLogs] = useState()
+
+useEffect(() => {
+  getBitacoraRecords();
+}, [])
+
+/**
+ * searchTableAll Maneja la búsqueda en la tabla, función que se encarga de filtrar los datos de la tabla
+ * @name searchTableAll
+ * @function
+ * @memberof Bitácora
+ * @inner
+ * @return {void}
+*/
+const searchTableAll = () => {
+  var searchBox = document.getElementById('search-input-table');
+  var table = document.getElementById("table-products");
+  var trs = table.tBodies[0].getElementsByTagName("tr");
+  var filter = searchBox.value.toUpperCase();
+  for (var rowI = 0; rowI &lt; trs.length; rowI++) {
+    var tds = trs[rowI].getElementsByTagName("td");
+    trs[rowI].style.display = "none";
+    for (var cellI = 0; cellI &lt; tds.length; cellI++) {
+      if (tds[cellI].innerHTML.toUpperCase().indexOf(filter) > -1) {
+        trs[rowI].style.display = "";
+        continue;
+      }
+    }
+  }
+}
+
+/**
+ * getBitacoraRecords Obtiene los datos de la bitacóra 
+ * @name getBitacoraRecords
+ * @function
+ * @memberof Bitácora
+ * @async
+ * @inner
+ * @return {void}
+*/
+const getBitacoraRecords = async() => {
+  const response = await fetch(process.env.REACT_APP_HOME + "bitacora", {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+  const data = await response.json()
+  setLogs(data)
+}
+    return (
+      &lt;>
+        &lt;NavigationWindow/>
+            &lt;NavPageContainer
+            hasPadding={true}
+            animateTransition={true}>
+
+            &lt;h1>Bitacora&lt;/h1>
+            &lt;p>Analiza los últimos movimientos realizados en el sistema.&lt;/p>
+            &lt;div style={{ display: "flex", flex: 1, marginRight: "30px", flexDirection: "column" }}>
+                &lt;div style={{ marginTop: "15px", display: "flex", flex: 1 }}>
+                  &lt;div style={{ flex: 1 }}>
+                    &lt;label>Buscar&lt;/label>
+                    &lt;input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
+                  &lt;/div>
+                &lt;/div>
+                &lt;table style={{ width: '100%' }} className="styled-table" id="table-products">
+                  &lt;thead>
+                    &lt;tr>
+                      &lt;th>Acción&lt;/th>
+                      &lt;th>Módulo&lt;/th>
+                      &lt;th>Fecha&lt;/th>
+                    &lt;/tr>
+                  &lt;/thead>
+                  &lt;tbody>
+                    {
+                      logs ?
+                        logs.map((ele, index) => {
+                          return (
+                            &lt;tr>
+                              &lt;td>{ele.Accion}&lt;/td>
+                              &lt;td>{ele.Modulo}&lt;/td>
+                              &lt;td>{ele.FechaF}&lt;/td>
+                            &lt;/tr>
+                          )
+                        }) : &lt;>&lt;/>
+                    }
+                  &lt;/tbody>
+                &lt;/table>
+              &lt;/div>
+        &lt;/NavPageContainer>
+    &lt;/>
+  );
+}
+
+export default Bitacora</code></pre>
+        </article>
+    </section>
 
 
 

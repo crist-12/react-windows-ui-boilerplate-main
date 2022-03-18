@@ -1,4 +1,10 @@
-
+/**
+ * @file Componente - Categorías
+ * @author Christopher Ortiz
+ * @namespace Categorías
+ * @description Componente que renderiza la lista de categorías
+ * @version 1.0.0
+ */
 import { NavPageContainer } from 'react-windows-ui'
 import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
@@ -10,28 +16,181 @@ import Select from 'react-select'
 import { useAuthState } from '../../stores/AuthStore';
 
 const Categoria = () => {
-
+/**
+ * Hook encargado de manejar el estado de mostrar el modal
+ * @function setShowModal
+ * @memberof Categorías
+ * @return showModal {boolean}
+ * @inner
+ */
   const [showModal, setShowModal] = useState(false);
+/**
+ * Hook encargado de manejar el estado de mostrar el modal para cambiar el estado de la categoría
+ * @function setModalCancel
+ * @memberof Categorías
+ * @return modalCancel {boolean}
+ * @inner
+ */
   const [modalCancel, setModalCancel] = useState(false);
+/**
+ * Hook encargado de manejar el nombre de la categoría
+ * @function setCategoria
+ * @memberof Categorías
+ * @return categoria {string}
+ * @inner
+ */
   const [categoria, setCategoria] = useState("")
+/**
+ * Hook encargado de manejar el listado de las categorías de la base de datos
+ * @function setlistCat
+ * @memberof Categorías
+ * @return listCat {array}
+ * @inner
+ */
   const [listCat, setlistCat, listCatRef] = useState([])
+/**
+ * Hook encargado de manejar el estado de carga de la página
+ * @function setLoading
+ * @memberof Categorías
+ * @return loading {boolean}
+ * @inner
+ */
   const [loading, setLoading] = useState(true)
+/**
+ * Hook encargado de manejar el código del equipo que se está actualizando actualmente
+ * @function setKeyEdit
+ * @memberof Categorías
+ * @return keyEdit {Object}
+ * @inner
+ */
   const [keyEdit, setKeyEdit, keyEditRef] = useState(null)
+/**
+ * Hook encargado de manejar la visualización del modal de actualización
+ * @function setModalActualizar
+ * @memberof Categorías
+ * @return modalActualizar {boolean}
+ * @inner
+ */
   const [modalActualizar, setModalActualizar] = useState(false)
+/**
+ * Hook encargado de manejar la información de la categoría que se está actualizando
+ * @function setInfoRaw
+ * @memberof Categorías
+ * @return infoRaw {Object}
+ * @inner
+ */
   const [infoRaw, setInfoRaw, infoRawRef] = useState()
+/**
+ * Hook encargado de manejar el estado del modal de la categoría
+ * @function setModalCategory
+ * @memberof Categorías
+ * @return modalCategory {boolean}
+ * @inner
+ */
   const [modalCategory, setModalCategory] = useState(false)
+/**
+ * Hook encargado de manejar el ingreso de un nuevo ítem
+ * @function setNewItems
+ * @memberof Categorías
+ * @return newItems {string}
+ * @inner
+ */
   const [newItems, setNewItems, newItemsRef] = useState("")
+/**
+ * Hook encargado de manejar el estado del modal de los nuevos items
+ * @function setItemModal
+ * @memberof Categorías
+ * @return itemsModal {boolean}
+ * @inner
+ */
   const [itemsModal, setItemsModal] = useState(false)
+/**
+ * Hook encargado de manejar el estado del modal de los nuevos items
+ * @function setItems
+ * @memberof Categorías
+ * @return items {Object}
+ * @inner
+ */
   const [items, setItems, itemsRef] = useState()
+/**
+ * Hook encargado de manejar el estado del modal de los items seleccionados
+ * @function setItemsSelect
+ * @memberof Categorías
+ * @return itemsSelect {Array}
+ * @inner
+ */
   const [itemsSelect, setItemsSelect, itemsSelectRef] = useState([])
+/**
+ * Hook encargado de manejar el estado del modal mostrar/ocultar de los nuevos items
+ * @function setModalNew
+ * @memberof Categorías
+ * @return modalNew {Object}
+ * @inner
+ */
   const [modalNew, setModalNew] = useState(false)
+/**
+ * Hook encargado de manejar el estado del modal de los nuevos items
+ * @function setTypes
+ * @memberof Categorías
+ * @return types {Object}
+ * @inner
+ */
   const [types, setTypes, typesRef] = useState()
+/**
+ * Hook encargado de manejar el tipo de campo seleccionado
+ * @function setSelectedType
+ * @memberof Categorías
+ * @return selectedType {Object}
+ * @inner
+ */
   const [selectedType, setSelectedType, selectedTypeRef] = useState();
+/**
+ * Hook encargado de manejar el nombre de la caracteristica
+ * @function setNombreCaracteristica
+ * @memberof Categorías
+ * @return nombreCaracteristica {Object}
+ * @inner
+ */
   const [nombreCaracteristica, setNombreCaracteristica, nombreCaracteristicaRef] = useState()
+/**
+ * Hook encargado de manejar el valor del Placeholder a registrar
+ * @function setPlaceholderR
+ * @memberof Categorías
+ * @return placeholderR {Object}
+ * @inner
+ */
   const [placeholderR, setPlaceholderR, placeholderRRef] = useState()
+/**
+ * Hook encargado de manejar el valor deL requerido
+ * @function setIsRequired
+ * @memberof Categorías
+ * @return isRequired {int}
+ * @inner
+ */
   const [isRequired, setIsRequired, isRequiredRef] = useState(0)
+/**
+ * Hook encargado de manejar el valor de los valores seleccionados
+ * @function setSelectValues
+ * @memberof Categorías
+ * @return selectValues {Object}
+ * @inner
+ */
   const [selectValues, setSelectValues, selectValuesRef] = useState()
+/**
+ * Hook encargado de manejar el valor del último nivel conseguido
+ * @function setLastLevel
+ * @memberof Categorías
+ * @return lastLevel {Object}
+ * @inner
+ */
   const [lastLevel, setLastLevel, lastLevelRef] = useState()
+/**
+ * Hook encargado de manejar el valor del código que fue insertado
+ * @function setInsertedId
+ * @memberof Categorías
+ * @return insertedId {Object}
+ * @inner
+ */
   const [insertedId, setInsertedId, insertedIdRef] = useState()
 
 

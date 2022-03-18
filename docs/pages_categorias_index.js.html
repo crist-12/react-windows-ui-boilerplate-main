@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>pages/categorias/index.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Area.html">Area</a><ul class='methods'><li data-type='method'><a href="Area.html#~addNewArea">addNewArea</a></li><li data-type='method'><a href="Area.html#~getAreasData">getAreasData</a></li><li data-type='method'><a href="Area.html#~handleUpdateCity">handleUpdateCity</a></li><li data-type='method'><a href="Area.html#~searchTableAll">searchTableAll</a></li><li data-type='method'><a href="Area.html#~setAddModal">setAddModal</a></li><li data-type='method'><a href="Area.html#~setDefaultName">setDefaultName</a></li><li data-type='method'><a href="Area.html#~setListAreas">setListAreas</a></li><li data-type='method'><a href="Area.html#~setLoading">setLoading</a></li><li data-type='method'><a href="Area.html#~setSelectedIndex">setSelectedIndex</a></li><li data-type='method'><a href="Area.html#~setShowModal">setShowModal</a></li><li data-type='method'><a href="Area.html#~updateCityRow">updateCityRow</a></li></ul></li><li><a href="Asignaci%25C3%25B3n.html">Asignación</a><ul class='methods'><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~changeComputerStatus">changeComputerStatus</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~checkComputerStatus">checkComputerStatus</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~deleteAssignmentRow">deleteAssignmentRow</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~employee">employee</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~getAllComputersRegistered">getAllComputersRegistered</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~getAllComputersRegistered">getAllComputersRegistered</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~getAllEmployeeDetails">getAllEmployeeDetails</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~getComputerDetails">getComputerDetails</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~handleChangeEmployee">handleChangeEmployee</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~handleRemoveAssignment">handleRemoveAssignment</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~handleSaveAssignment">handleSaveAssignment</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~handleSaveMaintenance">handleSaveMaintenance</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~handleShowAsiModal">handleShowAsiModal</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~selectedComputadora">selectedComputadora</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~selectedDataPC">selectedDataPC</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setComputadoras">setComputadoras</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setControls">setControls</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setCurrentImage">setCurrentImage</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setDefaultValue">setDefaultValue</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setDetallesAsi">setDetallesAsi</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setDisableEmployee">setDisableEmployee</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setDummy">setDummy</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setEmployeeDatos">setEmployeeDatos</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setFilteredComputer">setFilteredComputer</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setFilteredEmployee">setFilteredEmployee</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setIncluyeCargador">setIncluyeCargador</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setIncluyeMochila">setIncluyeMochila</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setIncluyeMouse">setIncluyeMouse</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setIncluyeTeclado">setIncluyeTeclado</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setIncluyeWebcam">setIncluyeWebcam</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setLoading">setLoading</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setMantenimientoTipo">setMantenimientoTipo</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setModalAsi">setModalAsi</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setModalCancel">setModalCancel</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setModalImg">setModalImg</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setModalMante">setModalMante</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setObservacionesMantenimiento">setObservacionesMantenimiento</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setSelectedEmployee">setSelectedEmployee</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setSelectEm">setSelectEm</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setSelectEq">setSelectEq</a></li><li data-type='method'><a href="Asignaci%2525C3%2525B3n.html#~setStatusComputadora">setStatusComputadora</a></li></ul></li><li><a href="Bit%25C3%25A1cora.html">Bitácora</a><ul class='methods'><li data-type='method'><a href="Bit%2525C3%2525A1cora.html#~getBitacoraRecords">getBitacoraRecords</a></li><li data-type='method'><a href="Bit%2525C3%2525A1cora.html#~searchTableAll">searchTableAll</a></li><li data-type='method'><a href="Bit%2525C3%2525A1cora.html#~setLogs">setLogs</a></li></ul></li><li><a href="Campos.html">Campos</a><ul class='methods'><li data-type='method'><a href="Campos.html#~addItemCampo">addItemCampo</a></li><li data-type='method'><a href="Campos.html#~changeLevelCampo">changeLevelCampo</a></li><li data-type='method'><a href="Campos.html#~cleanFields">cleanFields</a></li><li data-type='method'><a href="Campos.html#~deleteCampo">deleteCampo</a></li><li data-type='method'><a href="Campos.html#~getAllTypes">getAllTypes</a></li><li data-type='method'><a href="Campos.html#~handleSaveAllCampos">handleSaveAllCampos</a></li><li data-type='method'><a href="Campos.html#~handleSaveEntity">handleSaveEntity</a></li><li data-type='method'><a href="Campos.html#~handleToggleSwitch">handleToggleSwitch</a></li><li data-type='method'><a href="Campos.html#~handleToggleVisible">handleToggleVisible</a></li><li data-type='method'><a href="Campos.html#~onChangeHandler">onChangeHandler</a></li><li data-type='method'><a href="Campos.html#~onChangeHandler">onChangeHandler</a></li><li data-type='method'><a href="Campos.html#~saveAllFields">saveAllFields</a></li><li data-type='method'><a href="Campos.html#~setAllCampos">setAllCampos</a></li><li data-type='method'><a href="Campos.html#~setCampos">setCampos</a></li><li data-type='method'><a href="Campos.html#~setCategorias">setCategorias</a></li><li data-type='method'><a href="Campos.html#~setDialog">setDialog</a></li><li data-type='method'><a href="Campos.html#~setEntityName">setEntityName</a></li><li data-type='method'><a href="Campos.html#~setFlag">setFlag</a></li><li data-type='method'><a href="Campos.html#~setIndexModal">setIndexModal</a></li><li data-type='method'><a href="Campos.html#~setItemModal">setItemModal</a></li><li data-type='method'><a href="Campos.html#~setLoading">setLoading</a></li><li data-type='method'><a href="Campos.html#~setPropsCampos">setPropsCampos</a></li><li data-type='method'><a href="Campos.html#~setSelectedCategory">setSelectedCategory</a></li><li data-type='method'><a href="Campos.html#~setTypes">setTypes</a></li><li data-type='method'><a href="Campos.html#~showPrevisualization">showPrevisualization</a></li><li data-type='method'><a href="Campos.html#~validateAllFieldsHasName">validateAllFieldsHasName</a></li></ul></li><li><a href="Categor%25C3%25ADas.html">Categorías</a><ul class='methods'><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setCategoria">setCategoria</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setInfoRaw">setInfoRaw</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setInsertedId">setInsertedId</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setIsRequired">setIsRequired</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setItemModal">setItemModal</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setItems">setItems</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setItemsSelect">setItemsSelect</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setKeyEdit">setKeyEdit</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setLastLevel">setLastLevel</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setlistCat">setlistCat</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setLoading">setLoading</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setModalActualizar">setModalActualizar</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setModalCancel">setModalCancel</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setModalCategory">setModalCategory</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setModalNew">setModalNew</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setNewItems">setNewItems</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setNombreCaracteristica">setNombreCaracteristica</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setPlaceholderR">setPlaceholderR</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setSelectedType">setSelectedType</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setSelectValues">setSelectValues</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setShowModal">setShowModal</a></li><li data-type='method'><a href="Categor%2525C3%2525ADas.html#~setTypes">setTypes</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#useInput">useInput</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">pages/categorias/index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file Componente - Categorías
+ * @author Christopher Ortiz
+ * @namespace Categorías
+ * @description Componente que renderiza la lista de categorías
+ * @version 1.0.0
+ */
+import { NavPageContainer } from 'react-windows-ui'
+import React, { useEffect } from 'react'
+import NavigationWindow from '../../components/Navigation'
+import "../categorias/index.css"
+import { Dialog, Button } from 'react-windows-ui'
+import useState from 'react-usestateref'
+import Modal from '../../components/Modal';
+import Select from 'react-select'
+import { useAuthState } from '../../stores/AuthStore';
+
+const Categoria = () => {
+/**
+ * Hook encargado de manejar el estado de mostrar el modal
+ * @function setShowModal
+ * @memberof Categorías
+ * @return showModal {boolean}
+ * @inner
+ */
+  const [showModal, setShowModal] = useState(false);
+/**
+ * Hook encargado de manejar el estado de mostrar el modal para cambiar el estado de la categoría
+ * @function setModalCancel
+ * @memberof Categorías
+ * @return modalCancel {boolean}
+ * @inner
+ */
+  const [modalCancel, setModalCancel] = useState(false);
+/**
+ * Hook encargado de manejar el nombre de la categoría
+ * @function setCategoria
+ * @memberof Categorías
+ * @return categoria {string}
+ * @inner
+ */
+  const [categoria, setCategoria] = useState("")
+/**
+ * Hook encargado de manejar el listado de las categorías de la base de datos
+ * @function setlistCat
+ * @memberof Categorías
+ * @return listCat {array}
+ * @inner
+ */
+  const [listCat, setlistCat, listCatRef] = useState([])
+/**
+ * Hook encargado de manejar el estado de carga de la página
+ * @function setLoading
+ * @memberof Categorías
+ * @return loading {boolean}
+ * @inner
+ */
+  const [loading, setLoading] = useState(true)
+/**
+ * Hook encargado de manejar el código del equipo que se está actualizando actualmente
+ * @function setKeyEdit
+ * @memberof Categorías
+ * @return keyEdit {Object}
+ * @inner
+ */
+  const [keyEdit, setKeyEdit, keyEditRef] = useState(null)
+/**
+ * Hook encargado de manejar la visualización del modal de actualización
+ * @function setModalActualizar
+ * @memberof Categorías
+ * @return modalActualizar {boolean}
+ * @inner
+ */
+  const [modalActualizar, setModalActualizar] = useState(false)
+/**
+ * Hook encargado de manejar la información de la categoría que se está actualizando
+ * @function setInfoRaw
+ * @memberof Categorías
+ * @return infoRaw {Object}
+ * @inner
+ */
+  const [infoRaw, setInfoRaw, infoRawRef] = useState()
+/**
+ * Hook encargado de manejar el estado del modal de la categoría
+ * @function setModalCategory
+ * @memberof Categorías
+ * @return modalCategory {boolean}
+ * @inner
+ */
+  const [modalCategory, setModalCategory] = useState(false)
+/**
+ * Hook encargado de manejar el ingreso de un nuevo ítem
+ * @function setNewItems
+ * @memberof Categorías
+ * @return newItems {string}
+ * @inner
+ */
+  const [newItems, setNewItems, newItemsRef] = useState("")
+/**
+ * Hook encargado de manejar el estado del modal de los nuevos items
+ * @function setItemModal
+ * @memberof Categorías
+ * @return itemsModal {boolean}
+ * @inner
+ */
+  const [itemsModal, setItemsModal] = useState(false)
+/**
+ * Hook encargado de manejar el estado del modal de los nuevos items
+ * @function setItems
+ * @memberof Categorías
+ * @return items {Object}
+ * @inner
+ */
+  const [items, setItems, itemsRef] = useState()
+/**
+ * Hook encargado de manejar el estado del modal de los items seleccionados
+ * @function setItemsSelect
+ * @memberof Categorías
+ * @return itemsSelect {Array}
+ * @inner
+ */
+  const [itemsSelect, setItemsSelect, itemsSelectRef] = useState([])
+/**
+ * Hook encargado de manejar el estado del modal mostrar/ocultar de los nuevos items
+ * @function setModalNew
+ * @memberof Categorías
+ * @return modalNew {Object}
+ * @inner
+ */
+  const [modalNew, setModalNew] = useState(false)
+/**
+ * Hook encargado de manejar el estado del modal de los nuevos items
+ * @function setTypes
+ * @memberof Categorías
+ * @return types {Object}
+ * @inner
+ */
+  const [types, setTypes, typesRef] = useState()
+/**
+ * Hook encargado de manejar el tipo de campo seleccionado
+ * @function setSelectedType
+ * @memberof Categorías
+ * @return selectedType {Object}
+ * @inner
+ */
+  const [selectedType, setSelectedType, selectedTypeRef] = useState();
+/**
+ * Hook encargado de manejar el nombre de la caracteristica
+ * @function setNombreCaracteristica
+ * @memberof Categorías
+ * @return nombreCaracteristica {Object}
+ * @inner
+ */
+  const [nombreCaracteristica, setNombreCaracteristica, nombreCaracteristicaRef] = useState()
+/**
+ * Hook encargado de manejar el valor del Placeholder a registrar
+ * @function setPlaceholderR
+ * @memberof Categorías
+ * @return placeholderR {Object}
+ * @inner
+ */
+  const [placeholderR, setPlaceholderR, placeholderRRef] = useState()
+/**
+ * Hook encargado de manejar el valor deL requerido
+ * @function setIsRequired
+ * @memberof Categorías
+ * @return isRequired {int}
+ * @inner
+ */
+  const [isRequired, setIsRequired, isRequiredRef] = useState(0)
+/**
+ * Hook encargado de manejar el valor de los valores seleccionados
+ * @function setSelectValues
+ * @memberof Categorías
+ * @return selectValues {Object}
+ * @inner
+ */
+  const [selectValues, setSelectValues, selectValuesRef] = useState()
+/**
+ * Hook encargado de manejar el valor del último nivel conseguido
+ * @function setLastLevel
+ * @memberof Categorías
+ * @return lastLevel {Object}
+ * @inner
+ */
+  const [lastLevel, setLastLevel, lastLevelRef] = useState()
+/**
+ * Hook encargado de manejar el valor del código que fue insertado
+ * @function setInsertedId
+ * @memberof Categorías
+ * @return insertedId {Object}
+ * @inner
+ */
+  const [insertedId, setInsertedId, insertedIdRef] = useState()
+
+
+  const AuthStore = useAuthState();
+
+  useEffect(() => {
+    getAllTypes()
+    getItems()
+  }, [])
+
+
+  const addItem = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch(process.env.REACT_APP_HOME + "category", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "DescripcionCategoria": categoria })
+      })
+      setCategoria("")
+      await getItems()
+      setShowModal(false)
+      setLoading(false)
+      alert("La categoria se guardo exitosamente")
+    } catch (error) {
+      alert("Ocurrio un error al guardar la categoria")
+    }
+  }
+
+  const getItems = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "category/table", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const result = await response.json()
+      setlistCat(result)
+      setLoading(false)
+      //console.log(result)
+      //setlistCat(response)
+      // console.log(result)
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al obtener las categorias " + error)
+    }
+  }
+
+  const getAllTypes = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "machines/types", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const result = await response.json()
+      setTypes(result)
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al obtener los tipos de datos " + error)
+    }
+  }
+
+  const searchTableAll = () => {
+    var searchBox = document.getElementById('search-input-table');
+    var table = document.getElementById("table-products");
+    var trs = table.tBodies[0].getElementsByTagName("tr");
+    var filter = searchBox.value.toUpperCase();
+    for (var rowI = 0; rowI &lt; trs.length; rowI++) {
+      var tds = trs[rowI].getElementsByTagName("td");
+      trs[rowI].style.display = "none";
+      for (var cellI = 0; cellI &lt; tds.length; cellI++) {
+        if (tds[cellI].innerHTML.toUpperCase().indexOf(filter) > -1) {
+          trs[rowI].style.display = "";
+          continue;
+        }
+      }
+    }
+  }
+
+  const changeEntityStatus = async (key, action) => {
+    setKeyEdit(key);
+    await getLastLevelByEntity();
+    if (action == "UPD") {
+      await getEntityInfoRaw();
+      setModalActualizar(true);
+    }
+    if (action == "STA") {
+      setModalCancel(true);
+    }
+  }
+
+  const handleEntityStatus = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "category/changestatus/" + keyEditRef.current, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const result = await response.json()
+      await getAllTypes()
+      await getItems()
+      //window.location.reload()
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al cambiar el estado de la entidad " + error)
+    }
+    setModalCancel(false);
+  }
+
+  const getEntityInfoRaw = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "category/update/" + keyEditRef.current, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const result = await response.json()
+      setInfoRaw(result)
+      console.log(infoRawRef.current)
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al obtener la entidad " + error)
+    }
+  }
+
+  const handleCaracteristicaNameChange = (e) => {
+    var auxArray = [...infoRaw];
+    auxArray[e.target.id].CaracteristicaDescripcion = e.target.value;
+    setInfoRaw(auxArray);
+  }
+
+  const handlePlaceholderChange = (e) => {
+    var auxArray = [...infoRaw];
+    auxArray[e.target.id].Placeholder = e.target.value;
+    setInfoRaw(auxArray);
+  }
+
+  const handleIsRequiredItem = (e) => {
+    var auxArray = [...infoRaw];
+    var value = auxArray[e.target.id].Requerido.data[0];
+    //if(e.target.value == 0) value = 1; else value = 0;
+    if (value == 0) value = 1; else value = 0;
+    auxArray[e.target.id].Requerido.data[0] = value;
+    setInfoRaw(auxArray);
+    console.log(infoRawRef.current)
+  }
+
+  const handleNewItemsChange = async (e) => {
+    setItemsSelect(e.target.id)
+    await getItemsByRow();
+    setItemsModal(true)
+  }
+
+  const getItemsByRow = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "category/items/" + keyEditRef.current, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const result = await response.json()
+      setItems(result)
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al obtener las categorias " + error)
+    }
+  }
+
+  const updateCaracteristicaInfo = async (index) => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "category/update/" + keyEditRef.current, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          CaracteristicaDescripcion: infoRawRef.current[index].CaracteristicaDescripcion,
+          Placeholder: infoRawRef.current[index].Placeholder,
+          Requerido: infoRawRef.current[index].Requerido.data[0],
+          IdCaracteristica: infoRawRef.current[index].IdCaracteristica
+        })
+      })
+      const result = await response.json()
+      console.log(result)
+    } catch (error) {
+      console.log(error)
+      //alert("Ocurrio un error al obtener la entidad " + error)
+    }
+  }
+
+  const handleUpdateEntity = async (e) => {
+    setModalActualizar(false)
+    try {
+      infoRawRef.current.forEach((item, index) => {
+        updateCaracteristicaInfo(index);
+      })
+      alert("Datos actualizados exitosamente")
+      await getAllTypes()
+      await getItems()
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al actualizar la entidad " + error)
+    }
+  }
+
+  const saveNewItem = async (e) => {
+    if (newItemsRef.current.length &lt; 1) return alert("El campo no puede estar vacio");
+    try {
+      const lastLevel = parseInt(itemsRef.current?.filter(x => x.IdCaracteristica == itemsSelectRef.current)[0].MaxNivel) + 1;
+      const response = await fetch(process.env.REACT_APP_HOME + "category/items/", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          IdCategoria: keyEditRef.current,
+          IdCaracteristica: itemsSelectRef.current,
+          OpcionDescripcion: newItemsRef.current,
+          Nivel: lastLevel
+        })
+      })
+      const result = await response.json()
+      console.log(result)
+      alert("Item guardado exitosamente")
+      await getAllTypes()
+      await getItems()
+      //window.location.reload()
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al guardar la entidad " + error)
+    }
+  }
+
+  const handleChangeItemsState = async (e) => {
+    var auxArray = [...items];
+    console.log(auxArray)
+    var value = auxArray[e.target.id].Estado.data[0];
+    console.log(value)
+    if (value == 0) value = 1; else value = 0;
+    auxArray[e.target.id].Estado.data[0] = value;
+    setItems(auxArray);
+  }
+
+  const handleChangeItemsName = async (e) => {
+    var auxArray = [...items];
+    var id = e.target.id;
+    auxArray.filter(x => x.IdCaracteristica == itemsSelectRef.current)[e.target.id].OpcionDescripcion = e.target.value;
+    setItems(auxArray);
+  }
+
+  const updateAllMyItems = async (e) => {
+    try {
+      itemsRef.current.forEach((item, index) => {
+        updateItems(index);
+      })
+      alert("Datos actualizados exitosamente")
+      setModalActualizar(false)
+      await getAllTypes()
+      await getItems()
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al actualizar la entidad " + error)
+    }
+  }
+
+  const updateItems = async (index) => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "category/updateitems", {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          Estado: itemsRef.current[index].Estado.data[0],
+          OpcionDescripcion: itemsRef.current[index].OpcionDescripcion,
+          IdCategoria: keyEditRef.current,
+          IdCaracteristica: itemsSelectRef.current,
+          IdOpcion: itemsRef.current[index].IdOpcion
+        })
+      })
+      const result = await response.json()
+      console.log(result)
+    } catch (error) {
+      console.log(error)
+      //alert("Ocurrio un error al obtener la entidad " + error)
+    }
+  }
+
+  const handleRequiredNewItem = (e) => {
+    if (e.target.value == "on") {
+      setIsRequired(1);
+    } else {
+      setIsRequired(0);
+    }
+  }
+
+  const getLastLevelByEntity = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "control/lastlevel/" + keyEditRef.current, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const result = await response.json()
+      setLastLevel(result[0].LastNivel)
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al obtener las categorias " + error)
+    }
+  }
+
+  const addCaracteristica = async () => {
+    try {
+
+      const response = await fetch(process.env.REACT_APP_HOME + "control", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "IdCategoria": keyEditRef.current,
+          "CaracteristicaDescripcion": nombreCaracteristicaRef.current,
+          "Estado": 1,
+          "Nivel": parseInt(lastLevelRef.current) + 1,
+          "Requerido": isRequiredRef.current,
+          "Placeholder": placeholderRRef.current,
+          "Tooltip": nombreCaracteristicaRef.current,
+          "UsuarioCreo": AuthStore.me.get().username,
+          "CaracteristicaTipo": selectedTypeRef.current
+        })
+      })
+      const result = await response.json()
+      console.log(result)
+      setInsertedId(result.message)
+
+      if (selectedTypeRef.current != 4)
+        alert("La categoria se guardo exitosamente")
+      else
+        await handleNewSelectionSave();
+
+    } catch (error) {
+      alert("Ocurrio un error al guardar la categoria")
+    }
+  }
+
+  const addItemsOptions = async (description, level) => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "control/detail", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "IdCategoria": keyEditRef.current,
+          "IdCaracteristica": insertedIdRef.current,
+          "Valores": description,
+          "Nivel": level,
+          "Estado": 1
+        })
+      })
+      const result = await response.json()
+      console.log(result)
+      //window.location.reload()
+    } catch (error) {
+      alert("Ocurrio un error al guardar la categoria")
+    }
+  }
+
+  const handleNewSelectionSave = async () => {
+    try {
+      const stringValues = selectValuesRef.current;
+      const stringValuesArray = stringValues.split("|");
+      stringValuesArray.forEach((item, index) => {
+        console.log(item)
+        addItemsOptions(item, index).then((result) => {
+          //console.log(result)
+        })
+      })
+      alert("La categoria se guardo exitosamente");
+      await getAllTypes()
+      await getItems()
+    } catch (error) {
+      alert("Algo salió mal durante se guardaba la categoría");
+    }
+
+  }
+
+  return (
+    &lt;>
+      {
+        loading ? &lt;>&lt;/> :
+          &lt;>
+            &lt;NavigationWindow />
+            &lt;NavPageContainer
+              hasPadding={true}
+              animateTransition={true}>
+
+
+              &lt;Modal showOverlay={true} show={modalCancel} onClose={() => setModalCancel(false)}>
+                &lt;Modal.Header>
+                  &lt;Modal.Title>Cambiar estado&lt;/Modal.Title>
+                &lt;/Modal.Header>
+                &lt;Modal.Body>
+                  &lt;div style={{ display: 'flex' }}>
+                    &lt;i className="icons10-exclamation-mark" style={{ color: '#faca2a', fontSize: "70px" }} />
+                    &lt;div style={{ marginLeft: 25, justifyContent: "center", alignItems: "center", display: "flex" }}>
+                      &lt;label>Estás a punto de cambiar el estado de esta entidad, ¿estás seguro(a) que deseas continuar?&lt;/label>
+                    &lt;/div>
+                  &lt;/div>
+                &lt;/Modal.Body>
+                &lt;Modal.Footer>
+                  &lt;Button value='Si, cambiar estado' onClick={() => { handleEntityStatus() }} />
+                  &lt;Button value="No, mantener estado actual" onClick={() => setModalCancel(false)} />
+                &lt;/Modal.Footer>
+              &lt;/Modal>
+
+              &lt;Modal showOverlay={true} show={modalNew} onClose={() => setModalNew(false)} size={"md"}>
+                &lt;Modal.Header>
+                  &lt;Modal.Title>Nueva Caracteristica&lt;/Modal.Title>
+                &lt;/Modal.Header>
+                &lt;Modal.Body>
+                  &lt;div style={{ display: 'flex', flex: 1 }}>
+                    &lt;table style={{ width: '100%' }} className="styled-table" id="table-products">
+                      &lt;thead>
+                        &lt;tr>
+                          &lt;th>Elemento&lt;/th>
+                          &lt;th>Valor&lt;/th>
+                        &lt;/tr>
+                      &lt;/thead>
+                      &lt;tbody>
+                        &lt;tr>
+                          &lt;td>
+                            &lt;p>Nombre de la Caracteristica&lt;/p>
+                          &lt;/td>
+                          &lt;td>
+                            &lt;input type="text" className='app-input-text' placeholder='Nombre de la caracteristica' value={nombreCaracteristica} onChange={(e) => setNombreCaracteristica(e.target.value)} />
+                          &lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                          &lt;td>
+                            &lt;p>Placeholder&lt;/p>
+                          &lt;/td>
+                          &lt;td>
+                            &lt;input type="text" className='app-input-text' placeholder='Nombre de la caracteristica' value={placeholderR} onChange={(e) => setPlaceholderR(e.target.value)} />
+                          &lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                          &lt;td>
+                            &lt;p>Tipo&lt;/p>
+                          &lt;/td>
+                          &lt;td>
+                            &lt;Select
+                              options={typesRef.current}
+                              onChange={(e) => setSelectedType(e.value)}
+                            />
+                          &lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                          &lt;td>
+                            &lt;p>
+                              Opciones (separadas por barra |)
+                            &lt;/p>
+                          &lt;/td>
+                          &lt;td>
+                            &lt;input type="text" className='app-input-text' placeholder='Item 1|Item2|Item3' value={selectValues} onChange={(e) => setSelectValues(e.target.value)} disabled={selectedTypeRef.current == 4 ? false : true} />
+                          &lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                          &lt;td>
+                            &lt;p>
+                              ¿Es requerido?
+                            &lt;/p>
+                          &lt;/td>
+                          &lt;td>
+                            &lt;div style={{ display: "flex", justifyContent: "center" }}>
+                              &lt;input type="checkbox" placeholder='Nombre de la caracteristica' onChange={handleRequiredNewItem} />
+                            &lt;/div>
+                          &lt;/td>
+                        &lt;/tr>
+
+                      &lt;/tbody>
+                    &lt;/table>
+                  &lt;/div>
+                &lt;/Modal.Body>
+                &lt;Modal.Footer>
+                  &lt;Button value='Guardar nuevo campo' onClick={addCaracteristica} />
+                  &lt;Button value="Cancelar" onClick={() => setModalNew(false)} />
+                &lt;/Modal.Footer>
+              &lt;/Modal>
+
+              &lt;Modal showOverlay={true} show={modalActualizar} onClose={() => setModalActualizar(false)}>
+                &lt;Modal.Header>
+                  &lt;Modal.Title>Actualizar entidad&lt;/Modal.Title>
+                &lt;/Modal.Header>
+                &lt;Modal.Body>
+                  &lt;div style={{ display: 'flex' }}>
+                    {/* &lt;i className="icons10-info" style={{ color: '#faca2a', fontSize: "50px" }} /> */}
+                    &lt;div style={{ marginRight: 25, flex: 1 }}>
+
+                      &lt;div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+                        &lt;button className="app-button animate primary" onClick={() => setModalNew(true)}>Nuevo campo&lt;/button>
+                      &lt;/div>
+                      &lt;div>
+                        &lt;table style={{ width: '100%' }} className="styled-table" id="table-products">
+                          &lt;thead>
+                            &lt;tr>
+                              &lt;th>Caracteristica&lt;/th>
+                              &lt;th>Placeholder&lt;/th>
+                              &lt;th>Tipo&lt;/th>
+                              &lt;th>Requerido&lt;/th>
+                              &lt;th>Valores&lt;/th>
+                              &lt;th>Nuevos Items&lt;/th>
+                            &lt;/tr>
+                          &lt;/thead>
+                          &lt;tbody>
+                            {
+                              infoRaw ? infoRawRef.current?.map((item, index) => {
+
+                                return (
+                                  &lt;tr>
+                                    &lt;td>
+                                      &lt;input type="text" className='app-input-text' id={index} value={infoRawRef.current[index].CaracteristicaDescripcion} onChange={handleCaracteristicaNameChange} />
+                                    &lt;/td>
+                                    &lt;td>
+                                      &lt;input type="text" className='app-input-text' id={index} value={infoRawRef.current[index].Placeholder} onChange={handlePlaceholderChange} />
+                                    &lt;/td>
+                                    &lt;td>
+                                      {infoRawRef.current[index].DisplayText}
+                                    &lt;/td>
+                                    &lt;td>{
+                                      infoRawRef.current[index].Requerido.data[0] === 1 ?
+                                        &lt;div style={{ display: "flex", justifyContent: "center" }}>
+                                          &lt;input type="checkbox" id={index} checked onChange={handleIsRequiredItem} />
+                                        &lt;/div>
+                                        :
+                                        &lt;div style={{ display: "flex", justifyContent: "center" }}>
+                                          &lt;input type="checkbox" id={index} onChange={handleIsRequiredItem} />
+                                        &lt;/div>
+                                    }
+
+                                    &lt;/td>
+                                    &lt;td>
+                                      {infoRawRef.current[index].Campos}
+                                    &lt;/td>
+                                    &lt;td>
+                                      {
+                                        infoRawRef.current[index].DescripcionTipo === "select" ?
+                                          &lt;button className='app-button animate primary' style={{ marginRight: "10px" }} id={item.IdCaracteristica} onClick={handleNewItemsChange}>Actualizar items&lt;/button>
+                                          :
+                                          &lt;p>N/A&lt;/p>
+                                      }
+
+                                    &lt;/td>
+                                  &lt;/tr>
+                                )
+                              }) : &lt;>&lt;/>
+                            }
+                          &lt;/tbody>
+                        &lt;/table>
+                      &lt;/div>
+                    &lt;/div>
+                  &lt;/div>
+                  &lt;div style={{ display: "flex" }}>
+                    &lt;Modal showOverlay={true} show={itemsModal} onClose={() => setItemsModal(false)} size={"lg"}>
+                      &lt;Modal.Header>
+                        &lt;Modal.Title>Actualizacion de ítems&lt;/Modal.Title>
+                      &lt;/Modal.Header>
+                      &lt;Modal.Body>
+                        &lt;div style={{ display: "flex", flex: 1, justifyContent: "flex-end" }}>
+                          &lt;button className="app-button animate primary" onClick={() => setModalCategory(true)}>Nuevo item&lt;/button>
+                        &lt;/div>
+                        &lt;div style={{ display: 'flex' }}>
+                          &lt;table style={{ width: '100%' }} className="styled-table" id="table-products">
+                            &lt;thead>
+                              &lt;tr>
+                                &lt;th>Item&lt;/th>
+                                &lt;th>Estado&lt;/th>
+                              &lt;/tr>
+                            &lt;/thead>
+                            &lt;tbody>
+                              {
+                                itemsRef.current?.filter(x => x.IdCaracteristica == itemsSelectRef.current).map((item, index) => {
+                                  return (
+                                    &lt;tr>
+                                      &lt;td> &lt;input className='app-input-text' type="text" id={index} value={itemsRef.current.filter(x => x.IdCaracteristica == itemsSelectRef.current)[index].OpcionDescripcion} onChange={handleChangeItemsName} />&lt;/td>
+                                      {
+                                        &lt;td style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                          {
+                                            itemsRef.current[index].Estado.data[0] == 1 ?
+                                              &lt;input type="checkbox" checked id={index} onChange={handleChangeItemsState} /> :
+                                              &lt;input type="checkbox" id={index} onChange={handleChangeItemsState} />
+                                          }
+                                        &lt;/td>
+                                      }
+                                    &lt;/tr>
+                                  )
+                                })
+                              }
+                            &lt;/tbody>
+                          &lt;/table>
+                        &lt;/div>
+
+
+                        &lt;Modal showOverlay={true} show={modalCategory} size={"xs"} onClose={() => setModalCategory(false)}>
+                          &lt;Modal.Header>
+                            &lt;Modal.Title>Nuevo Item&lt;/Modal.Title>
+                          &lt;/Modal.Header>
+                          &lt;Modal.Body>
+                            &lt;p>Ingrese el valor del nuevo item&lt;/p>
+                            &lt;input className='app-input-text' placeholder='Nuevo item' value={newItems} onChange={(e) => setNewItems(e.target.value)} />
+                          &lt;/Modal.Body>
+                          &lt;Modal.Footer>
+                            &lt;Button value='Agregar item' onClick={() => { saveNewItem() }} />
+                            &lt;Button value="Cancelar" onClick={() => setModalCategory(false)} />
+                          &lt;/Modal.Footer>
+                        &lt;/Modal>
+
+
+
+                      &lt;/Modal.Body>
+                      &lt;Modal.Footer>
+                        &lt;Button value='Actualizar items' onClick={updateAllMyItems} />
+                        &lt;Button value="Cancelar" onClick={() => setItemsModal(false)} />
+                      &lt;/Modal.Footer>
+                    &lt;/Modal>
+
+
+                  &lt;/div>
+                &lt;/Modal.Body>
+                &lt;Modal.Footer>
+                  &lt;button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={() => handleUpdateEntity()}>Actualizar&lt;/button>
+                  &lt;button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={() => setModalActualizar(false)} >Cancelar&lt;/button>
+                &lt;/Modal.Footer>
+              &lt;/Modal>
+              &lt;h1>Entidades&lt;/h1>
+              &lt;p>Añada, modifique o elimine sus entidades&lt;/p>
+              &lt;div className="app-hr">&lt;/div>
+              &lt;div style={{ marginTop: "15px" }}>
+                &lt;label>Buscar&lt;/label>
+                &lt;input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
+              &lt;/div>
+              &lt;div style={{ display: "flex", flex: 1, marginRight: "30px" }}>
+                &lt;table style={{ width: '100%' }} className="styled-table" id="table-products">
+                  &lt;thead>
+                    &lt;tr>
+                      &lt;th>Entidad&lt;/th>
+                      &lt;th>Estado&lt;/th>
+                      &lt;th>Fecha de Creación&lt;/th>
+                      &lt;th>Grupo&lt;/th>
+                      &lt;th>Creada por&lt;/th>
+                      &lt;th>Acciones&lt;/th>
+                    &lt;/tr>
+                  &lt;/thead>
+                  &lt;tbody>
+                    {
+                      listCatRef?.current?.map(item => {
+                        return (
+                          &lt;tr>
+                            &lt;td>{item.DescripcionCategoria}&lt;/td>
+                            &lt;td>{item.EstadoCategoria == "Activo" ? &lt;span style={{ color: "green" }}>■&lt;/span> : &lt;span style={{ color: "red" }}>■&lt;/span>} {item.EstadoCategoria}&lt;/td>
+                            &lt;td>{item.FechaCreacion}&lt;/td>
+                            &lt;td>{item.DescripcionGrupo}&lt;/td>
+                            &lt;td>{item.UsuarioCreo}&lt;/td>
+                            &lt;td>
+                              &lt;div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                &lt;button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={() => changeEntityStatus(item.IdCategoria, "STA")}>Cambiar estado&lt;/button>
+                                &lt;button className='app-button animate primary' style={{ marginRight: "10px" }} onClick={() => changeEntityStatus(item.IdCategoria, "UPD")}>Actualizar&lt;/button>
+                              &lt;/div>
+                            &lt;/td>
+                          &lt;/tr>
+                        )
+                      })
+                    }
+                  &lt;/tbody>
+                &lt;/table>
+              &lt;/div>
+              &lt;Dialog
+                isVisible={showModal}
+                onBackdropPress={() => setShowModal(false)}
+                showDropShadow={true}>
+                &lt;div style={{ padding: '10px' }}>
+                  &lt;h3>Nueva Categoría&lt;/h3>
+                  &lt;div className="app-hr">&lt;/div>
+                  &lt;div >
+                    &lt;p>Nombre de la categoria: &lt;/p>
+                    &lt;input
+                      value={categoria}
+                      onChange={e => setCategoria(e.target.value)}
+                    />
+                    &lt;Button
+                      style={{ marginLeft: '30px' }}
+                      value="Guardar"
+                      onClick={addItem}
+                      icon={&lt;i className="icons10-save">&lt;/i>} />
+                  &lt;/div>
+                &lt;/div>
+              &lt;/Dialog>
+            &lt;/NavPageContainer>
+          &lt;/>
+      }
+    &lt;/>
+  );
+}
+
+export default Categoria</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a> on Fri Mar 18 2022 12:00:41 GMT-0600 (hora estándar central) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

@@ -73,7 +73,8 @@ const Sucursal = () => {
       console.log(error)
     }
   }
-
+  /**
+   */
   const getCities = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "city", {

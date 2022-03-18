@@ -1,16 +1,36 @@
-
+/**
+ * @file Componente - Bitácpra
+ * @author Christopher Ortiz
+ * @namespace Bitácora
+ * @description Componente que contiene la bitácora de los movimientos realizados en el sistema.
+ * @version 1.0.0
+ */
 import { NavPageContainer,Link } from 'react-windows-ui'
 import React, { useState, useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
 
 const Bitacora = () => {
-
+/**
+ * setLogs Obtiene los registros de la bitácora
+ * @function setLogs
+ * @memberof Bitácora
+ * @return logs {Object}
+ * @inner
+ */
 const [logs, setLogs] = useState()
 
 useEffect(() => {
   getBitacoraRecords();
 }, [])
 
+/**
+ * searchTableAll Maneja la búsqueda en la tabla, función que se encarga de filtrar los datos de la tabla
+ * @name searchTableAll
+ * @function
+ * @memberof Bitácora
+ * @inner
+ * @return {void}
+*/
 const searchTableAll = () => {
   var searchBox = document.getElementById('search-input-table');
   var table = document.getElementById("table-products");
@@ -28,6 +48,15 @@ const searchTableAll = () => {
   }
 }
 
+/**
+ * getBitacoraRecords Obtiene los datos de la bitacóra 
+ * @name getBitacoraRecords
+ * @function
+ * @memberof Bitácora
+ * @async
+ * @inner
+ * @return {void}
+*/
 const getBitacoraRecords = async() => {
   const response = await fetch(process.env.REACT_APP_HOME + "bitacora", {
     method: 'GET',
