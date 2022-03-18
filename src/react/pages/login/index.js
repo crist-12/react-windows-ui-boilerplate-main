@@ -1,3 +1,10 @@
+/**
+ * @file Componente - Login
+ * @author Christopher Ortiz
+ * @namespace Login
+ * @description Pantalla que gestiona el inicio de sesión
+ * @version 1.0.0
+ */
 import React, {Image, useState, useEffect} from 'react'
 import login from "../../assets/login.jpg"
 import { AvatarView, InputText, Button, SplashScreen } from 'react-windows-ui'
@@ -26,6 +33,14 @@ const Login = () => {
 
     }, [])
 
+/**
+ * Gestiona la autenticación del usuario
+ * @function handleLogin
+ * @memberof Login
+ * @async
+ * @return void
+ * @inner
+ */
     const handleLogin = async() => {
         if(username == ""){
            setValidate(true)

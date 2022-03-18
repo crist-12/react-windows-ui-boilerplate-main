@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>pages/bitacora/index.js - Documentation</title>
+    <title>pages/empleados/index.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">pages/bitacora/index.js</h1>
+    <h1 class="page-title">pages/empleados/index.js</h1>
     
 
     
@@ -43,108 +43,653 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @file Componente - Bitácpra
+ * @file Componente - Configuraciones
  * @author Christopher Ortiz
- * @namespace Bitácora
- * @description Componente que contiene la bitácora de los movimientos realizados en el sistema.
+ * @namespace Empleados
+ * @description Pantalla que gestiona los datos relacionados con los empleados
  * @version 1.0.0
  */
-import { NavPageContainer,Link } from 'react-windows-ui'
-import React, { useState, useEffect } from 'react'
+import { NavPageContainer } from 'react-windows-ui'
+import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
+import { Dialog, Button } from 'react-windows-ui'
+import MaterialTable from 'material-table'
+import "../empleados/index.css"
+import Select from 'react-select'
+import Modal from '../../components/Modal';
+import useState from 'react-usestateref'
 
-const Bitacora = () => {
+
+const Empleado = () => {
+
+
+
+  const [listEmployee, setListEmployees, listEmployeeRef] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [modalCancel, setModalCancel] = useState(false)
+  const [modalActualizar, setModalActualizar] = useState(false)
+  const [keyEdit, setKeyEdit, keyEditRef] = useState()
+  const [areas, setAreas] = useState();
+  const [cities, setCities] = useState();
+  const [selectedCity, setSelectedCity, selectedCityRef] = useState();
+  const [selectedArea, setSelectedArea, selectedAreaRef] = useState();
+  const [selectedSucursal, setSelectedSucursal, selectedSucursalRef] = useState();
+  const [defaultArea, setDefaultArea, defaultAreaRef] = useState();
+  const [defaultCity, setDefaultCity, defaultCityRef] = useState();
+  const [defaultSucursal, setDefaultSucursal, defaultSucursalRef] = useState();
+  const [allSucursales, setAllSucursales, allSucursalesRef] = useState();
+  const [sucursales, setSucursales, sucursalesRef] = useState()
+  const [modalAdd, setModalAdd] = useState(false)
+  const [employeeName, setEmployeeName, employeeRefName] = useState()
+  const [employeeEmail, setEmployeeEmail, employeeRefEmail] = useState()
+
+  useEffect(() => {
+    getEmployeesData()
+    getCities()
+    getAllSucursales()
+    getAreas()
+  }, [])
+
+  
 /**
- * setLogs Obtiene los registros de la bitácora
- * @function setLogs
- * @memberof Bitácora
- * @return logs {Object}
- * @inner
- */
-const [logs, setLogs] = useState()
-
-useEffect(() => {
-  getBitacoraRecords();
-}, [])
-
-/**
- * searchTableAll Maneja la búsqueda en la tabla, función que se encarga de filtrar los datos de la tabla
- * @name searchTableAll
+ * Maneja el cambio para añadir un nuevo empleado.
+ * @name addItem
  * @function
- * @memberof Bitácora
+ * @memberof Empleados
  * @inner
  * @return {void}
 */
-const searchTableAll = () => {
-  var searchBox = document.getElementById('search-input-table');
-  var table = document.getElementById("table-products");
-  var trs = table.tBodies[0].getElementsByTagName("tr");
-  var filter = searchBox.value.toUpperCase();
-  for (var rowI = 0; rowI &lt; trs.length; rowI++) {
-    var tds = trs[rowI].getElementsByTagName("td");
-    trs[rowI].style.display = "none";
-    for (var cellI = 0; cellI &lt; tds.length; cellI++) {
-      if (tds[cellI].innerHTML.toUpperCase().indexOf(filter) > -1) {
-        trs[rowI].style.display = "";
-        continue;
+  const addItem = async () => {
+      if (employeeName &amp;&amp; selectedArea &amp;&amp; selectedSucursal) {
+        if (validarEmail(employeeEmail)) {
+        try {
+          setLoading(true)
+          const response = await fetch(process.env.REACT_APP_HOME + "employee", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ "NombreEmpleado": employeeRefName.current, "IdArea": selectedArea, "Email": employeeRefEmail.current, "IdSucursal": selectedSucursal })
+          })
+          alert("El empleado se guardó exitosamente")
+          await getEmployeesData()
+          setModalAdd(false)
+        } catch (error) {
+          alert("Ocurrio un error al guardar el empleado")
+        }
+      } 
+    }else {
+      alert("Asegúrate de llenar todos los datos.")
+    }
+  }
+
+/**
+ * Función que valida que el correo electrónico sea una entrada válida.
+ * @name validarEmail
+ * @function
+ * @memberof Empleados
+ * @inner
+ * @return {void}
+*/
+  const validarEmail = (valor) => {
+    if (/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(valor)) {
+      return true;
+    } else {
+      alert("La dirección de email es incorrecta.");
+      return false;
+    }
+  }
+
+/**
+ * Maneja los datos de los empleados que se encuentran en la base de datos.
+ * @name getEmployeesData
+ * @function
+ * @memberof Empleados
+ * @inner
+ * @return {void}
+*/
+  const getEmployeesData = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "employee", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const result = await response.json()
+      setListEmployees(result)
+      /*setLoading(false)*/
+      // setLoading(true)
+      //console.log(result)
+      //setListEmployees(response)
+    setLoading(true);
+    setLoading(false);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+/**
+ * Maneja un listado de las áreas registradas en la base de datos.
+ * @name getAreas
+ * @function
+ * @memberof Empleados
+ * @inner
+ * @return {void}
+*/
+  const getAreas = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "area", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const result = await response.json()
+      var arre = []
+      result.forEach(ele => {
+        var obj = {
+          value: ele.IdArea,
+          label: ele.DescripcionArea
+        }
+        arre.push(obj)
+        console.log(obj)
+      })
+      setAreas(arre)
+      setLoading(false)
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+/**
+ * Maneja los datos de las sucursales que se encuentran en la base de datos.
+ * @name getAllSucursales
+ * @function
+ * @memberof Empleados
+ * @inner
+ * @return {void}
+*/
+  const getAllSucursales = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "sucursales/all", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const result = await response.json()
+      var arre = []
+      result.forEach(ele => {
+        var obj = {
+          value: ele.IdSucursal,
+          label: ele.NombreSucursal
+        }
+        arre.push(obj)
+        console.log(obj)
+      })
+      setAllSucursales(arre)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+/**
+ * Tabla que se encarga de filtrar los datos de la tabla
+ * @name searchTableAll
+ * @function
+ * @memberof Empleados
+ * @inner
+ * @return {void}
+*/
+  const searchTableAll = () => {
+    var searchBox = document.getElementById('search-input-table');
+    var table = document.getElementById("table-products");
+    var trs = table.tBodies[0].getElementsByTagName("tr");
+    var filter = searchBox.value.toUpperCase();
+    for (var rowI = 0; rowI &lt; trs.length; rowI++) {
+      var tds = trs[rowI].getElementsByTagName("td");
+      trs[rowI].style.display = "none";
+      for (var cellI = 0; cellI &lt; tds.length; cellI++) {
+        if (tds[cellI].innerHTML.toUpperCase().indexOf(filter) > -1) {
+          trs[rowI].style.display = "";
+          continue;
+        }
       }
     }
   }
-}
-
 /**
- * getBitacoraRecords Obtiene los datos de la bitacóra 
- * @name getBitacoraRecords
+ * Maneja y cambia el estado de los empleados
+ * @name handleEntityStatus
  * @function
- * @memberof Bitácora
- * @async
+ * @memberof Empleados
  * @inner
  * @return {void}
 */
-const getBitacoraRecords = async() => {
-  const response = await fetch(process.env.REACT_APP_HOME + "bitacora", {
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-  })
-  const data = await response.json()
-  setLogs(data)
-}
-    return (
-      &lt;>
-        &lt;NavigationWindow/>
-            &lt;NavPageContainer
-            hasPadding={true}
-            animateTransition={true}>
+  const handleEntityStatus = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "employee/changestatus/" + keyEditRef.current, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
 
-            &lt;h1>Bitacora&lt;/h1>
-            &lt;p>Analiza los últimos movimientos realizados en el sistema.&lt;/p>
-            &lt;div style={{ display: "flex", flex: 1, marginRight: "30px", flexDirection: "column" }}>
+      const result = await response.json()
+      setModalCancel(false)
+      await getEmployeesData()
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al cambiar el estado de la entidad " + error)
+    }
+  }
+/**
+ * Maneja el modal para dar de baja el empleado
+ * @name handleChangeStatus
+ * @function
+ * @memberof Empleados
+ * @inner
+ * @return {void}
+*/
+  const handleChangeStatus = async (e) => {
+    setModalCancel(true);
+    setKeyEdit(e.target.id);
+  }
+/**
+ * Maneja los procesos necesarios para actualizar los datos del empleado
+ * @name handleActualizarStatus
+ * @function
+ * @memberof Empleados
+ * @inner
+ * @return {void}
+*/
+  const handleActualizarStatus = async (e) => {
+    setModalActualizar(true);
+    setKeyEdit(e.target.id);
+    var objArea = {
+      value: listEmployeeRef.current.filter(x => x.IdEmpleado == e.target.id)[0].IdArea,
+      label: listEmployeeRef.current.filter(x => x.IdEmpleado == e.target.id)[0].DescripcionArea
+    }
+    setDefaultArea(objArea);
+    setSelectedArea(objArea.value);
+    var objCity = {
+      value: listEmployeeRef.current.filter(x => x.IdEmpleado == e.target.id)[0].IdCiudad,
+      label: listEmployeeRef.current.filter(x => x.IdEmpleado == e.target.id)[0].NombreCiudad
+    }
+    setDefaultCity(objCity);
+    setSelectedCity(objCity.value);
+    var objSucursal = {
+      value: listEmployeeRef.current.filter(x => x.IdEmpleado == e.target.id)[0].IdSucursal,
+      label: listEmployeeRef.current.filter(x => x.IdEmpleado == e.target.id)[0].NombreSucursal
+    }
+    setDefaultSucursal(objSucursal);
+    setSelectedSucursal(objSucursal.value);
+  }
+/**
+ * Maneja los datos de las ciudades registradas en la base de datos
+ * @name getCities
+ * @function
+ * @memberof Empleados
+ * @inner
+ * @return {void}
+*/
+  const getCities = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "city", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const result = await response.json()
+      var arre = []
+      result.forEach(ele => {
+        var obj = {
+          value: ele.IdCiudad,
+          label: ele.NombreCiudad
+        }
+        arre.push(obj)
+      })
+      setCities(arre)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+/**
+ * Maneja las sucursales filtradas por la ciudad seleccionada
+ * @name getSucursalesByCity
+ * @function
+ * @memberof Empleados
+ * @inner
+ * @return {void}
+*/
+  const getSucursalesByCity = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "sucursales/" + selectedCityRef.current, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const result = await response.json()
+      var arre = []
+      result.forEach(ele => {
+        var obj = {
+          value: ele.IdSucursal,
+          label: ele.NombreSucursal
+        }
+        arre.push(obj)
+      })
+      setSucursales(arre)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+/**
+ * Actualiza los datos del empleado
+ * @name handleUpdateEmployee
+ * @function
+ * @memberof Empleados
+ * @inner
+ * @return {void}
+*/
+  const handleUpdateEmployee = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "employee/" + keyEditRef.current, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          NombreEmpleado: listEmployeeRef.current.filter(x => x.IdEmpleado == keyEditRef.current)[0].NombreEmpleado,
+          Email: listEmployeeRef.current.filter(x => x.IdEmpleado == keyEditRef.current)[0].Email,
+          IdArea: selectedAreaRef.current,
+          IdCiudad: selectedCityRef.current,
+          IdSucursal: selectedSucursalRef.current,
+          EstadoEmpleado: listEmployeeRef.current.filter(x => x.IdEmpleado == keyEditRef.current)[0].EstadoEmpleado.data[0]
+        })
+      })
+
+      const result = await response.json()
+      console.log(result)
+      alert("Empleado actualizado exitosamente")
+      setModalActualizar(false);
+      await getEmployeesData()
+    } catch (error) {
+      console.log(error)
+      alert("Ocurrio un error al actualizar el empleado " + error)
+    }
+  }
+/**
+ * Maneja el cambio en el input del nombre del empleado
+ * @name handleInputNameChange
+ * @function
+ * @memberof Empleados
+ * @inner
+ * @return {void}
+*/
+  const handleInputNameChange = async (e) => {
+    var auxArray = [...listEmployee];
+    auxArray[e.target.id].NombreEmpleado = e.target.value;
+    setListEmployees(auxArray);
+  }
+/**
+ * Manejo de cambio en el input del email del empleado
+ * @name handleInputEmailChange
+ * @function
+ * @memberof Empleados
+ * @inner
+ * @return {void}
+*/
+  const handleInputEmailChange = async (e) => {
+    var auxArray = [...listEmployee];
+    auxArray[e.target.id].Email = e.target.value;
+    setListEmployees(auxArray);
+  }
+/**
+ * Maneja el cambio de estado en el empleado
+ * @name handleInputEstadoChange
+ * @function
+ * @memberof Empleados
+ * @inner
+ * @return {void}
+*/
+  const handleInputEstadoChange = async (e) => {
+    var auxArray = [...listEmployee];
+    var value = listEmployeeRef.current[e.target.id]?.EstadoEmpleado?.data[0];
+    if (value == 0) value = 1; else value = 0;
+    auxArray[e.target.id].EstadoEmpleado.data[0] = value;
+    setListEmployees(auxArray);
+  }
+
+
+  return (
+    &lt;>
+      {
+        loading ? &lt;>&lt;/> :
+          &lt;>
+            &lt;NavigationWindow />
+            &lt;NavPageContainer
+              hasPadding={true}
+              animateTransition={true}>
+
+              &lt;Modal showOverlay={true} show={modalCancel} onClose={() => setModalCancel(false)}>
+                &lt;Modal.Header>
+                  &lt;Modal.Title>Cambiar estado&lt;/Modal.Title>
+                &lt;/Modal.Header>
+                &lt;Modal.Body>
+                  &lt;div style={{ display: 'flex' }}>
+                    &lt;i className="icons10-exclamation-mark" style={{ color: '#faca2a', fontSize: "70px" }} />
+                    &lt;div style={{ marginLeft: 25, justifyContent: "center", alignItems: "center", display: "flex" }}>
+                      &lt;label>Estás a punto de cambiar el estado de este empleado, ¿estás seguro(a) que deseas continuar?&lt;/label>
+                    &lt;/div>
+                  &lt;/div>
+                &lt;/Modal.Body>
+                &lt;Modal.Footer>
+                  &lt;Button value='Si, cambiar estado' onClick={handleEntityStatus} />
+                  &lt;Button value="No, mantener estado actual" onClick={() => setModalCancel(false)} />
+                &lt;/Modal.Footer>
+              &lt;/Modal>
+
+              &lt;Modal showOverlay={true} show={modalActualizar} onClose={() => setModalActualizar(false)} size={"md"}>
+                &lt;Modal.Header>
+                  &lt;Modal.Title>Actualizar Empleado&lt;/Modal.Title>
+                &lt;/Modal.Header>
+                &lt;Modal.Body>
+                  &lt;div style={{ display: 'flex', flex: 1 }}>
+                    &lt;table style={{ width: '100%' }} className="styled-table" id="table-products">
+                      &lt;thead>
+                        &lt;tr>
+                          &lt;th>Caracteristica&lt;/th>
+                          &lt;th>Valor&lt;/th>
+                        &lt;/tr>
+                      &lt;/thead>
+                      &lt;tbody>
+                        {
+                          listEmployeeRef.current.map((item, index) => {
+                            if (item.IdEmpleado == keyEditRef.current) {
+                              return (
+                                &lt;>
+                                  &lt;tr>
+                                    &lt;td>Nombre del Empleado&lt;/td>
+                                    &lt;td>
+                                      &lt;input className='app-input-text' onChange={handleInputNameChange} type="text" id={index} value={listEmployeeRef.current[index].NombreEmpleado} />
+                                    &lt;/td>
+                                  &lt;/tr>
+                                  &lt;tr>
+                                    &lt;td>Correo electrónico&lt;/td>
+                                    &lt;td>
+                                      &lt;input className='app-input-text' onChange={handleInputEmailChange} type="email" id={index} value={listEmployeeRef.current[index].Email} />
+                                    &lt;/td>
+                                  &lt;/tr>&lt;tr>
+                                    &lt;td>Área&lt;/td>
+                                    &lt;td>
+                                      &lt;Select
+                                        options={areas}
+                                        defaultValue={defaultAreaRef.current}
+                                        onChange={(e) => setSelectedArea(e.value)}
+                                      />
+                                    &lt;/td>
+                                  &lt;/tr>
+                                  &lt;tr>
+                                    &lt;td>Ciudad&lt;/td>
+                                    &lt;td>
+                                      &lt;Select
+                                        options={cities}
+                                        defaultValue={defaultCityRef.current}
+                                        onChange={(e) => { setSelectedCity(e.value); getSucursalesByCity(); }}
+                                      />
+                                    &lt;/td>
+                                  &lt;/tr>
+                                  &lt;tr>
+                                    &lt;td>Sucursal&lt;/td>
+                                    &lt;td>
+                                      &lt;Select
+                                        options={sucursalesRef.current}
+                                        defaultValue={defaultSucursalRef.current}
+                                        // value={sucursalesRef.current[0]}
+                                        onChange={(e) => setSelectedSucursal(e.value)}
+                                      />
+                                    &lt;/td>
+                                  &lt;/tr>
+                                  &lt;tr>
+                                    &lt;td>Estado&lt;/td>
+                                    &lt;td>
+                                      {
+                                        listEmployeeRef.current[index].EstadoEmpleado.data[0] === 1 ?
+                                          &lt;div style={{ display: "flex", justifyContent: "center" }}>
+                                            &lt;input type="checkbox" id={index} checked style={{ marginRight: "10px" }} onChange={handleInputEstadoChange} />
+                                            &lt;span> ACTIVO&lt;/span>
+                                          &lt;/div>
+                                          :
+                                          &lt;div style={{ display: "flex", justifyContent: "center" }}>
+                                            &lt;input type="checkbox" id={index} style={{ marginRight: "10px" }} onChange={handleInputEstadoChange} />
+                                            &lt;span> INACTIVO&lt;/span>
+                                          &lt;/div>
+                                      }
+                                    &lt;/td>
+                                  &lt;/tr>
+                                &lt;/>
+                              )
+                            }
+                          })
+                        }
+                      &lt;/tbody>
+                    &lt;/table>
+                  &lt;/div>
+                &lt;/Modal.Body>
+                &lt;Modal.Footer>
+                  &lt;Button value='Actualizar' onClick={handleUpdateEmployee} />
+                  &lt;Button value="Cancelar" onClick={() => setModalActualizar(false)} />
+                &lt;/Modal.Footer>
+              &lt;/Modal>
+
+              &lt;Modal showOverlay={true} show={modalAdd} onClose={() => setModalAdd(false)} size={"sm"}>
+                &lt;Modal.Header>
+                  &lt;Modal.Title>Nuevo Empleado&lt;/Modal.Title>
+                &lt;/Modal.Header>
+                &lt;Modal.Body>
+                  &lt;div style={{ display: 'flex', flex: 1 }}>
+                    &lt;table style={{ width: '100%' }} className="styled-table" id="table-products">
+                      &lt;thead>
+                        &lt;tr>
+                          &lt;th>Caracteristica&lt;/th>
+                          &lt;th>Valor&lt;/th>
+                        &lt;/tr>
+                      &lt;/thead>
+                      &lt;tbody>
+                        &lt;tr>
+                          &lt;td>
+                            Nombre del Empleado
+                          &lt;/td>
+                          &lt;td>
+                            &lt;input className='app-input-text' type="text" value={employeeName} onChange={(e) => setEmployeeName(e.target.value)} required />
+                          &lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                          &lt;td>
+                            Email
+                          &lt;/td>
+                          &lt;td>
+                            &lt;input className='app-input-text' type="email" value={employeeEmail} onChange={(e) => setEmployeeEmail(e.target.value)} />
+                          &lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                          &lt;td>
+                            Área
+                          &lt;/td>
+                          &lt;td>
+                            &lt;Select
+                              options={areas}
+                              onChange={(e) => setSelectedArea(e.value)}
+                            />
+                          &lt;/td>
+                        &lt;/tr>
+                        &lt;tr>
+                          &lt;td>
+                            Sucursal
+                          &lt;/td>
+                          &lt;td>
+                            &lt;Select
+                              options={allSucursales}
+                              onChange={(e) => setSelectedSucursal(e.value)}
+                            />
+                          &lt;/td>
+                        &lt;/tr>
+                      &lt;/tbody>
+                    &lt;/table>
+                  &lt;/div>
+                &lt;/Modal.Body>
+                &lt;Modal.Footer>
+                  &lt;Button value='Agregar' onClick={addItem} />
+                  &lt;Button value="Cancelar" onClick={() => setModalAdd(false)} />
+                &lt;/Modal.Footer>
+              &lt;/Modal>
+
+              &lt;h1>Empleados&lt;/h1>
+              &lt;p>Añada, modifique o elimine registros de empleados.&lt;/p>
+              &lt;div className="app-hr">&lt;/div>
+
+              &lt;div style={{ margin: '20px 0' }}>
+              &lt;/div>
+              &lt;div style={{ display: "flex", flex: 1, marginRight: "30px", flexDirection: "column" }}>
                 &lt;div style={{ marginTop: "15px", display: "flex", flex: 1 }}>
                   &lt;div style={{ flex: 1 }}>
                     &lt;label>Buscar&lt;/label>
                     &lt;input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
                   &lt;/div>
+                  &lt;div style={{ flex: 1, justifyContent: "flex-end", display: "flex" }}>
+                    &lt;button className="app-button animate primary" onClick={() => setModalAdd(true)}>Nuevo empleado&lt;/button>
+                  &lt;/div>
                 &lt;/div>
                 &lt;table style={{ width: '100%' }} className="styled-table" id="table-products">
                   &lt;thead>
                     &lt;tr>
-                      &lt;th>Acción&lt;/th>
-                      &lt;th>Módulo&lt;/th>
-                      &lt;th>Fecha&lt;/th>
+                      &lt;th>Nombre del Empleado&lt;/th>
+                      &lt;th>Correo electrónico&lt;/th>
+                      &lt;th>Área&lt;/th>
+                      &lt;th>Sucursal&lt;/th>
+                      &lt;th>Ciudad&lt;/th>
+                      &lt;th>Estado&lt;/th>
+                      &lt;th>Acciones&lt;/th>
                     &lt;/tr>
                   &lt;/thead>
                   &lt;tbody>
                     {
-                      logs ?
-                        logs.map((ele, index) => {
+                      listEmployee ?
+                        listEmployeeRef.current.map((ele, index) => {
                           return (
                             &lt;tr>
-                              &lt;td>{ele.Accion}&lt;/td>
-                              &lt;td>{ele.Modulo}&lt;/td>
-                              &lt;td>{ele.FechaF}&lt;/td>
+                              &lt;td>{ele.NombreEmpleado}&lt;/td>
+                              &lt;td>{ele.Email}&lt;/td>
+                              &lt;td>{ele.DescripcionArea}&lt;/td>
+                              &lt;td>{ele.NombreSucursal}&lt;/td>
+                              &lt;td>{ele.NombreCiudad}&lt;/td>
+                              &lt;td>{ele.EstadoEmpleado.data[0] == 1 ? &lt;>&lt;span style={{ color: "green" }}>■ &lt;/span>&lt;span>ACTIVO&lt;/span>&lt;/> : &lt;>&lt;span style={{ color: "red" }}>■ &lt;/span>&lt;span>INACTIVO&lt;/span>&lt;/>}&lt;/td>
+                              &lt;td style={{ display: "flex", justifyContent: "center" }}>
+                                &lt;button className='app-button animate primary' id={ele.IdEmpleado} style={{ marginRight: "10px" }} onClick={handleChangeStatus}>Cambiar estado&lt;/button>
+                                &lt;button className='app-button animate primary' id={ele.IdEmpleado} style={{ marginRight: "10px" }} onClick={handleActualizarStatus}>Actualizar&lt;/button>
+                              &lt;/td>
                             &lt;/tr>
                           )
                         }) : &lt;>&lt;/>
@@ -152,12 +697,15 @@ const getBitacoraRecords = async() => {
                   &lt;/tbody>
                 &lt;/table>
               &lt;/div>
-        &lt;/NavPageContainer>
+
+            &lt;/NavPageContainer>
+          &lt;/>
+      }
     &lt;/>
   );
 }
 
-export default Bitacora</code></pre>
+export default Empleado</code></pre>
         </article>
     </section>
 

@@ -1,4 +1,10 @@
-
+/**
+ * @file Componente - Ciudades
+ * @author Christopher Ortiz
+ * @namespace Ciudades
+ * @description Pantalla que permite la creación de los registros de las ciudades donde la empresa tenga sucursales.
+ * @version 1.0.0
+ */
 import { NavPageContainer, Link } from 'react-windows-ui'
 import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
@@ -9,18 +15,66 @@ import useState from 'react-usestateref'
 
 const Ciudad = () => {
 
+/**
+ * Hook encargado de mostrar/ocultar el modal para añadir una nueva ciudad
+ * @function setShowModal
+ * @memberof Ciudades
+ * @return types {boolean}
+ * @inner
+ */
   const [showModal, setShowModal] = useState(false);
-  const [ciudad, setCiudad] = useState("")
+  //const [ciudad, setCiudad] = useState("")
+/**
+ * Hook encargado de traer el listado de ciudades desde la base de datos 
+ * @function setListCities
+ * @memberof Ciudades
+ * @return types {Object}
+ * @inner
+ */
   const [listCities, setListCities] = useState("")
+/**
+ * Hook encargado de manejar el estado de si está cargando o no el componente
+ * @function setLoading
+ * @memberof Ciudades
+ * @return loading {boolean}
+ * @inner
+ */
   const [loading, setLoading] = useState(true)
+/**
+ * Hook encargado de manejar el valor del nombre de la ciudad a añadir/actualizar
+ * @function setDefaultName
+ * @memberof Ciudades
+ * @return defaultName {Object}
+ * @inner
+ */
   const [defaultName, setDefaultName, defaultNameRef] = useState()
+/**
+ * Hook encargado de manejar el código de la ciudad a modificar
+ * @function setSelectedIndex
+ * @memberof Ciudades
+ * @return selectedIndex {Object}
+ * @inner
+ */
   const [selectedIndex, setSelectedIndex, selectedIndexRef] = useState()
+/**
+ * Hook encargado de manejar el valor del modal de añadir una nueva ciudad
+ * @function setAddModal
+ * @memberof Ciudades
+ * @return addModal {boolean}
+ * @inner
+ */
   const [addModal, setAddModal] = useState(false)
 
   useEffect(() => {
     getCitiesData()
   }, [])
-
+/**
+ * Función encargada de insertar una nueva ciudad a la base de datos
+ * @function addNewCity
+ * @memberof Ciudades
+ * @return void
+ * @inner
+ */
   const addNewCity = async () => {
     if (defaultName) {
       try {
@@ -46,7 +100,13 @@ const Ciudad = () => {
       alert("El nombre de la ciudad no puede ir vacio")
     }
   }
-
+/**
+ * Función encargada de actualizar una ciudad en la base de datos
+ * @function updateCityRow
+ * @memberof Ciudades
+ * @return void
+ * @inner
+ */
   const updateCityRow = async () => {
     if(defaultName){
       try {
@@ -72,7 +132,13 @@ const Ciudad = () => {
       alert("El nombre de la ciudad no puede ir vacio")
     }
   }
-
+/**
+ * Función encargada de listar las ciudades registradas en la base de datos
+ * @function getCitiesData
+ * @memberof Ciudades
+ * @return void
+ * @inner
+ */
   const getCitiesData = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "city", {
@@ -90,8 +156,14 @@ const Ciudad = () => {
       console.log(error)
     }
   }
-
-
+/**
+ * Maneja la búsqueda en la tabla, función que se encarga de filtrar los datos de la tabla
+ * @name searchTableAll
+ * @function
+ * @memberof Ciudades
+ * @inner
+ * @return {void}
+*/
   const searchTableAll = () => {
     var searchBox = document.getElementById('search-input-table');
     var table = document.getElementById("table-products");
@@ -108,7 +180,14 @@ const Ciudad = () => {
       }
     }
   }
-
+/**
+ * Función manejadora de los procesos necesarios para actualizar una ciudad
+ * @name handleUpdateCity
+ * @function
+ * @memberof Ciudades
+ * @inner
+ * @return {void}
+*/
   const handleUpdateCity = async(nombre, codigo) => {
     setDefaultName(nombre); 
     setSelectedIndex(codigo); 

@@ -1,4 +1,10 @@
-
+/**
+ * @file Componente - Sucursales
+ * @author Christopher Ortiz
+ * @namespace Sucursales
+ * @description Pantalla que gestiona las sucursales de la empresa
+ * @version 1.0.0
+ */
 import { NavPageContainer } from 'react-windows-ui'
 import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
@@ -29,7 +35,14 @@ const Sucursal = () => {
   }, [])
 
 
-
+/**
+ * Registra una nueva sucursal
+ * @function addItem
+ * @memberof Sucursales
+ * @async
+ * @return void
+ * @inner
+ */
   const addItem = async () => {
     if(defaultNameRef.current?.length > 0 && selectedCity){
     try {
@@ -54,6 +67,14 @@ const Sucursal = () => {
     }
   }
 
+/**
+ * Obtiene un listado con los datos de las sucursales
+ * @function getItems
+ * @memberof Sucursales
+ * @async
+ * @return void
+ * @inner
+ */
   const getItems = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "sucursales", {
@@ -73,8 +94,14 @@ const Sucursal = () => {
       console.log(error)
     }
   }
-  /**
-   */
+/**
+ * Obtiene un listado con los datos de las ciudades
+ * @function getCities
+ * @memberof Sucursales
+ * @async
+ * @return void
+ * @inner
+ */
   const getCities = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "city", {
@@ -106,6 +133,14 @@ const Sucursal = () => {
     }
   }
 
+/**
+ * Filtra los datos de las columnas de la tabla
+ * @function searchTableAll
+ * @memberof Sucursales
+ * @async
+ * @return void
+ * @inner
+ */
   const searchTableAll = () => {
     var searchBox = document.getElementById('search-input-table');
     var table = document.getElementById("table-products");
@@ -122,7 +157,14 @@ const Sucursal = () => {
       }
     }
   }
-
+/**
+ * Gestiona los procesos e inicializaciones necesarias para actualizar una sucursal
+ * @function handleUpdateSucursal
+ * @memberof Sucursales
+ * @async
+ * @return void
+ * @inner
+ */
   const handleUpdateSucursal = (element) => {
     setShowModal(true);
     const objCity = {
@@ -134,6 +176,14 @@ const Sucursal = () => {
     setDefaultValue(objCity);
   }
 
+ /**
+ * Actualiza los datos de una sucursal
+ * @function updateSucursalData
+ * @memberof Sucursales
+ * @async
+ * @return void
+ * @inner
+ */
   const updateSucursalData = async () => {
     try {
       setLoading(true)

@@ -1,4 +1,10 @@
-
+/**
+ * @file Componente - Grupos
+ * @author Christopher Ortiz
+ * @namespace Grupos
+ * @description Grupos de productos
+ * @version 1.0.0
+ */
 import { NavPageContainer, Link } from 'react-windows-ui'
 import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
@@ -17,10 +23,17 @@ const Grupo = () => {
   const [addModal, setAddModal] = useState(false)
 
   useEffect(() => {
-    getAreasData()
+    getGroupsData()
   }, [])
-
-  const addNewArea = async () => {
+/**
+ * Filtra en la tabla buscando por todos los campos
+ * @function addNewGroup
+ * @memberof Grupos
+ * @async
+ * @return void
+ * @inner
+ */
+  const addNewGroup = async () => {
     if (defaultName) {
       try {
         setLoading(true)
@@ -33,7 +46,7 @@ const Grupo = () => {
         })
         const result = await response.json()
         console.log(result)
-        await getAreasData()
+        await getGroupsData()
         setAddModal(false)
         setLoading(false)
         setDefaultName()
@@ -45,8 +58,15 @@ const Grupo = () => {
       alert("El nombre del area no puede ir vacio")
     }
   }
-
-  const updateCityRow = async () => {
+/**
+ * Actualiza los datos de un grupo
+ * @function updateGroupRow
+ * @memberof Grupos
+ * @async
+ * @return void
+ * @inner
+ */
+  const updateGroupRow = async () => {
     if(defaultName){
       try {
         setLoading(true)
@@ -59,7 +79,7 @@ const Grupo = () => {
         })
         const result = await response.json();
         console.log(result)
-        await getAreasData()
+        await getGroupsData()
         setShowModal(false)
         setLoading(false)
         setDefaultName()
@@ -72,7 +92,15 @@ const Grupo = () => {
     }
   }
 
-  const getAreasData = async () => {
+/**
+ * Obtiene los datos de los grupos
+ * @function getGroupsData
+ * @memberof Grupos
+ * @async
+ * @return void
+ * @inner
+ */
+  const getGroupsData = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "groups", {
         method: 'GET',
@@ -90,7 +118,14 @@ const Grupo = () => {
     }
   }
 
-
+/**
+ * Filtra en la tabla por todos los campos
+ * @function searchTableAll
+ * @memberof Grupos
+ * @async
+ * @return void
+ * @inner
+ */
   const searchTableAll = () => {
     var searchBox = document.getElementById('search-input-table');
     var table = document.getElementById("table-products");
@@ -107,8 +142,15 @@ const Grupo = () => {
       }
     }
   }
-
-  const handleUpdateCity = async(nombre, codigo) => {
+/**
+ * Función encargada de los procesos que realizan la actualización de un grupo
+ * @function handleUpdateGroup
+ * @memberof Grupos
+ * @async
+ * @return void
+ * @inner
+ */
+  const handleUpdateGroup = async(nombre, codigo) => {
     setDefaultName(nombre); 
     setSelectedIndex(codigo); 
     setShowModal(true)
@@ -148,7 +190,7 @@ const Grupo = () => {
                   </table>
                 </Modal.Body>
                 <Modal.Footer>
-                  <Button value="Aceptar" onClick={updateCityRow} />
+                  <Button value="Aceptar" onClick={updateGroupRow} />
                   <Button value="Cerrar" onClick={() => setShowModal(false)} />
                 </Modal.Footer>
               </Modal>
@@ -177,7 +219,7 @@ const Grupo = () => {
                   </table>
                 </Modal.Body>
                 <Modal.Footer>
-                  <Button value="Aceptar" onClick={addNewArea} />
+                  <Button value="Aceptar" onClick={addNewGroup} />
                   <Button value="Cerrar" onClick={() => setAddModal(false)} />
                 </Modal.Footer>
               </Modal>
@@ -210,7 +252,7 @@ const Grupo = () => {
                           <tr>
                             <td>{item.DescripcionGrupo}</td>
                             <td style={{ display: "flex", justifyContent: "center" }}>
-                              <button className='app-button primary animate' onClick={() => handleUpdateCity(item.DescripcionGrupo, item.IdGrupo)}>Actualizar</button>
+                              <button className='app-button primary animate' onClick={() => handleUpdateGroup(item.DescripcionGrupo, item.IdGrupo)}>Actualizar</button>
                             </td>
                           </tr>
                         )

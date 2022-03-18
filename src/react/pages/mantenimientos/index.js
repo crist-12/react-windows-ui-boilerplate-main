@@ -1,4 +1,10 @@
-
+/**
+ * @file Componente - Mantenimientos
+ * @author Christopher Ortiz
+ * @namespace Mantenimientos
+ * @description Pantalla que gestiona los registros de los mantenimientos a los equipos
+ * @version 1.0.0
+ */
 import { NavPageContainer, Link, Button } from 'react-windows-ui'
 import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
@@ -16,6 +22,14 @@ const Mantenimiento = () => {
         getMaintenanceRecords();
     }, [])
 
+/**
+ * Obtiene los datos obtenidos de los mantenimientos registrados en la base de datos
+ * @function getMaintenanceRecords
+ * @memberof Mantenimientos
+ * @async
+ * @return void
+ * @inner
+ */
     const getMaintenanceRecords = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "maintenance", {
@@ -32,6 +46,14 @@ const Mantenimiento = () => {
         }
     }
 
+/**
+ * Filtra los valores de la tabla por el texto ingresado en el input de búsqueda
+ * @function searchTableAll
+ * @memberof Mantenimientos
+ * @async
+ * @return void
+ * @inner
+ */
     const searchTableAll = () => {
         var searchBox = document.getElementById('search-input-table');
         var table = document.getElementById("table-products");

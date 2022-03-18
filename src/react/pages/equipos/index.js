@@ -1,4 +1,10 @@
-
+/**
+ * @file Componente - Asignación
+ * @author Christopher Ortiz
+ * @namespace Equipos
+ * @description Los equipos deben ser asignados a los empleados, esta pantalla es la encargada de realizar las asignaciones a cada uno de ellos.
+ * @version 1.0.0
+ */
 import { NavPageContainer, InputText, RadioButton, Button, NavPageContainerRight, LinkCompound } from 'react-windows-ui'
 import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
@@ -47,7 +53,14 @@ const Equipos = () => {
     setLoading(false)
   }, [])
 
-  // Obtiene listado de las entidades para llenar el select
+/**
+ * Obtiene todas las entidades para cargarlas en el select
+ * @function getAllCategories
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const getAllCategories = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "category", {
@@ -72,7 +85,14 @@ const Equipos = () => {
       alert(error)
     }
   }
-
+/**
+ * Obtiene las cabeceras para establecer en la tabla
+ * @function getHeaders
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const getHeaders = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "control/headers/" + entityCodeRef.current, {
@@ -101,7 +121,14 @@ const Equipos = () => {
       alert(error)
     }
   }
-  // Cuando seleccionemos una entidad, obtenemos los controles de esa entidad
+/**
+ * Cuando seleccionamos la entidad, obtenemos los campos de la misma
+ * @function getEntityEntries
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const getEntityEntries = async (id) => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "control/filter/" + id, {
@@ -139,8 +166,14 @@ const Equipos = () => {
       alert(error)
     }
   }
-
-  // Obtiene las opciones para los controles
+/**
+ * Obtiene las opciones para los campos de la entidad
+ * @function getOptions
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const getOptions = async (id) => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "control/options/" + id, {
@@ -166,7 +199,14 @@ const Equipos = () => {
     }
   }
 
-  // Maneja el evento de seleccionar una entidad
+/**
+ * Manejo el cambio de la entidad 
+ * @function handleListChange
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const handleListChange = async (e) => {
     //setLoading(true)
     //setSelected(e.value)
@@ -184,8 +224,14 @@ const Equipos = () => {
     //setLoading(false)
   }
 
-  //const handle
-
+/**
+ * Obtiene las entradas de la entidad seleccionada
+ * @function getAllEntriesTable
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const getAllEntriesTable = async (id) => {
     //setLoading(true)
     try {
@@ -211,7 +257,14 @@ const Equipos = () => {
     }
   }
 
-  // Maneja el evento de mostrar los controles de cada entidad
+ /**
+ * Muestra el control indicado de acuerdo al tipo de control especificado en la base de datos
+ * @function showControls
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const showControls = (item) => {
     try {
       if (item?.type != undefined) {
@@ -304,7 +357,14 @@ const Equipos = () => {
 
   }
 
-  //Detecta cual es el control que se esta editando y asigna el valor al objeto de respuesta
+/**
+ * Maneja los valores de los controles cuando se produce un cambio en él 
+ * @function handleChangeControlValue
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const handleChangeControlValue = (e) => {
     var auxArray = respuesta
 
@@ -317,7 +377,14 @@ const Equipos = () => {
       console.log(auxArray)
     setRespuesta(auxArray)
   }
-
+/**
+ * Obtiene las opciones para los campos de la entidad
+ * @function handleInputControlValue
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const handleInputControlValue = async (e) => {
     const file = e.target.files[0];
     const base64 = await convertToBase64(file);
@@ -335,7 +402,14 @@ const Equipos = () => {
     console.log(auxArray)
   }
 
-
+/**
+ * Convierte el archivo obtenido por el input type file en base 64
+ * @function convertToBase64
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -345,6 +419,14 @@ const Equipos = () => {
     });
   }
 
+/**
+ * Maneja el cambio del select cuando cambia
+ * @function handleChangeSelectValue
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const handleChangeSelectValue = (e, { name }) => {
     var auxArray = respuesta
 
@@ -357,6 +439,14 @@ const Equipos = () => {
     setRespuesta(auxArray)
   }
 
+  /**
+ * Obtiene el último equipo insertado
+ * @function getLastProductKey
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const getLastProductKey = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "control/key", {
@@ -372,6 +462,14 @@ const Equipos = () => {
     }
   }
 
+/**
+ * Maneja el proceso del guardado del estado de la computadora
+ * @function saveComputerState
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const saveComputerState = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "control/state", {
@@ -387,7 +485,14 @@ const Equipos = () => {
       alert(error)
     }
   }
-
+/**
+ * Obtiene las opciones para los campos de la entidad
+ * @function handleSaveNewEntry
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const handleSaveNewEntry = async (event) => {
     event.preventDefault()
     try {
@@ -435,7 +540,14 @@ const Equipos = () => {
     setLoading(false);
     await getAllCategories();
   }
-
+/**
+ * Función que obtiene los listados de la computadora, invoca a  la función pivote en Js para ordenamiento de los mismos.
+ * @function getRows
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const getRows = async (id) => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "control/rows/" + entityCodeRef.current, {
@@ -462,7 +574,14 @@ const Equipos = () => {
       alert(error)
     }
   }
-
+/**
+ * Filtra en la tabla buscando por todos los campos
+ * @function performSearch
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
   const performSearch = () => {
     var searchBox = document.getElementById('search-input-table');
     var table = document.getElementById("table-products");

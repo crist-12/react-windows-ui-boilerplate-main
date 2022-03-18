@@ -1,4 +1,10 @@
-
+/**
+ * @file Componente - Ciudades
+ * @author Christopher Ortiz
+ * @namespace Computadoras
+ * @description Pantalla exclusiva para manejar los registros de las computadoras registradas en el sistema
+ * @version 1.0.0
+ */
 import { NavPageContainer, Link, InputText, NavPageContainerRight, LinkCompound, RadioButton, Button } from 'react-windows-ui'
 import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
@@ -60,7 +66,14 @@ const Computadora = () => {
         getTableData()
         getAllAssignmentData()
     }, [])
-
+/**
+ * Obtiene los datos de las computadoras para desplegarla en la tabla
+ * @name getTableData
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const getTableData = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "control/equipos", {
@@ -86,7 +99,14 @@ const Computadora = () => {
         }
 
     }
-
+/**
+ * Obtiene todos los datos relacionado con las asignaciones de las computadoras
+ * @name getAllAssignmentData
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const getAllAssignmentData = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "assignment/", {
@@ -103,7 +123,14 @@ const Computadora = () => {
             console.log(error)
         }
     }
-
+/**
+ * Muestra el estado de la computadora 
+ * @name showStateSpan
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const showStateSpan = (state) => {
         switch (state) {
             case "Sin asignar":
@@ -143,7 +170,14 @@ const Computadora = () => {
                 )
         }
     }
-
+/**
+ * Maneja la búsqueda en la tabla, función que se encarga de filtrar los datos de la tabla
+ * @name searchTableAll
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const searchTableAll = () => {
         var searchBox = document.getElementById('search-input-table');
         var table = document.getElementById("table-products");
@@ -160,7 +194,14 @@ const Computadora = () => {
             }
         }
     }
-
+/**
+ * Función encargada de convertir el archivo a base64
+ * @name convertToBase64
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -169,14 +210,28 @@ const Computadora = () => {
             reader.onerror = error => reject(error);
         });
     }
-
+/**
+ * Maneja el cambio de los controles de input (text, number, date, textarea)
+ * @name handleInputControlValue
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const handleInputControlValue = async (e) => {
         const file = e.target.files[0];
         const base64 = await convertToBase64(file);
         console.log(base64)
         setFactura(base64)
     }
-
+/**
+ * Actualiza el estado del mantenimiento de la computadora
+ * @name updateMaintenanceStatus
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const updateMaintenanceStatus = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "assignment/receive/" + id, {
@@ -201,7 +256,14 @@ const Computadora = () => {
         await getTableData()
         await getAllAssignmentData()
     }
-
+/**
+ * Cambia el estado de la computadora según le sea indicado
+ * @name changeComputerStatus
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const changeComputerStatus = async (status) => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "machines/status/" + idRef.current, {
@@ -227,7 +289,14 @@ const Computadora = () => {
             alert(error)
         }
     }
-
+/**
+ * Función que se encarga de actualizar el estado del equipo cuando se recibe de mantenimiento
+ * @name updateReceivedFromMaitenance
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const updateReceivedFromMaitenance = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "machines/receivedcheck/" + idRef.current, {
@@ -245,7 +314,14 @@ const Computadora = () => {
             alert(error)
         }
     }
-
+/**
+ * Función encargada de eliminar la asignación de la computadora
+ * @name deleteAssignmentRow
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const deleteAssignmentRow = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "assignment/" + idRef.current, {
@@ -262,7 +338,14 @@ const Computadora = () => {
             alert(error)
         }
     }
-
+/**
+ * Función encargada de obtener los detalles de una computadora según su código
+ * @name getComputerDetails
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const getComputerDetails = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "machines/" + idRef.current, {
@@ -278,13 +361,28 @@ const Computadora = () => {
             alert(error)
         }
     }
-
+/**
+ * Función que se encarga de invocar los procesos para obtener los datos necesarios para la visualización de los datos
+ * @name handleDetailsVisualization
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const handleDetailsVisualization = async (id) => {
         setId(id)
         await getComputerDetails()
         setModalInfo(true)
     }
-
+/**
+ * Función que se encarga de actualizar los datos de una computadora
+ * @name updateComputerInfo
+ * @function
+ * @async
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const updateComputerInfo = async (answer, caracteristica) => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "machines/" + caracteristica, {
@@ -301,7 +399,15 @@ const Computadora = () => {
             alert(error)
         }
     }
-
+/**
+ * Función encargada de gestionar los procesos que se llevan a cabo al actualizar un dato de una computadoras
+ * @name handleUpdateProcess
+ * @function
+ * @async
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const handleUpdateProcess = async () => {
         try {
             infoRawRef.current.map((elemento) => {
@@ -315,7 +421,14 @@ const Computadora = () => {
         await getTableData()
         setModalActualizar(false)
     }
-
+/**
+ * Obtiene la información de una computadora según su código
+ * @name getComputerInfoRaw
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const getComputerInfoRaw = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "machines/update/" + idRef.current, {
@@ -342,7 +455,15 @@ const Computadora = () => {
             alert(error)
         }
     }
-
+/**
+ * Maneja los procesos que se realizan durante la actualización de una computadora
+ * @name handleUpdateCity
+ * @function
+ * @async
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const handleUpdateClick = async (id) => {
         setId(id)
         setModalActualizar(true);
@@ -350,14 +471,27 @@ const Computadora = () => {
         await getComputerInfoRaw();
         // console.log(infoRawRef.current)
     }
-
+/**
+ * Función encargada de manejar los cambios en un input de tipo text, date, number o textarea
+ * @name handleChangeInputValue
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const handleChangeInputValue = (e) => {
         var auxArray = [...infoRaw]
         auxArray[e.target.id]["Respuesta"] = e.target.value;
         setInfoRaw(auxArray);
         console.log(computerObjectRef.current)
     }
-
+/**
+ * Maneja los estados de los controles en el modal de actualzación de datos
+ * @name handleInputControlValueAct
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const handleInputControlValueAct = async (e) => {
         const file = e.target.files[0];
         const base64 = await convertToBase64(file);
@@ -367,7 +501,14 @@ const Computadora = () => {
         console.log(computerObjectRef.current)
         console.log(e)
     }
-
+/**
+ * Función encargada de responder a los cambios cuando el select cambia de opción
+ * @name handleSelectHasChanged
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const handleSelectHasChanged = (e) => {
         var auxArray = [...infoRaw]
         auxArray[e.key]["Respuesta"] = e.value;
@@ -376,8 +517,14 @@ const Computadora = () => {
         console.log(e)
         //console.log(e)
     }
-
-
+/**
+ * Función encargada de desplegar el control adecuado según sea el tipo en la base de datos
+ * @name showControls
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const showControls = (item, index) => {
         var req = item.Requerido.data[0];
         if (req == 1) req = true; else req = false;
@@ -456,7 +603,14 @@ const Computadora = () => {
                 )
         }
     }
-
+/**
+ * Función encargada de traer los tipos de datos de la base de datos
+ * @name getOptions
+ * @function
+ * @memberof Computadoras
+ * @inner
+ * @return {void}
+*/
     const getOptions = async (id) => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "control/options/" + 1, {

@@ -1,4 +1,10 @@
-
+/**
+ * @file Componente - Configuraciones
+ * @author Christopher Ortiz
+ * @namespace Configuraciones
+ * @description Pantalla que muestra algunas configuraciones del sistema
+ * @version 1.0.0
+ */
 import { NavPageContainer, NavPageContainerRight, ColorPickerItem, ColorPickerPalette, LinkCompound } from 'react-windows-ui'
 import React, { useEffect, createContext } from 'react'
 import NavigationWindow from '../../components/Navigation'
@@ -17,12 +23,26 @@ const Configuracion = () => {
   const masterState = useMasterState();
   const authState = useAuthState();
 
-
+/**
+ * Maneja el cambio de color de la aplicación
+ * @name handleColorHasChanged
+ * @function
+ * @memberof Configuraciones
+ * @inner
+ * @return {void}
+*/
   const handleColorHasChanged = (color) => {
     setThemeColor(color);
     updateUserPreference(color);
   }
-
+/**
+ * Actualiza la preferencia de color del usuario
+ * @name updateUserPreference
+ * @function
+ * @memberof Configuraciones
+ * @inner
+ * @return {void}
+*/
   const updateUserPreference = (color) => {
     try {
       fetch(process.env.REACT_APP_HOME + "auth/color/" + authState.me.get().username, {

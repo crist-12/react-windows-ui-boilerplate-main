@@ -1,4 +1,10 @@
-
+/**
+ * @file Componente - Perfil
+ * @author Christopher Ortiz
+ * @namespace Perfil
+ * @description Pantalla que gestiona las credenciales de acceso, crear nuevos usuarios y mi última actividad de autenticación
+ * @version 1.0.0
+ */
 import { NavPageContainer, Link } from 'react-windows-ui'
 import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
@@ -23,6 +29,14 @@ const Perfil = () => {
     getLoginsRecords();
   }, [])
 
+/**
+ * Obtiene los últimos veinte inicios de sesión o cierres de sesión
+ * @function getMaintenanceRecords
+ * @memberof Perfil
+ * @async
+ * @return void
+ * @inner
+ */
   const getLoginsRecords = async () => {
     const response = await fetch(process.env.REACT_APP_HOME + "auth/sessions/" + authState.me.get().username, {
       method: 'GET',
@@ -36,6 +50,14 @@ const Perfil = () => {
     console.log(data)
   }
 
+/**
+ * Actualiza las credenciales de acceso al usuario logueado
+ * @function updateCredentials
+ * @memberof Perfil
+ * @async
+ * @return void
+ * @inner
+ */
   const updateCredentials = async () => {
     if (password === confirmPassword) {
       try {
@@ -59,6 +81,14 @@ const Perfil = () => {
     }
   }
 
+/**
+ * Registra un nuevo usuario en el sistema
+ * @function registerUser
+ * @memberof Perfil
+ * @async
+ * @return void
+ * @inner
+ */
   const registerUser = async () => {
     if (passwordR === confirmPasswordR) {
       try {
@@ -83,6 +113,14 @@ const Perfil = () => {
     }
   }
 
+  /**
+ * Limpia los campos después de una actualización o un registro de usuario
+ * @function cleanData
+ * @memberof Perfil
+ * @async
+ * @return void
+ * @inner
+ */
   const cleanData = () => {
     setPassword("");
     setConfirmPassword("");

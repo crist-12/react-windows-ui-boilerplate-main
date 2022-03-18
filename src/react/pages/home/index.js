@@ -1,14 +1,17 @@
-
+/**
+ * @file Componente - Home
+ * @author Christopher Ortiz
+ * @namespace Home
+ * @description Pantalla que muestra datos generales en forma de un dashboard
+ * @version 1.0.0
+ */
 import { NavPageContainer } from 'react-windows-ui'
 import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
 import { useAuthState } from '../../stores/AuthStore'
 import { useMasterState } from '../../stores/MasterStore'
 import useState from 'react-usestateref';
-import { PieChart } from 'react-minimal-pie-chart';
-import { Pie } from 'react-chartjs-2';
 import { VictoryPie, VictoryContainer } from 'victory';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import "../home/index.css";
 import logorv from "../../assets/rvlogo.png"
 const Palette = require('nice-color-palettes/200');
@@ -30,7 +33,14 @@ const Home = () => {
 
   }, [])
 
-
+/**
+ * Obtiene los datos del dashboard
+ * @function getAllAssignmentData
+ * @memberof Home
+ * @async
+ * @return void
+ * @inner
+ */
   const getDashboardData = async () => {
     var indice = Math.floor((Math.random() * (200 - 1 + 1)) + 1);
     setColors(Palette[indice]);

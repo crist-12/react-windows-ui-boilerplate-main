@@ -1,4 +1,10 @@
-
+/**
+ * @file Componente - Historial de Asignaciones
+ * @author Christopher Ortiz
+ * @namespace Historial
+ * @description Las asignaciones que se remuevan, pasarán a formar parte de este historial
+ * @version 1.0.0
+ */
 import { NavPageContainer, Link } from 'react-windows-ui'
 import React, { useState, useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
@@ -13,7 +19,14 @@ const Historial = () => {
         getAllAssignmentData()
     }, []);
 
-
+/**
+ * Obtiene los datos del histórico de asignaciones
+ * @function getAllAssignmentData
+ * @memberof Historial
+ * @async
+ * @return void
+ * @inner
+ */
     const getAllAssignmentData = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "assignment/history", {
@@ -30,7 +43,14 @@ const Historial = () => {
             console.log(error)
         }
     }
-
+/**
+ * Filtra en la tabla por todos los campos
+ * @function searchTableAll
+ * @memberof Historial
+ * @async
+ * @return void
+ * @inner
+ */
     const searchTableAll = () => {
         var searchBox = document.getElementById('search-input-table');
         var table = document.getElementById("table-products");

@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>pages/sucursales/index.js - Documentation</title>
+    <title>pages/equipos/index.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">pages/sucursales/index.js</h1>
+    <h1 class="page-title">pages/equipos/index.js</h1>
     
 
     
@@ -43,149 +43,590 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @file Componente - Sucursales
+ * @file Componente - Asignación
  * @author Christopher Ortiz
- * @namespace Sucursales
- * @description Pantalla que gestiona las sucursales de la empresa
+ * @namespace Equipos
+ * @description Los equipos deben ser asignados a los empleados, esta pantalla es la encargada de realizar las asignaciones a cada uno de ellos.
  * @version 1.0.0
  */
-import { NavPageContainer } from 'react-windows-ui'
+import { NavPageContainer, InputText, RadioButton, Button, NavPageContainerRight, LinkCompound } from 'react-windows-ui'
 import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
-import { Dialog, Button } from 'react-windows-ui'
-import MaterialTable from 'material-table'
-import Modal from '../../components/Modal';
-import useState from 'react-usestateref'
 import Select from 'react-select'
-import "../sucursales/index.css"
+import useState from 'react-usestateref'
+import { useMasterState } from '../../stores/MasterStore'
+import { useAuthState } from '../../stores/AuthStore'
+import "../equipos/index.css"
+import getPivotArray from '../../../shared/arrayToPivot'
+import { triggerBase64Download } from 'react-base64-downloader'
+import Modal from '../../components/Modal';
 
-const Sucursal = () => {
 
-  const [showModal, setShowModal] = React.useState(false);
-  const [addModal, setAddModal] = React.useState(false);
-  const [selectedCity, setSelectedCity] = React.useState()
-  const [listSucursales, setListSucursales, listSucursalesRef] = useState()
+const Equipos = () => {
+
+  const [entities, setEntities] = React.useState([])
   const [loading, setLoading] = React.useState(true)
-  const [cities, setCities, citiesRef] = useState();
+  const [controls, setControls] = React.useState([])
+  const [selected, setSelected] = React.useState(null)
+  const [options, setOptions] = React.useState([[]])
+  const [respuesta, setRespuesta, respuestaRef] = useState([])
+  const [entityCode, setEntityCode, entityCodeRef] = useState()
+  const [mode, setMode] = React.useState('R')
+  const [tableEquipo, setTableEquipo, tableEquipoRef] = useState([])
+  const [lastKey, setLastKey, lastKeyRef] = useState()
+  const [headers, setHeaders, headersRef] = useState([])
+  const [rows, setRows, rowsRef] = useState([])
+  const [modalImg, setModalImg] = useState(false)
+  const [currentImage, setCurrentImage, currentImageRef] = useState()
+  // const [dataList, setDataList] = React.useState([])
 
-  const [defaultValue, setDefaultValue, defaultValueRef] = useState();
-  const [defaultName, setDefaultName, defaultNameRef] = useState();
-  const [selectedSucursal, setSelectedSucursal, selectedSucursalRef] = useState();
+  const masterState = useMasterState();
+  const authState = useAuthState();
 
+
+
+  const columnas = [
+    {
+      title: 'Equipo',
+      field: 'equipo'
+    }
+  ]
 
   useEffect(() => {
-    getItems()
-    getCities()
+    getAllCategories()
+    setLoading(false)
   }, [])
 
-
 /**
- * Registra una nueva sucursal
- * @function addItem
- * @memberof Sucursales
+ * Obtiene todas las entidades para cargarlas en el select
+ * @function getAllCategories
+ * @memberof Equipos
  * @async
  * @return void
  * @inner
  */
-  const addItem = async () => {
-    if(defaultNameRef.current?.length > 0 &amp;&amp; selectedCity){
+  const getAllCategories = async () => {
     try {
-      setLoading(true)
-      const response = await fetch(process.env.REACT_APP_HOME + "sucursales", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ "NombreSucursal": defaultNameRef.current, "IdCiudad": selectedCity })
-      })
-      await getItems()
-      setLoading(false)
-      setAddModal(false)
-      setDefaultName()
-      setDefaultValue()
-      alert("La categoria se guardo exitosamente")
-    } catch (error) {
-      alert("Ocurrio un error al guardar la categoria")
-    }}else{
-      alert("Asegurate de llenar todos los campos")
-    }
-  }
-
-/**
- * Obtiene un listado con los datos de las sucursales
- * @function getItems
- * @memberof Sucursales
- * @async
- * @return void
- * @inner
- */
-  const getItems = async () => {
-    try {
-      const response = await fetch(process.env.REACT_APP_HOME + "sucursales", {
+      const response = await fetch(process.env.REACT_APP_HOME + "category", {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         }
       })
-
-      const result = await response.json()
-      setListSucursales(result)
-      setLoading(true)
-      //console.log(result)
-      //setListSucursales(response)
-
-    } catch (error) {
-      console.log(error)
-    }
-  }
-/**
- * Obtiene un listado con los datos de las ciudades
- * @function getCities
- * @memberof Sucursales
- * @async
- * @return void
- * @inner
- */
-  const getCities = async () => {
-    try {
-      const response = await fetch(process.env.REACT_APP_HOME + "city", {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-
       const result = await response.json()
       var arre = []
       result.forEach(ele => {
         var obj = {
-          value: ele.IdCiudad,
-          label: ele.NombreCiudad
+          value: ele.IdCategoria,
+          label: ele.DescripcionCategoria
         }
         arre.push(obj)
-        //enumList.push(obj.label)
-        //setLabel([...label, obj.label])
-        console.log(obj)
+        // console.log(obj)
       })
-      setCities(arre)
-      setLoading(false)
-      //console.log(result)
-      //setListSucursales(response)
-
+      setEntities(arre)
+      // setLoading(false)
     } catch (error) {
-      console.log(error)
+      alert(error)
     }
   }
-
 /**
- * Filtra los datos de las columnas de la tabla
- * @function searchTableAll
- * @memberof Sucursales
+ * Obtiene las cabeceras para establecer en la tabla
+ * @function getHeaders
+ * @memberof Equipos
  * @async
  * @return void
  * @inner
  */
-  const searchTableAll = () => {
+  const getHeaders = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "control/headers/" + entityCodeRef.current, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const result = await response.json()
+      var arre = []
+      result.forEach(ele => {
+        var obj = {
+          categoria: ele.IdCategoria,
+          caracteristica: ele.IdCaracteristica,
+          descripcion: ele.CaracteristicaDescripcion
+        }
+        arre.push(obj)
+        // console.log(obj)
+      })
+      //console.log("RESPUESTA HEADERS")
+      //console.log(result)
+      setHeaders(arre)
+      //console.log(headersRef.current)
+      // setLoading(false)
+    } catch (error) {
+      alert(error)
+    }
+  }
+/**
+ * Cuando seleccionamos la entidad, obtenemos los campos de la misma
+ * @function getEntityEntries
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
+  const getEntityEntries = async (id) => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "control/filter/" + id, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const result = await response.json()
+      var arre = []
+      var resp = [...respuesta]
+      result.forEach(ele => {
+        var obj = {
+          id: ele.IdCaracteristica,
+          key: ele.IdCategoria,
+          name: ele.CaracteristicaDescripcion,
+          required: ele.Requerido,
+          placeholder: ele.Placeholder,
+          tooltip: ele.Tooltip,
+          type: ele.DescripcionTipo
+        }
+        arre.push(obj)
+        var keyObj = "CTRL-" + obj.id
+        setEntityCode(obj.key)
+        resp[keyObj] = ""
+        //setRespuesta([...respuesta, resp])
+        // console.log(resp)
+      })
+      setRespuesta(resp)
+      // console.log(resp)
+      setControls(arre)
+      getOptions(id)
+      // setLoading(false)
+    } catch (error) {
+      alert(error)
+    }
+  }
+/**
+ * Obtiene las opciones para los campos de la entidad
+ * @function getOptions
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
+  const getOptions = async (id) => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "control/options/" + id, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const result = await response.json()
+      var arre = []
+      result.forEach(ele => {
+        var obj = {
+          value: ele.IdOpcion,
+          label: ele.OpcionDescripcion,
+          key: ele.IdCaracteristica
+        }
+        arre.push(obj)
+        //console.log(obj)
+      })
+      setOptions(arre)
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+/**
+ * Manejo el cambio de la entidad 
+ * @function handleListChange
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
+  const handleListChange = async (e) => {
+    //setLoading(true)
+    //setSelected(e.value)
+    /*if (mode == 'R')
+      await getEntityEntries(e.value)
+    else if (mode == 'L') {
+      setLoading(true)
+      await getAllEntriesTable(e.value)
+      setLoading(false)
+    }*/
+    await getEntityEntries(e.value)
+    await getAllEntriesTable(e.value)
+    await getHeaders();
+    await getRows();
+    //setLoading(false)
+  }
+
+/**
+ * Obtiene las entradas de la entidad seleccionada
+ * @function getAllEntriesTable
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
+  const getAllEntriesTable = async (id) => {
+    //setLoading(true)
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "control/equipos", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const result = await response.json()
+      var arre = []
+      result.forEach(ele => {
+        var obj = {
+          equipo: ele.Equipo
+        }
+        arre.push(obj)
+        //console.log(obj)
+      })
+      setTableEquipo(arre)
+      //setLoading(false)
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+ /**
+ * Muestra el control indicado de acuerdo al tipo de control especificado en la base de datos
+ * @function showControls
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
+  const showControls = (item) => {
+    try {
+      if (item?.type != undefined) {
+        var req = item.required.data[0];
+        // console.log(req)
+        if (req == 1) req = true; else req = false;
+        //console.log(req)
+        switch (item.type) {
+          case "text": case "number": case "date":
+            return (
+              &lt;div style={{ margin: "15px 0px" }}>
+                &lt;label>{item.name} {req ? &lt;label style={{ color: masterState.get().color }}>*&lt;/label> : &lt;>&lt;/>}&lt;/label>
+                &lt;div style={{ margin: "10px 0" }}>
+                  &lt;input
+                    className='app-input-text'
+                    placeholder={item.placeholder}
+                    tooltip={item.tooltip}
+                    type={item.type}
+                    required={req}
+                    onChange={handleChangeControlValue}
+                    //onChange={change}
+                    step={0.01}
+                    id={item.id} />
+                &lt;/div>
+              &lt;/div>
+            )
+          case "textarea":
+            return (
+              &lt;div style={{ margin: "15px 0px" }}>
+                &lt;label>{item.name} {req ? &lt;label style={{ color: masterState.get().color }}>*&lt;/label> : &lt;>&lt;/>}&lt;/label>
+                &lt;div style={{ margin: "10px 0" }}>
+                  &lt;textarea
+                    className='app-textarea'
+                    style={{ resize: 'none', width: '350px', height: '150px' }}
+                    placeholder={item.placeholder}
+                    tooltip={item.tooltip}
+                    id={item.id}
+                    onChange={handleChangeControlValue}
+                    required={req} />
+                &lt;/div>
+              &lt;/div>
+            )
+          case 'file':
+            return (
+              &lt;div style={{ margin: "15px 0px" }}>
+                {/* 
+                &lt;br />
+                &lt;div style={{ marginTop: "15px" }}>
+                  &lt;label htmlFor={"filePicker"+item.id} style={{ background: "lightgray", padding: "5px 10px" }}>
+                    {item.placeholder ?? "Escoge un archivo"}
+                  &lt;/label>
+                  &lt;input id={"filePicker"+item.id} style={{ visibility: "hidden" }} type={"file"} required={req} onChange={handleInputControlValue} />
+                &lt;/div>
+                &lt;br /> */}
+                &lt;label>{item.name} {req ? &lt;label style={{ color: masterState.get().color }}>*&lt;/label> : &lt;>&lt;/>}&lt;/label>
+                &lt;br />
+                &lt;input type={item.type} id={item.id} onChange={handleInputControlValue} required={req} style={{ marginTop: "10px" }} accept="image/*" />
+              &lt;/div>)
+          case 'select':
+            /*getOptions(item.key)*/
+            var arrayAux = options.filter(ele => ele.key == item.id)
+            return (
+              &lt;div style={{ margin: "15px 0px" }}>
+                &lt;label>{item.name} {req ? &lt;label style={{ color: masterState.get().color }}>*&lt;/label> : &lt;>&lt;/>}&lt;/label>
+                &lt;div style={{ margin: "10px 0" }}>
+                  &lt;Select
+                    name={item.id}
+                    // id={item.id}
+                    placeholder={item.placeholder}
+                    options={arrayAux}
+                    onChange={handleChangeSelectValue}
+                    theme={(theme) => ({
+                      ...theme,
+                      borderRadius: 0,
+                      colors: {
+                        ...theme.colors,
+                        primary: masterState.get().color,
+                        primary25: masterState.get().color
+                      },
+                    })}
+                  />
+                &lt;/div>
+              &lt;/div>
+            )
+        }
+      }
+    } catch (error) {
+
+    }
+
+  }
+
+/**
+ * Maneja los valores de los controles cuando se produce un cambio en él 
+ * @function handleChangeControlValue
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
+  const handleChangeControlValue = (e) => {
+    var auxArray = respuesta
+
+    var keyName = "CTRL-" + e.target.id;
+    // if(e?.value){
+
+    if (e.target?.value) {
+      auxArray[keyName] = e.target.value;
+    } else
+      console.log(auxArray)
+    setRespuesta(auxArray)
+  }
+/**
+ * Obtiene las opciones para los campos de la entidad
+ * @function handleInputControlValue
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
+  const handleInputControlValue = async (e) => {
+    const file = e.target.files[0];
+    const base64 = await convertToBase64(file);
+    console.log(base64)
+    var auxArray = respuesta
+
+    var id = e.target.id;
+    //  var id2 = id.substring(10);
+    var keyName = "CTRL-" + id;
+    console.log(keyName)
+    // if(e?.value){
+    auxArray[keyName] = base64;
+
+    setRespuesta(auxArray)
+    console.log(auxArray)
+  }
+
+/**
+ * Convierte el archivo obtenido por el input type file en base 64
+ * @function convertToBase64
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+/**
+ * Maneja el cambio del select cuando cambia
+ * @function handleChangeSelectValue
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
+  const handleChangeSelectValue = (e, { name }) => {
+    var auxArray = respuesta
+
+    var keyName = "CTRL-" + name
+    // if(e?.value){
+    auxArray[keyName] = e.value;
+    // }else
+
+    console.log(auxArray)
+    setRespuesta(auxArray)
+  }
+
+  /**
+ * Obtiene el último equipo insertado
+ * @function getLastProductKey
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
+  const getLastProductKey = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "control/key", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const result = await response.json()
+      setLastKey(result[0].Key)
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+/**
+ * Maneja el proceso del guardado del estado de la computadora
+ * @function saveComputerState
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
+  const saveComputerState = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "control/state", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "IdEquipo": lastKeyRef.current })
+      })
+      const result = await response.json()
+
+    } catch (error) {
+      alert(error)
+    }
+  }
+/**
+ * Obtiene las opciones para los campos de la entidad
+ * @function handleSaveNewEntry
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
+  const handleSaveNewEntry = async (event) => {
+    event.preventDefault()
+    try {
+      await getLastProductKey();
+
+
+      let llaves = Object.keys(respuestaRef.current)
+      const entityCode = entityCodeRef.current;
+
+      if (entityCode == 1) {
+        await saveComputerState();
+      }
+
+      console.log(llaves)
+
+      llaves.forEach((el) => {
+        console.log(el)
+        var show = el.substring(5)
+        console.log(respuestaRef.current[el])
+        const response = fetch(process.env.REACT_APP_HOME + "control/entries", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ "IdEquipoIngresado": lastKeyRef.current, "IdCategoria": entityCode, "IdCaracteristica": show, "Respuesta": respuestaRef.current[el], "UsuarioCreo": authState.me.get().username })
+        })
+        
+      }).then((response) => {
+        console.log(response);
+        alert("Se ha registrado el producto exitosamente");
+      }).catch((error) => {
+        alert("Ocurrio un error al registrar el producto");
+        console.log(error);
+      })
+      //setRespuesta([])
+      alert("Registro finalizado exitosamente")
+      
+    } catch (error) {
+      //alert("Ocurrio un error al guardar el empleado" + error)
+      //alert("Ocurrio un error en el proceso "+error)
+    }
+    alert("Registro finalizado exitosamente")
+    setRespuesta([])
+    setLoading(true);
+    setLoading(false);
+    await getAllCategories();
+  }
+/**
+ * Función que obtiene los listados de la computadora, invoca a  la función pivote en Js para ordenamiento de los mismos.
+ * @function getRows
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
+  const getRows = async (id) => {
+    try {
+      const response = await fetch(process.env.REACT_APP_HOME + "control/rows/" + entityCodeRef.current, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const result = await response.json()
+      console.log(result)
+      let array = []
+
+      result.forEach((el) => {
+        let row = [];
+        console.log(el)
+        row[0] = el.IdEquipoIngresado
+        row[1] = el.IdCaracteristica
+        row[2] = el.Respuesta
+        array.push(row)
+      })
+      //console.log(array)
+      setRows(getPivotArray(array, 0, 1, 2))
+    } catch (error) {
+      alert(error)
+    }
+  }
+/**
+ * Filtra en la tabla buscando por todos los campos
+ * @function performSearch
+ * @memberof Equipos
+ * @async
+ * @return void
+ * @inner
+ */
+  const performSearch = () => {
     var searchBox = document.getElementById('search-input-table');
     var table = document.getElementById("table-products");
     var trs = table.tBodies[0].getElementsByTagName("tr");
@@ -200,192 +641,149 @@ const Sucursal = () => {
         }
       }
     }
-  }
-/**
- * Gestiona los procesos e inicializaciones necesarias para actualizar una sucursal
- * @function handleUpdateSucursal
- * @memberof Sucursales
- * @async
- * @return void
- * @inner
- */
-  const handleUpdateSucursal = (element) => {
-    setShowModal(true);
-    const objCity = {
-      value: element.IdCiudad,
-      label: element.NombreCiudad
-    }
-    setSelectedSucursal(element.IdSucursal)
-    setDefaultName(element.NombreSucursal)
-    setDefaultValue(objCity);
-  }
 
- /**
- * Actualiza los datos de una sucursal
- * @function updateSucursalData
- * @memberof Sucursales
- * @async
- * @return void
- * @inner
- */
-  const updateSucursalData = async () => {
-    try {
-      setLoading(true)
-      const response = await fetch(process.env.REACT_APP_HOME + "sucursales/" + selectedSucursalRef.current, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ "NombreSucursal": defaultNameRef.current, "IdCiudad": selectedCity || defaultValueRef.current.value })
-      })
-      const result = await response.json();
-      console.log(result)
-      await getItems()
-      setShowModal(false)
-      setLoading(false)
-      alert("La sucursal se actualizó exitosamente");
-      setDefaultName()
-      setDefaultValue()
-    } catch (error) {
-      alert("Ocurrio un error al actualizar la sucursal "+error)
-    }
   }
 
 
   return (
     &lt;>
       {
-        loading ? &lt;>&lt;/> :
-          &lt;>
-            &lt;NavigationWindow />
-            &lt;NavPageContainer
-              hasPadding={true}
-              animateTransition={true}>
+        loading ? &lt;>&lt;/> : &lt;>
+          &lt;NavigationWindow />
+          &lt;NavPageContainer
+            hasPadding={true}
+            animateTransition={true}>
 
-              &lt;Modal showOverlay={true} show={showModal} onClose={() => setShowModal(false)} size={"md"}>
-                &lt;Modal.Header>
-                  &lt;Modal.Title>Actualizacion de Sucursal&lt;/Modal.Title>
-                &lt;/Modal.Header>
-                &lt;Modal.Body>
-                  {/* &lt;img src={currentImageRef.current} width="700px" height="auto" /> */}
-                  &lt;table style={{ width: '100%' }} className="styled-table" id="table-products">
-                    &lt;thead>
-                      &lt;tr>
-                        &lt;th>Caracteristica&lt;/th>
-                        &lt;th>Valor&lt;/th>
-                      &lt;/tr>
-                    &lt;/thead>
-                    &lt;tbody>
-                      &lt;tr>
-                        &lt;td>Nombre de la Sucursal&lt;/td>
-                        &lt;td>
-                          &lt;input type="text" className='app-input-text' value={defaultName} onChange={(e) => setDefaultName(e.target.value)} />
-                        &lt;/td>
-                      &lt;/tr>
-                      &lt;tr>
-                        &lt;td>Ciudad&lt;/td>
-                        &lt;td>
-                          &lt;Select
-                            options={cities}
-                            defaultValue={defaultValueRef.current}
-                            onChange={(e) => setSelectedCity(e.value)}
-                          />
-                        &lt;/td>
-                      &lt;/tr>
-                    &lt;/tbody>
-                  &lt;/table>
-                &lt;/Modal.Body>
-                &lt;Modal.Footer>
-                  &lt;Button value="Aceptar" onClick={updateSucursalData} />
-                  &lt;Button value="Cerrar" onClick={() => setShowModal(false)} />
-                &lt;/Modal.Footer>
-              &lt;/Modal>
-
-              &lt;Modal showOverlay={true} show={addModal} onClose={() => setAddModal(false)} size={"md"}>
-                &lt;Modal.Header>
-                  &lt;Modal.Title>Nueva Sucursal&lt;/Modal.Title>
-                &lt;/Modal.Header>
-                &lt;Modal.Body>
-                  {/* &lt;img src={currentImageRef.current} width="700px" height="auto" /> */}
-                  &lt;table style={{ width: '100%' }} className="styled-table" id="table-products">
-                    &lt;thead>
-                      &lt;tr>
-                        &lt;th>Caracteristica&lt;/th>
-                        &lt;th>Valor&lt;/th>
-                      &lt;/tr>
-                    &lt;/thead>
-                    &lt;tbody>
-                      &lt;tr>
-                        &lt;td>Nombre de la Sucursal&lt;/td>
-                        &lt;td>
-                          &lt;input type="text" className='app-input-text' value={defaultName} onChange={(e) => setDefaultName(e.target.value)} />
-                        &lt;/td>
-                      &lt;/tr>
-                      &lt;tr>
-                        &lt;td>Ciudad&lt;/td>
-                        &lt;td>
-                          &lt;Select
-                            options={cities}
-                            defaultValue={defaultValueRef.current}
-                            onChange={(e) => setSelectedCity(e.value)}
-                          />
-                        &lt;/td>
-                      &lt;/tr>
-                    &lt;/tbody>
-                  &lt;/table>
-                &lt;/Modal.Body>
-                &lt;Modal.Footer>
-                  &lt;Button value="Aceptar" onClick={addItem} />
-                  &lt;Button value="Cerrar" onClick={() => setAddModal(false)} />
-                &lt;/Modal.Footer>
-              &lt;/Modal>
-
-              &lt;h1>Sucursales&lt;/h1>
-              &lt;p>Añada, modifique o elimine sucursales&lt;/p>
-              &lt;div className="app-hr">&lt;/div>
-              &lt;div style={{ display: "flex", flex: 1, marginRight: "30px", flexDirection: "column" }}>
-                &lt;div style={{ marginTop: "15px", display: "flex" }}>
-                  &lt;div style={{flex: 1}}>
-                  &lt;label>Buscar&lt;/label>
-                  &lt;input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
-                  &lt;/div>
-                  &lt;div style={{flex: 1, justifyContent: "flex-end", display: "flex"}}>
-                  &lt;button className='app-button primary animate' onClick={()=> setAddModal(true)}>Nueva Sucursal&lt;/button>
-                  &lt;/div>
+            &lt;h1>Equipos&lt;/h1>
+            &lt;p>Ingrese productos a su stock de inventario.&lt;/p>
+            &lt;div className="app-hr">&lt;/div>
+            &lt;div>
+              &lt;span style={{ fontWeight: "bold" }}>Modo&lt;/span>
+              &lt;br />
+              &lt;div style={{ display: "flex", margin: "15px 0px" }}>
+                &lt;div style={{ marginRight: "15px" }}>
+                  &lt;RadioButton name="radio" value={mode} label='Registro' onChange={() => setMode('R')} defaultChecked />
                 &lt;/div>
-                &lt;table style={{ width: '100%' }} className="styled-table" id="table-products">
-                  &lt;thead>
-                    &lt;tr>
-                      &lt;th>Sucursal&lt;/th>
-                      &lt;th>Ciudad&lt;/th>
-                      &lt;th>Acciones&lt;/th>
-                    &lt;/tr>
-                  &lt;/thead>
-                  &lt;tbody>
-                    {
-                      listSucursalesRef.current?.map(ele => {
-                        return (
-                          &lt;tr>
-                            &lt;td>{ele.NombreSucursal}&lt;/td>
-                            &lt;td>{ele.NombreCiudad}&lt;/td>
-                            &lt;td style={{ display: "flex", justifyContent: "center" }}>
-                              &lt;button className='app-button primary animate' onClick={() => handleUpdateSucursal(ele)}>Actualizar&lt;/button>
-                            &lt;/td>
-                          &lt;/tr>
-                        )
-                      })
-                    }
-                  &lt;/tbody>
-                &lt;/table>
+                &lt;div>
+                  &lt;RadioButton name="radio" value={mode} label='Lectura' onChange={() => setMode('L')} />
+                &lt;/div>
               &lt;/div>
-            &lt;/NavPageContainer>
-          &lt;/>
+            &lt;/div>
+
+            &lt;div style={{ marginRight: "20px" }}>
+              &lt;Select
+                // defaultInputValue='Seleccione una categoria'
+                placeholder='Seleccione una categoria'
+                defaultValue={entities[0]}
+                menuPortalTarget={document.body}
+                styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                options={entities}
+                onChange={handleListChange}
+                theme={(theme) => ({
+                  ...theme,
+                  borderRadius: 0,
+                  colors: {
+                    ...theme.colors,
+                    primary: masterState.get().color,
+                    primary25: masterState.get().color
+                  },
+                })}
+              />
+            &lt;/div>
+            {
+              mode == 'R' ?
+                &lt;>
+                  {
+                    controls.length >= 1 ?
+                      &lt;form id="form-control-items" onSubmit={handleSaveNewEntry}>
+                        &lt;fieldset style={{ borderRadius: "10px", marginTop: "15px", marginRight: "20px", color: "d9d9d9", borderColor: "d9d9d9" }}>
+                          {
+                            controls.map(item => {
+                              return showControls(item)
+                            })
+                          }
+                          &lt;button type="submit" className='app-button animate primary' /*onSubmit={handleSaveNewEntry}*/ /*onClick={handleSaveNewEntry}*/>Guardar&lt;/button>
+                        &lt;/fieldset>
+                      &lt;/form>
+                      :
+                      &lt;div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        &lt;h3 style={{ color: "lightgray", marginTop: "40px" }}>Selecciona un elemento de la lista para añadir productos&lt;/h3>
+                      &lt;/div>
+                  }
+                &lt;/>
+                : rowsRef.current.length >= 1 ? &lt;>
+                  &lt;div style={{ marginTop: "20px", marginRight: "30px" }}>
+                    &lt;div>
+                      &lt;label>Buscar&lt;/label>
+                      &lt;input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={performSearch} />
+                    &lt;/div>
+                    &lt;div style={{ overflow: "auto" }}>
+                      &lt;table className="styled-table" id="table-products">
+                        &lt;thead>
+                          &lt;tr>
+                            {
+                              headers.map(item => {
+                                return (&lt;th>{item.descripcion}&lt;/th>)
+                              })
+                            }
+                          &lt;/tr>
+                        &lt;/thead>
+                        &lt;tbody>
+                          {
+                            rowsRef.current.map((elemento, indice) => {
+                              if (indice == 0) return;
+                              return (
+                                &lt;tr>
+                                  {
+                                    elemento.map((dato, indiceDato) => {
+                                      if (indiceDato == 0) return;
+                                      //return (&lt;td>{dato}&lt;/td>)
+                                      if (dato.length > 1000) {
+                                        return (
+                                          &lt;>
+                                            &lt;td>&lt;a style={{ textDecoration: "underline", color: "blue" }} onClick={() => { setModalImg(true); setCurrentImage(dato); }}>Ver imagen&lt;/a>&lt;/td>
+                                            &lt;Modal showOverlay={true} show={modalImg}  onClose={() => setModalImg(false)}>
+                                              &lt;Modal.Header>
+                                                &lt;Modal.Title>Visualizador de imágenes&lt;/Modal.Title>
+                                              &lt;/Modal.Header>
+                                              &lt;Modal.Body>
+                                                &lt;img src={currentImageRef.current} width="700px" height="auto" />
+                                              &lt;/Modal.Body>
+                                              &lt;Modal.Footer>
+                                                &lt;Button value='Guardar imagen' onClick={() => {triggerBase64Download(currentImageRef.current, "IMG-"+Date.now()) }}  />
+                                                &lt;Button value="Cerrar" onClick={() => setModalImg(false)} />
+                                              &lt;/Modal.Footer>
+                                            &lt;/Modal>
+                                          &lt;/>
+                                        )
+                                      }
+                                      return (
+                                        &lt;td>{dato}&lt;/td>
+                                      )
+                                    })
+                                  }
+                                &lt;/tr>
+                              )
+
+                            })
+                          }
+                        &lt;/tbody>
+                      &lt;/table>
+                    &lt;/div>
+                  &lt;/div>
+                &lt;/> : &lt;div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  &lt;h3 style={{ color: "lightgray", marginTop: "40px" }}>Selecciona un elemento de la lista para añadir productos&lt;/h3>
+                &lt;/div>
+            }
+
+          &lt;/NavPageContainer>
+        &lt;/>
       }
     &lt;/>
   );
 }
 
-export default Sucursal</code></pre>
+export default Equipos</code></pre>
         </article>
     </section>
 
