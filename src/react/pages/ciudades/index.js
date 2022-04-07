@@ -11,70 +11,71 @@ import NavigationWindow from '../../components/Navigation'
 import { Dialog, Button } from 'react-windows-ui'
 import MaterialTable from 'material-table'
 import Modal from '../../components/Modal';
-import useState from 'react-usestateref'
+import useState from 'react-usestateref';
+import Loader from 'react-js-loader';
 
 const Ciudad = () => {
 
-/**
- * Hook encargado de mostrar/ocultar el modal para añadir una nueva ciudad
- * @function setShowModal
- * @memberof Ciudades
- * @return types {boolean}
- * @inner
- */
+  /**
+   * Hook encargado de mostrar/ocultar el modal para añadir una nueva ciudad
+   * @function setShowModal
+   * @memberof Ciudades
+   * @return types {boolean}
+   * @inner
+   */
   const [showModal, setShowModal] = useState(false);
   //const [ciudad, setCiudad] = useState("")
-/**
- * Hook encargado de traer el listado de ciudades desde la base de datos 
- * @function setListCities
- * @memberof Ciudades
- * @return types {Object}
- * @inner
- */
+  /**
+   * Hook encargado de traer el listado de ciudades desde la base de datos 
+   * @function setListCities
+   * @memberof Ciudades
+   * @return types {Object}
+   * @inner
+   */
   const [listCities, setListCities] = useState("")
-/**
- * Hook encargado de manejar el estado de si está cargando o no el componente
- * @function setLoading
- * @memberof Ciudades
- * @return loading {boolean}
- * @inner
- */
+  /**
+   * Hook encargado de manejar el estado de si está cargando o no el componente
+   * @function setLoading
+   * @memberof Ciudades
+   * @return loading {boolean}
+   * @inner
+   */
   const [loading, setLoading] = useState(true)
-/**
- * Hook encargado de manejar el valor del nombre de la ciudad a añadir/actualizar
- * @function setDefaultName
- * @memberof Ciudades
- * @return defaultName {Object}
- * @inner
- */
+  /**
+   * Hook encargado de manejar el valor del nombre de la ciudad a añadir/actualizar
+   * @function setDefaultName
+   * @memberof Ciudades
+   * @return defaultName {Object}
+   * @inner
+   */
   const [defaultName, setDefaultName, defaultNameRef] = useState()
-/**
- * Hook encargado de manejar el código de la ciudad a modificar
- * @function setSelectedIndex
- * @memberof Ciudades
- * @return selectedIndex {Object}
- * @inner
- */
+  /**
+   * Hook encargado de manejar el código de la ciudad a modificar
+   * @function setSelectedIndex
+   * @memberof Ciudades
+   * @return selectedIndex {Object}
+   * @inner
+   */
   const [selectedIndex, setSelectedIndex, selectedIndexRef] = useState()
-/**
- * Hook encargado de manejar el valor del modal de añadir una nueva ciudad
- * @function setAddModal
- * @memberof Ciudades
- * @return addModal {boolean}
- * @inner
- */
+  /**
+   * Hook encargado de manejar el valor del modal de añadir una nueva ciudad
+   * @function setAddModal
+   * @memberof Ciudades
+   * @return addModal {boolean}
+   * @inner
+   */
   const [addModal, setAddModal] = useState(false)
 
   useEffect(() => {
     getCitiesData()
   }, [])
-/**
- * Función encargada de insertar una nueva ciudad a la base de datos
- * @function addNewCity
- * @memberof Ciudades
- * @return void
- * @inner
- */
+  /**
+   * Función encargada de insertar una nueva ciudad a la base de datos
+   * @function addNewCity
+   * @memberof Ciudades
+   * @return void
+   * @inner
+   */
   const addNewCity = async () => {
     if (defaultName) {
       try {
@@ -91,27 +92,27 @@ const Ciudad = () => {
         await getCitiesData()
         setAddModal(false)
         setLoading(false)
-        setDefaultName()
-        alert("La categoria se guardo exitosamente")
+        setDefaultName("")
+        alert("La ciudad se guardo exitosamente")
       } catch (error) {
-        alert("Ocurrio un error al guardar la categoria")
+        alert("Ocurrio un error al guardar la ciudad")
       }
     } else {
       alert("El nombre de la ciudad no puede ir vacio")
     }
   }
-/**
- * Función encargada de actualizar una ciudad en la base de datos
- * @function updateCityRow
- * @memberof Ciudades
- * @return void
- * @inner
- */
+  /**
+   * Función encargada de actualizar una ciudad en la base de datos
+   * @function updateCityRow
+   * @memberof Ciudades
+   * @return void
+   * @inner
+   */
   const updateCityRow = async () => {
-    if(defaultName){
+    if (defaultName) {
       try {
         setLoading(true)
-        const response = await fetch(process.env.REACT_APP_HOME + "city/"+selectedIndexRef.current, {
+        const response = await fetch(process.env.REACT_APP_HOME + "city/" + selectedIndexRef.current, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -123,22 +124,22 @@ const Ciudad = () => {
         await getCitiesData()
         setShowModal(false)
         setLoading(false)
-        setDefaultName()
+        setDefaultName("")
         alert("La categoria se actualizó exitosamente")
       } catch (error) {
         alert("Ocurrio un error al actualizar la categoria")
       }
-    }else{
+    } else {
       alert("El nombre de la ciudad no puede ir vacio")
     }
   }
-/**
- * Función encargada de listar las ciudades registradas en la base de datos
- * @function getCitiesData
- * @memberof Ciudades
- * @return void
- * @inner
- */
+  /**
+   * Función encargada de listar las ciudades registradas en la base de datos
+   * @function getCitiesData
+   * @memberof Ciudades
+   * @return void
+   * @inner
+   */
   const getCitiesData = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "city", {
@@ -156,14 +157,14 @@ const Ciudad = () => {
       console.log(error)
     }
   }
-/**
- * Maneja la búsqueda en la tabla, función que se encarga de filtrar los datos de la tabla
- * @name searchTableAll
- * @function
- * @memberof Ciudades
- * @inner
- * @return {void}
-*/
+  /**
+   * Maneja la búsqueda en la tabla, función que se encarga de filtrar los datos de la tabla
+   * @name searchTableAll
+   * @function
+   * @memberof Ciudades
+   * @inner
+   * @return {void}
+  */
   const searchTableAll = () => {
     var searchBox = document.getElementById('search-input-table');
     var table = document.getElementById("table-products");
@@ -180,24 +181,26 @@ const Ciudad = () => {
       }
     }
   }
-/**
- * Función manejadora de los procesos necesarios para actualizar una ciudad
- * @name handleUpdateCity
- * @function
- * @memberof Ciudades
- * @inner
- * @return {void}
-*/
-  const handleUpdateCity = async(nombre, codigo) => {
-    setDefaultName(nombre); 
-    setSelectedIndex(codigo); 
+  /**
+   * Función manejadora de los procesos necesarios para actualizar una ciudad
+   * @name handleUpdateCity
+   * @function
+   * @memberof Ciudades
+   * @inner
+   * @return {void}
+  */
+  const handleUpdateCity = async (nombre, codigo) => {
+    setDefaultName(nombre);
+    setSelectedIndex(codigo);
     setShowModal(true)
   }
 
   return (
     <>
       {
-        loading ? <></> :
+        loading ? <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", width: "100vw", height: "100vh" }}>
+          <Loader type="spinner-circle" bgColor={"#000"} title={"Cargando..."} color={'#000'} size={100} />
+        </div> :
           <>
             <NavigationWindow />
             <NavPageContainer
@@ -206,7 +209,7 @@ const Ciudad = () => {
 
               <Modal showOverlay={true} show={showModal} onClose={() => setShowModal(false)} size={"md"}>
                 <Modal.Header>
-                  <Modal.Title>Actualizar Sucursal</Modal.Title>
+                  <Modal.Title>Actualizar Ciudad</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                   {/* <img src={currentImageRef.current} width="700px" height="auto" /> */}
@@ -219,7 +222,7 @@ const Ciudad = () => {
                     </thead>
                     <tbody>
                       <tr>
-                        <td>Nombre de la Sucursal</td>
+                        <td>Nombre de la ciudad</td>
                         <td>
                           <input type="text" className='app-input-text' value={defaultName} onChange={(e) => setDefaultName(e.target.value)} />
                         </td>
@@ -235,7 +238,7 @@ const Ciudad = () => {
 
               <Modal showOverlay={true} show={addModal} onClose={() => setAddModal(false)} size={"md"}>
                 <Modal.Header>
-                  <Modal.Title>Nueva Sucursal</Modal.Title>
+                  <Modal.Title>Nueva Ciudad</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                   {/* <img src={currentImageRef.current} width="700px" height="auto" /> */}
@@ -248,7 +251,7 @@ const Ciudad = () => {
                     </thead>
                     <tbody>
                       <tr>
-                        <td>Nombre de la Sucursal</td>
+                        <td>Nombre de la Ciudad</td>
                         <td>
                           <input type="text" className='app-input-text' value={defaultName} onChange={(e) => setDefaultName(e.target.value)} />
                         </td>
@@ -267,13 +270,13 @@ const Ciudad = () => {
               <p>Añada, modifique o elimine registro de ciudades</p>
               <div className="app-hr"></div>
               <div style={{ marginTop: "20px", marginRight: "30px", display: "flex", flex: 1, flexDirection: "column" }}>
-              <div style={{ marginTop: "15px", display: "flex" }}>
-                  <div style={{flex: 1}}>
-                  <label>Buscar</label>
-                  <input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
+                <div style={{ marginTop: "15px", display: "flex" }}>
+                  <div style={{ flex: 1 }}>
+                    <label>Buscar</label>
+                    <input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
                   </div>
-                  <div style={{flex: 1, justifyContent: "flex-end", display: "flex"}}>
-                  <button className='app-button primary animate' onClick={()=> setAddModal(true)}>Nueva Sucursal</button>
+                  <div style={{ flex: 1, justifyContent: "flex-end", display: "flex" }}>
+                    <button className='app-button primary animate' onClick={() => setAddModal(true)}>Nueva Ciudad</button>
                   </div>
                 </div>
                 <table style={{ width: '100%' }} className="styled-table" id="table-products">

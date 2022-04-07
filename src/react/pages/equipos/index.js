@@ -13,6 +13,7 @@ import useState from 'react-usestateref'
 import { useMasterState } from '../../stores/MasterStore'
 import { useAuthState } from '../../stores/AuthStore'
 import "../equipos/index.css"
+import Loader from 'react-js-loader'
 import getPivotArray from '../../../shared/arrayToPivot'
 import { triggerBase64Download } from 'react-base64-downloader'
 import Modal from '../../components/Modal';
@@ -53,14 +54,14 @@ const Equipos = () => {
     setLoading(false)
   }, [])
 
-/**
- * Obtiene todas las entidades para cargarlas en el select
- * @function getAllCategories
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Obtiene todas las entidades para cargarlas en el select
+   * @function getAllCategories
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const getAllCategories = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "category", {
@@ -85,14 +86,14 @@ const Equipos = () => {
       alert(error)
     }
   }
-/**
- * Obtiene las cabeceras para establecer en la tabla
- * @function getHeaders
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Obtiene las cabeceras para establecer en la tabla
+   * @function getHeaders
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const getHeaders = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "control/headers/" + entityCodeRef.current, {
@@ -121,14 +122,14 @@ const Equipos = () => {
       alert(error)
     }
   }
-/**
- * Cuando seleccionamos la entidad, obtenemos los campos de la misma
- * @function getEntityEntries
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Cuando seleccionamos la entidad, obtenemos los campos de la misma
+   * @function getEntityEntries
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const getEntityEntries = async (id) => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "control/filter/" + id, {
@@ -152,7 +153,7 @@ const Equipos = () => {
         }
         arre.push(obj)
         var keyObj = "CTRL-" + obj.id
-        setEntityCode(obj.key)
+        setEntityCode(ele.IdCategoria)
         resp[keyObj] = ""
         //setRespuesta([...respuesta, resp])
         // console.log(resp)
@@ -166,14 +167,14 @@ const Equipos = () => {
       alert(error)
     }
   }
-/**
- * Obtiene las opciones para los campos de la entidad
- * @function getOptions
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Obtiene las opciones para los campos de la entidad
+   * @function getOptions
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const getOptions = async (id) => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "control/options/" + id, {
@@ -199,14 +200,14 @@ const Equipos = () => {
     }
   }
 
-/**
- * Manejo el cambio de la entidad 
- * @function handleListChange
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Manejo el cambio de la entidad 
+   * @function handleListChange
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const handleListChange = async (e) => {
     //setLoading(true)
     //setSelected(e.value)
@@ -224,14 +225,14 @@ const Equipos = () => {
     //setLoading(false)
   }
 
-/**
- * Obtiene las entradas de la entidad seleccionada
- * @function getAllEntriesTable
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Obtiene las entradas de la entidad seleccionada
+   * @function getAllEntriesTable
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const getAllEntriesTable = async (id) => {
     //setLoading(true)
     try {
@@ -257,14 +258,14 @@ const Equipos = () => {
     }
   }
 
- /**
- * Muestra el control indicado de acuerdo al tipo de control especificado en la base de datos
- * @function showControls
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+  * Muestra el control indicado de acuerdo al tipo de control especificado en la base de datos
+  * @function showControls
+  * @memberof Equipos
+  * @async
+  * @return void
+  * @inner
+  */
   const showControls = (item) => {
     try {
       if (item?.type != undefined) {
@@ -357,14 +358,14 @@ const Equipos = () => {
 
   }
 
-/**
- * Maneja los valores de los controles cuando se produce un cambio en él 
- * @function handleChangeControlValue
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Maneja los valores de los controles cuando se produce un cambio en él 
+   * @function handleChangeControlValue
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const handleChangeControlValue = (e) => {
     var auxArray = respuesta
 
@@ -377,14 +378,14 @@ const Equipos = () => {
       console.log(auxArray)
     setRespuesta(auxArray)
   }
-/**
- * Obtiene las opciones para los campos de la entidad
- * @function handleInputControlValue
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Obtiene las opciones para los campos de la entidad
+   * @function handleInputControlValue
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const handleInputControlValue = async (e) => {
     const file = e.target.files[0];
     const base64 = await convertToBase64(file);
@@ -402,14 +403,14 @@ const Equipos = () => {
     console.log(auxArray)
   }
 
-/**
- * Convierte el archivo obtenido por el input type file en base 64
- * @function convertToBase64
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Convierte el archivo obtenido por el input type file en base 64
+   * @function convertToBase64
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -419,14 +420,14 @@ const Equipos = () => {
     });
   }
 
-/**
- * Maneja el cambio del select cuando cambia
- * @function handleChangeSelectValue
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Maneja el cambio del select cuando cambia
+   * @function handleChangeSelectValue
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const handleChangeSelectValue = (e, { name }) => {
     var auxArray = respuesta
 
@@ -440,13 +441,13 @@ const Equipos = () => {
   }
 
   /**
- * Obtiene el último equipo insertado
- * @function getLastProductKey
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+   * Obtiene el último equipo insertado
+   * @function getLastProductKey
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const getLastProductKey = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "control/key", {
@@ -462,14 +463,14 @@ const Equipos = () => {
     }
   }
 
-/**
- * Maneja el proceso del guardado del estado de la computadora
- * @function saveComputerState
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Maneja el proceso del guardado del estado de la computadora
+   * @function saveComputerState
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const saveComputerState = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "control/state", {
@@ -479,32 +480,32 @@ const Equipos = () => {
         },
         body: JSON.stringify({ "IdEquipo": lastKeyRef.current })
       })
+      console.log("ESTOY AQUI " + lastKeyRef.current)
       const result = await response.json()
 
     } catch (error) {
       alert(error)
     }
   }
-/**
- * Obtiene las opciones para los campos de la entidad
- * @function handleSaveNewEntry
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Obtiene las opciones para los campos de la entidad
+   * @function handleSaveNewEntry
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const handleSaveNewEntry = async (event) => {
     event.preventDefault()
     try {
       await getLastProductKey();
 
-
       let llaves = Object.keys(respuestaRef.current)
       const entityCode = entityCodeRef.current;
 
-      if (entityCode == 1) {
-        await saveComputerState();
-      }
+      // if (entityCode == 1) {
+
+      // }
 
       console.log(llaves)
 
@@ -519,7 +520,7 @@ const Equipos = () => {
           },
           body: JSON.stringify({ "IdEquipoIngresado": lastKeyRef.current, "IdCategoria": entityCode, "IdCaracteristica": show, "Respuesta": respuestaRef.current[el], "UsuarioCreo": authState.me.get().username })
         })
-        
+
       }).then((response) => {
         console.log(response);
         alert("Se ha registrado el producto exitosamente");
@@ -529,25 +530,26 @@ const Equipos = () => {
       })
       //setRespuesta([])
       alert("Registro finalizado exitosamente")
-      
+
     } catch (error) {
       //alert("Ocurrio un error al guardar el empleado" + error)
       //alert("Ocurrio un error en el proceso "+error)
     }
+    await saveComputerState();
     alert("Registro finalizado exitosamente")
     setRespuesta([])
     setLoading(true);
     setLoading(false);
-    await getAllCategories();
+    /*await getAllCategories();*/
   }
-/**
- * Función que obtiene los listados de la computadora, invoca a  la función pivote en Js para ordenamiento de los mismos.
- * @function getRows
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Función que obtiene los listados de la computadora, invoca a  la función pivote en Js para ordenamiento de los mismos.
+   * @function getRows
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const getRows = async (id) => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "control/rows/" + entityCodeRef.current, {
@@ -574,14 +576,14 @@ const Equipos = () => {
       alert(error)
     }
   }
-/**
- * Filtra en la tabla buscando por todos los campos
- * @function performSearch
- * @memberof Equipos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Filtra en la tabla buscando por todos los campos
+   * @function performSearch
+   * @memberof Equipos
+   * @async
+   * @return void
+   * @inner
+   */
   const performSearch = () => {
     var searchBox = document.getElementById('search-input-table');
     var table = document.getElementById("table-products");
@@ -604,7 +606,9 @@ const Equipos = () => {
   return (
     <>
       {
-        loading ? <></> : <>
+        loading ? <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", width: "100vw", height: "100vh" }}>
+          <Loader type="spinner-circle" bgColor={"#000"} title={"Cargando..."} color={'#000'} size={100} />
+        </div> : <>
           <NavigationWindow />
           <NavPageContainer
             hasPadding={true}
@@ -694,11 +698,11 @@ const Equipos = () => {
                                     elemento.map((dato, indiceDato) => {
                                       if (indiceDato == 0) return;
                                       //return (<td>{dato}</td>)
-                                      if (dato.length > 1000) {
+                                      if (dato.length > 500) {
                                         return (
                                           <>
                                             <td><a style={{ textDecoration: "underline", color: "blue" }} onClick={() => { setModalImg(true); setCurrentImage(dato); }}>Ver imagen</a></td>
-                                            <Modal showOverlay={true} show={modalImg}  onClose={() => setModalImg(false)}>
+                                            <Modal showOverlay={true} show={modalImg} onClose={() => setModalImg(false)}>
                                               <Modal.Header>
                                                 <Modal.Title>Visualizador de imágenes</Modal.Title>
                                               </Modal.Header>
@@ -706,7 +710,7 @@ const Equipos = () => {
                                                 <img src={currentImageRef.current} width="700px" height="auto" />
                                               </Modal.Body>
                                               <Modal.Footer>
-                                                <Button value='Guardar imagen' onClick={() => {triggerBase64Download(currentImageRef.current, "IMG-"+Date.now()) }}  />
+                                                <Button value='Guardar imagen' onClick={() => { triggerBase64Download(currentImageRef.current, "IMG-" + Date.now()) }} />
                                                 <Button value="Cerrar" onClick={() => setModalImg(false)} />
                                               </Modal.Footer>
                                             </Modal>
@@ -727,7 +731,9 @@ const Equipos = () => {
                       </table>
                     </div>
                   </div>
-                </> : <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                </> : entityCodeRef.current ? <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", width: "100%", height: "auto", marginTop: "30px" }}>
+                  <Loader type="spinner-circle" bgColor={"#000"} title={"Cargando..."} color={'#000'} size={100} />
+                </div> : <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <h3 style={{ color: "lightgray", marginTop: "40px" }}>Selecciona un elemento de la lista para añadir productos</h3>
                 </div>
             }

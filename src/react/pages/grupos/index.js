@@ -11,7 +11,8 @@ import NavigationWindow from '../../components/Navigation'
 import { Dialog, Button } from 'react-windows-ui'
 import MaterialTable from 'material-table'
 import Modal from '../../components/Modal';
-import useState from 'react-usestateref'
+import useState from 'react-usestateref';
+import Loader from 'react-js-loader';
 
 const Grupo = () => {
 
@@ -25,14 +26,14 @@ const Grupo = () => {
   useEffect(() => {
     getGroupsData()
   }, [])
-/**
- * Filtra en la tabla buscando por todos los campos
- * @function addNewGroup
- * @memberof Grupos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Filtra en la tabla buscando por todos los campos
+   * @function addNewGroup
+   * @memberof Grupos
+   * @async
+   * @return void
+   * @inner
+   */
   const addNewGroup = async () => {
     if (defaultName) {
       try {
@@ -49,7 +50,7 @@ const Grupo = () => {
         await getGroupsData()
         setAddModal(false)
         setLoading(false)
-        setDefaultName()
+        setDefaultName("")
         alert("El area se guardo exitosamente")
       } catch (error) {
         alert("Ocurrio un error al guardar el area")
@@ -58,19 +59,19 @@ const Grupo = () => {
       alert("El nombre del area no puede ir vacio")
     }
   }
-/**
- * Actualiza los datos de un grupo
- * @function updateGroupRow
- * @memberof Grupos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Actualiza los datos de un grupo
+   * @function updateGroupRow
+   * @memberof Grupos
+   * @async
+   * @return void
+   * @inner
+   */
   const updateGroupRow = async () => {
-    if(defaultName){
+    if (defaultName) {
       try {
         setLoading(true)
-        const response = await fetch(process.env.REACT_APP_HOME + "groups/"+selectedIndexRef.current, {
+        const response = await fetch(process.env.REACT_APP_HOME + "groups/" + selectedIndexRef.current, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -82,24 +83,24 @@ const Grupo = () => {
         await getGroupsData()
         setShowModal(false)
         setLoading(false)
-        setDefaultName()
+        setDefaultName("")
         alert("El area se actualizó exitosamente")
       } catch (error) {
         alert("Ocurrio un error al actualizar la categoria")
       }
-    }else{
+    } else {
       alert("El nombre del area no puede ir vacio")
     }
   }
 
-/**
- * Obtiene los datos de los grupos
- * @function getGroupsData
- * @memberof Grupos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Obtiene los datos de los grupos
+   * @function getGroupsData
+   * @memberof Grupos
+   * @async
+   * @return void
+   * @inner
+   */
   const getGroupsData = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "groups", {
@@ -118,14 +119,14 @@ const Grupo = () => {
     }
   }
 
-/**
- * Filtra en la tabla por todos los campos
- * @function searchTableAll
- * @memberof Grupos
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Filtra en la tabla por todos los campos
+   * @function searchTableAll
+   * @memberof Grupos
+   * @async
+   * @return void
+   * @inner
+   */
   const searchTableAll = () => {
     var searchBox = document.getElementById('search-input-table');
     var table = document.getElementById("table-products");
@@ -142,24 +143,26 @@ const Grupo = () => {
       }
     }
   }
-/**
- * Función encargada de los procesos que realizan la actualización de un grupo
- * @function handleUpdateGroup
- * @memberof Grupos
- * @async
- * @return void
- * @inner
- */
-  const handleUpdateGroup = async(nombre, codigo) => {
-    setDefaultName(nombre); 
-    setSelectedIndex(codigo); 
+  /**
+   * Función encargada de los procesos que realizan la actualización de un grupo
+   * @function handleUpdateGroup
+   * @memberof Grupos
+   * @async
+   * @return void
+   * @inner
+   */
+  const handleUpdateGroup = async (nombre, codigo) => {
+    setDefaultName(nombre);
+    setSelectedIndex(codigo);
     setShowModal(true)
   }
 
   return (
     <>
       {
-        loading ? <></> :
+        loading ? <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", width: "100vw", height: "100vh" }}>
+          <Loader type="spinner-circle" bgColor={"#000"} title={"Cargando..."} color={'#000'} size={100} />
+        </div> :
           <>
             <NavigationWindow />
             <NavPageContainer
@@ -229,13 +232,13 @@ const Grupo = () => {
               <p>Añada, modifique o elimine registro de grupos de productos</p>
               <div className="app-hr"></div>
               <div style={{ marginTop: "20px", marginRight: "30px", display: "flex", flex: 1, flexDirection: "column" }}>
-              <div style={{ marginTop: "15px", display: "flex" }}>
-                  <div style={{flex: 1}}>
-                  <label>Buscar</label>
-                  <input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
+                <div style={{ marginTop: "15px", display: "flex" }}>
+                  <div style={{ flex: 1 }}>
+                    <label>Buscar</label>
+                    <input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
                   </div>
-                  <div style={{flex: 1, justifyContent: "flex-end", display: "flex"}}>
-                  <button className='app-button primary animate' onClick={()=> setAddModal(true)}>Nuevo Grupo</button>
+                  <div style={{ flex: 1, justifyContent: "flex-end", display: "flex" }}>
+                    <button className='app-button primary animate' onClick={() => setAddModal(true)}>Nuevo Grupo</button>
                   </div>
                 </div>
                 <table style={{ width: '100%' }} className="styled-table" id="table-products">

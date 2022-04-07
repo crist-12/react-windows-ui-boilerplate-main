@@ -12,6 +12,7 @@ import "./styles.css"
 import { useMasterState } from '../../stores/MasterStore'
 import { useAuthState } from '../../stores/AuthStore'
 import Select from 'react-select'
+import Loader from 'react-js-loader'
 import useState from 'react-usestateref'
 
 
@@ -26,121 +27,121 @@ const Campos = () => {
 
     const visibleDialogs = new Array(MAX_FIELDS).fill(false);
 
-/**
- * setTypes Hook encargado de traer los controles o los campos de cada entidad
- * @function setTypes
- * @memberof Campos
- * @return types {Array}
- * @inner
- */
+    /**
+     * setTypes Hook encargado de traer los controles o los campos de cada entidad
+     * @function setTypes
+     * @memberof Campos
+     * @return types {Array}
+     * @inner
+     */
     const [types, setTypes] = React.useState([])
-/**
- * setLoading Hook encargado de manejar el estado de carga de los controles o los campos de cada entidad
- * @function setLoading
- * @memberof Campos
- * @return types {boolean}
- * @inner
- */
+    /**
+     * setLoading Hook encargado de manejar el estado de carga de los controles o los campos de cada entidad
+     * @function setLoading
+     * @memberof Campos
+     * @return types {boolean}
+     * @inner
+     */
     const [loading, setLoading] = React.useState(false)
-/**
- * Hook encargado de traer almacenar los campos que se están creando para la entidad
- * @function setCampos
- * @memberof Campos
- * @return types {Array}
- * @inner
- */
+    /**
+     * Hook encargado de traer almacenar los campos que se están creando para la entidad
+     * @function setCampos
+     * @memberof Campos
+     * @return types {Array}
+     * @inner
+     */
     const [campos, setCampos] = React.useState([])
-/**
- * setDialog Hook encargado de traer almacenar los campos que se están creando para la entidad
- * @function setDialog
- * @deprecated
- * @memberof Campos
- * @return types {Array}
- * @inner
- */
+    /**
+     * setDialog Hook encargado de traer almacenar los campos que se están creando para la entidad
+     * @function setDialog
+     * @deprecated
+     * @memberof Campos
+     * @return types {Array}
+     * @inner
+     */
     const [dialog, setDialog] = React.useState(visibleDialogs)
-/**
- * setPropsCampos Hook encargado de almacenar las propiedades que tendrá cada campo
- * @function setPropsCampos
- * @memberof Campos
- * @return types {Array}
- * @inner
- */
+    /**
+     * setPropsCampos Hook encargado de almacenar las propiedades que tendrá cada campo
+     * @function setPropsCampos
+     * @memberof Campos
+     * @return types {Array}
+     * @inner
+     */
     const [propsCampos, setPropsCampos] = React.useState(initialArr)
-/**
- * Hook encargado de almacenar el item que mostrará en el modal
- * @function setItemModal
- * @memberof Campos
- * @return itemModal {Object}
- * @inner
- */
+    /**
+     * Hook encargado de almacenar el item que mostrará en el modal
+     * @function setItemModal
+     * @memberof Campos
+     * @return itemModal {Object}
+     * @inner
+     */
     const [itemModal, setItemModal] = React.useState()
-/**
- * Hook encargado de almacenar el índice/código del item/elemento que mostrará en el modal
- * @function setIndexModal
- * @memberof Campos
- * @return indexModal {Object}
- * @inner
- */
+    /**
+     * Hook encargado de almacenar el índice/código del item/elemento que mostrará en el modal
+     * @function setIndexModal
+     * @memberof Campos
+     * @return indexModal {Object}
+     * @inner
+     */
     const [indexModal, setIndexModal] = React.useState()
-/**
- * Hook encargado de almacenar el item que mostrará en el modal
- * @function setCategorias
- * @memberof Campos
- * @return itemModal {Object}
- * @inner
- */
+    /**
+     * Hook encargado de almacenar el item que mostrará en el modal
+     * @function setCategorias
+     * @memberof Campos
+     * @return itemModal {Object}
+     * @inner
+     */
     const [categorias, setCategorias] = React.useState()
-/**
- * Hook encargado de almacenar el nombre de la entidad a registrar
- * @function setEntityName
- * @memberof Campos
- * @return entityName {Object}
- * @inner
- */
+    /**
+     * Hook encargado de almacenar el nombre de la entidad a registrar
+     * @function setEntityName
+     * @memberof Campos
+     * @return entityName {Object}
+     * @inner
+     */
     const [entityName, setEntityName] = React.useState()
-/**
- * Hook encargado de almacenar el id que se acaba de insertar en la base de datos, esto para luego usarlo en la creación de los detalles de esa entidad
- * @function setInsertedId
- * @memberof insertedId
- * @return itemModal {Object}
- * @inner
- */
+    /**
+     * Hook encargado de almacenar el id que se acaba de insertar en la base de datos, esto para luego usarlo en la creación de los detalles de esa entidad
+     * @function setInsertedId
+     * @memberof insertedId
+     * @return itemModal {Object}
+     * @inner
+     */
     const [insertedId, setInsertedId, insertedIdRef] = useState()
-/**
- * Hook encargado de almacenar todos los campos a registrar
- * @function setAllCampos
- * @memberof Campos
- * @return allCampos {Object}
- * @inner
- */
+    /**
+     * Hook encargado de almacenar todos los campos a registrar
+     * @function setAllCampos
+     * @memberof Campos
+     * @return allCampos {Object}
+     * @inner
+     */
     const [allCampos, setAllCampos] = React.useState()
-/**
- * Hook encargado de almacena la categoría/grupo a la que pertenece la entidad
- * @function setSelectedCategory
- * @memberof Campos
- * @return selectedCategory {Object}
- * @inner
- */
+    /**
+     * Hook encargado de almacena la categoría/grupo a la que pertenece la entidad
+     * @function setSelectedCategory
+     * @memberof Campos
+     * @return selectedCategory {Object}
+     * @inner
+     */
     const [selectedCategory, setSelectedCategory] = React.useState()
-/**
- * Hook encargado de manejar el estado del Dialog de previsualización
- * @function setFlag
- * @memberof Campos
- * @return flag {boolean}
- * @inner
- */
+    /**
+     * Hook encargado de manejar el estado del Dialog de previsualización
+     * @function setFlag
+     * @memberof Campos
+     * @return flag {boolean}
+     * @inner
+     */
     const [flag, setFlag] = React.useState(false)
     const masterState = useMasterState()
     const authState = useAuthState()
 
-/**
- * Maneja el evento onChange de los controles o campos de cada entidad para almacenarlos posteriormente
- * @function onChangeHandler
- * @memberof Campos
- * @return void
- * @inner
- */
+    /**
+     * Maneja el evento onChange de los controles o campos de cada entidad para almacenarlos posteriormente
+     * @function onChangeHandler
+     * @memberof Campos
+     * @return void
+     * @inner
+     */
     const onChangeHandler = (event) => {
         const { name, value } = event.target;
 
@@ -153,13 +154,13 @@ const Campos = () => {
         console.log(propsCampos)
     }
 
-/**
- * Obtiene todos los tipos de datos con los que se pueden crear las entidades
- * @function getAllTypes
- * @memberof Campos
- * @return void
- * @inner
- */
+    /**
+     * Obtiene todos los tipos de datos con los que se pueden crear las entidades
+     * @function getAllTypes
+     * @memberof Campos
+     * @return void
+     * @inner
+     */
     const getAllTypes = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "control/types", {
@@ -186,13 +187,13 @@ const Campos = () => {
             alert(error)
         }
     }
-/**
- * Obtiene un listado con los grupos de productos existentes
- * @function onChangeHandler
- * @memberof Campos
- * @return void
- * @inner
- */
+    /**
+     * Obtiene un listado con los grupos de productos existentes
+     * @function onChangeHandler
+     * @memberof Campos
+     * @return void
+     * @inner
+     */
     const getAllCategories = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "groups", {
@@ -223,13 +224,13 @@ const Campos = () => {
         getAllCategories()
     }, [])
 
-/**
- * Almacena un nuevo item al arreglo de los campos para luego almacenarlos
- * @function addItemCampo
- * @memberof Campos
- * @return void
- * @inner
- */
+    /**
+     * Almacena un nuevo item al arreglo de los campos para luego almacenarlos
+     * @function addItemCampo
+     * @memberof Campos
+     * @return void
+     * @inner
+     */
     const addItemCampo = (campoObj) => {
         let oldArray = [...campos]
         oldArray.push(campoObj);
@@ -240,26 +241,26 @@ const Campos = () => {
         setPropsCampos(camposP)
     }
 
-/**
- * Maneja el dialog para la previsualización de los campos a registrar
- * @function handleToggleVisible
- * @memberof Campos
- * @return void
- * @inner
- */
+    /**
+     * Maneja el dialog para la previsualización de los campos a registrar
+     * @function handleToggleVisible
+     * @memberof Campos
+     * @return void
+     * @inner
+     */
     const handleToggleVisible = (item, indice) => {
         setFlag(true)
         setItemModal(item)
         setIndexModal(indice)
     }
 
-/**
- * Maneja los valores del campo de requerido
- * @function handleToggleSwitch
- * @memberof Campos
- * @return void
- * @inner
- */
+    /**
+     * Maneja los valores del campo de requerido
+     * @function handleToggleSwitch
+     * @memberof Campos
+     * @return void
+     * @inner
+     */
     const handleToggleSwitch = (indice) => {
         let value = propsCampos[indice]?.[2] ?? false;
         let allData = [...propsCampos];
@@ -271,13 +272,13 @@ const Campos = () => {
         setPropsCampos(allData);
     }
 
-/**
- * Se encarga de mostrar el control indicado (input text, number, date, long text, select) en la previsualización
- * @function showPrevisualization
- * @memberof Campos
- * @return void
- * @inner
- */
+    /**
+     * Se encarga de mostrar el control indicado (input text, number, date, long text, select) en la previsualización
+     * @function showPrevisualization
+     * @memberof Campos
+     * @return void
+     * @inner
+     */
     const showPrevisualization = (item, index) => {
         if (item?.type != undefined) {
             switch (item.type) {
@@ -321,26 +322,26 @@ const Campos = () => {
         }
     }
 
-/**
- * Elimina el campo en cuestión de los ítems seleccionados
- * @function deleteCampo
- * @memberof Campos
- * @return void
- * @inner
- */
+    /**
+     * Elimina el campo en cuestión de los ítems seleccionados
+     * @function deleteCampo
+     * @memberof Campos
+     * @return void
+     * @inner
+     */
     const deleteCampo = (index) => {
         var datosAgregados = [...campos];
         datosAgregados.splice(index, 1)
         setCampos(datosAgregados);
     }
 
- /**
- * Controla la función de subir/bajar nivel de los campos
- * @function changeLevelCampo
- * @memberof Campos
- * @return void
- * @inner
- */
+    /**
+    * Controla la función de subir/bajar nivel de los campos
+    * @function changeLevelCampo
+    * @memberof Campos
+    * @return void
+    * @inner
+    */
     const changeLevelCampo = (index, move) => {
         if ((index == 0 && move == -1) || (index == campos.length - 1 && move == 1)) return;
         let newIndex = index + move;
@@ -352,14 +353,14 @@ const Campos = () => {
         setCampos(camposArray)
     }
 
-/**
- * Función encargada de manejar el guardado de la nueva entidad
- * @function handleSaveEntity
- * @memberof Campos
- * @async
- * @return void
- * @inner
- */
+    /**
+     * Función encargada de manejar el guardado de la nueva entidad
+     * @function handleSaveEntity
+     * @memberof Campos
+     * @async
+     * @return void
+     * @inner
+     */
     const handleSaveEntity = async () => {
         try {
             setLoading(true)
@@ -382,13 +383,13 @@ const Campos = () => {
             alert("Ocurrio un error al guardar el empleado" + error)
         }
     }
-/**
- * Valida que todos los campos tengan valores antes de guardar la entidad
- * @function validateAllFieldsHasName
- * @memberof Campos
- * @return void
- * @inner
- */
+    /**
+     * Valida que todos los campos tengan valores antes de guardar la entidad
+     * @function validateAllFieldsHasName
+     * @memberof Campos
+     * @return void
+     * @inner
+     */
     const validateAllFieldsHasName = () => {
         let camposArrayAux = [...propsCampos]
         let arrayFiltered = []
@@ -403,13 +404,13 @@ const Campos = () => {
         })
         return flag;
     }
-/**
- * Luego de guardar la entidad, se deben guardar los campos por separado, esta función se encarga de hacerlo
- * @function handleSaveAllCampos
- * @memberof Campos
- * @return void
- * @inner
- */
+    /**
+     * Luego de guardar la entidad, se deben guardar los campos por separado, esta función se encarga de hacerlo
+     * @function handleSaveAllCampos
+     * @memberof Campos
+     * @return void
+     * @inner
+     */
     const handleSaveAllCampos = async () => {
         let camposArrayAux = [...propsCampos]
         let arrayFiltered = []
@@ -463,25 +464,25 @@ const Campos = () => {
         // alert("Campos añadidos exitosamente")
 
     }
-/**
- * AFunción encargada de limpiar los campos luegos de ser guardados
- * @function cleanFields
- * @memberof Campos
- * @return void
- * @inner
- */
+    /**
+     * AFunción encargada de limpiar los campos luegos de ser guardados
+     * @function cleanFields
+     * @memberof Campos
+     * @return void
+     * @inner
+     */
     const cleanFields = () => {
         setEntityName("")
         setPropsCampos(initialArr)
         setCampos([])
     }
-/**
- * Función que funciona como manejador de otros métodos de guardado de todos los campos pertenecientes a la entidad
- * @function saveAllFields
- * @memberof Campos
- * @return void
- * @inner
- */
+    /**
+     * Función que funciona como manejador de otros métodos de guardado de todos los campos pertenecientes a la entidad
+     * @function saveAllFields
+     * @memberof Campos
+     * @return void
+     * @inner
+     */
     const saveAllFields = async () => {
         if (!campos[0]) {
             return alert("Debes añadir los campos a tu entidad antes de proseguir")
@@ -505,7 +506,9 @@ const Campos = () => {
     return (
         <>
             {
-                loading ? <></> : <>
+                loading ? <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", width: "100vw", height: "100vh" }}>
+                    <Loader type="spinner-circle" bgColor={"#000"} title={"Cargando..."} color={'#000'} size={100} />
+                </div> : <>
                     <NavigationWindow />
                     <NavPageContainer
                         hasPadding={true}

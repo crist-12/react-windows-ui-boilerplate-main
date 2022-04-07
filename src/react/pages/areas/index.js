@@ -93,7 +93,7 @@ const Area = () => {
         await getAreasData()
         setAddModal(false)
         setLoading(false)
-        setDefaultName()
+        setDefaultName("")
         alert("El area se guardo exitosamente")
       } catch (error) {
         alert("Ocurrio un error al guardar el area")
@@ -128,10 +128,10 @@ const Area = () => {
         await getAreasData()
         setShowModal(false)
         setLoading(false)
-        setDefaultName()
+        setDefaultName("")
         alert("El area se actualizó exitosamente")
       } catch (error) {
-        alert("Ocurrio un error al actualizar la categoria")
+        alert("Ocurrio un error al actualizar el area")
       }
     }else{
       alert("El nombre del area no puede ir vacio")
@@ -217,7 +217,7 @@ const Area = () => {
 
               <Modal showOverlay={true} show={showModal} onClose={() => setShowModal(false)} size={"md"}>
                 <Modal.Header>
-                  <Modal.Title>Actualizar Sucursal</Modal.Title>
+                  <Modal.Title>Actualizar Área</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                   {/* <img src={currentImageRef.current} width="700px" height="auto" /> */}
@@ -230,7 +230,7 @@ const Area = () => {
                     </thead>
                     <tbody>
                       <tr>
-                        <td>Nombre de la Sucursal</td>
+                        <td>Nombre del área</td>
                         <td>
                           <input type="text" className='app-input-text' value={defaultName} onChange={(e) => setDefaultName(e.target.value)} />
                         </td>
@@ -246,7 +246,7 @@ const Area = () => {
 
               <Modal showOverlay={true} show={addModal} onClose={() => setAddModal(false)} size={"md"}>
                 <Modal.Header>
-                  <Modal.Title>Nueva Sucursal</Modal.Title>
+                  <Modal.Title>Nueva Área</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                   {/* <img src={currentImageRef.current} width="700px" height="auto" /> */}
@@ -259,7 +259,7 @@ const Area = () => {
                     </thead>
                     <tbody>
                       <tr>
-                        <td>Nombre de la Sucursal</td>
+                        <td>Nombre del área</td>
                         <td>
                           <input type="text" className='app-input-text' value={defaultName} onChange={(e) => setDefaultName(e.target.value)} />
                         </td>
@@ -284,7 +284,7 @@ const Area = () => {
                   <input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
                   </div>
                   <div style={{flex: 1, justifyContent: "flex-end", display: "flex"}}>
-                  <button className='app-button primary animate' onClick={()=> setAddModal(true)}>Nueva Sucursal</button>
+                  <button className='app-button primary animate' onClick={()=> setAddModal(true)}>Nueva Área</button>
                   </div>
                 </div>
                 <table style={{ width: '100%' }} className="styled-table" id="table-products">

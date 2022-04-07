@@ -93,7 +93,7 @@ const Grupo = () => {
         await getGroupsData()
         setAddModal(false)
         setLoading(false)
-        setDefaultName()
+        setDefaultName("")
         alert("El area se guardo exitosamente")
       } catch (error) {
         alert("Ocurrio un error al guardar el area")
@@ -126,7 +126,7 @@ const Grupo = () => {
         await getGroupsData()
         setShowModal(false)
         setLoading(false)
-        setDefaultName()
+        setDefaultName("")
         alert("El area se actualizó exitosamente")
       } catch (error) {
         alert("Ocurrio un error al actualizar la categoria")

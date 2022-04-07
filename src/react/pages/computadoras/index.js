@@ -17,6 +17,7 @@ import { Table } from 'react-bootstrap'
 import "../computadoras/index.css"
 import Modal from '../../components/Modal';
 import { triggerBase64Download } from 'react-base64-downloader'
+import Loader from 'react-js-loader'
 import Select from 'react-select'
 //import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -27,7 +28,7 @@ const Computadora = () => {
 
     const [controls, setControls] = React.useState([]);
     const [loading, setLoading] = React.useState(true)
-    const [tableData, setTableData] = React.useState();
+    const [tableData, setTableData, tableDataRef] = useState();
     const [assignmentData, setAssignmentData] = React.useState();
     const [respuesta, setRespuesta, respuestaRef] = useState([])
     const [mode, setMode] = React.useState('T')
@@ -43,6 +44,7 @@ const Computadora = () => {
     const [infoRaw, setInfoRaw, infoRawRef] = useState()
     const [computerObject, setComputerObject, computerObjectRef] = useState()
     const [options, setOptions, optionsRef] = useState()
+    const [price, setPrice, priceRef] = useState()
 
     const columnas = [
         {
@@ -66,14 +68,14 @@ const Computadora = () => {
         getTableData()
         getAllAssignmentData()
     }, [])
-/**
- * Obtiene los datos de las computadoras para desplegarla en la tabla
- * @name getTableData
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Obtiene los datos de las computadoras para desplegarla en la tabla
+     * @name getTableData
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const getTableData = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "control/equipos", {
@@ -89,7 +91,8 @@ const Computadora = () => {
                 var obj = {
                     id: ele.IdEquipo,
                     equipo: ele.Equipo,
-                    estado: ele.DescripcionEstado
+                    estado: ele.DescripcionEstado,
+                    total: ele.Total
                 }
                 arre.push(obj)
             })
@@ -99,17 +102,17 @@ const Computadora = () => {
         }
 
     }
-/**
- * Obtiene todos los datos relacionado con las asignaciones de las computadoras
- * @name getAllAssignmentData
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Obtiene todos los datos relacionado con las asignaciones de las computadoras
+     * @name getAllAssignmentData
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const getAllAssignmentData = async () => {
         try {
-            const response = await fetch(process.env.REACT_APP_HOME + "assignment/", {
+            const response = await fetch(process.env.REACT_APP_HOME + "assignment/assignment", {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -123,14 +126,14 @@ const Computadora = () => {
             console.log(error)
         }
     }
-/**
- * Muestra el estado de la computadora 
- * @name showStateSpan
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Muestra el estado de la computadora 
+     * @name showStateSpan
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const showStateSpan = (state) => {
         switch (state) {
             case "Sin asignar":
@@ -170,14 +173,14 @@ const Computadora = () => {
                 )
         }
     }
-/**
- * Maneja la búsqueda en la tabla, función que se encarga de filtrar los datos de la tabla
- * @name searchTableAll
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Maneja la búsqueda en la tabla, función que se encarga de filtrar los datos de la tabla
+     * @name searchTableAll
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const searchTableAll = () => {
         var searchBox = document.getElementById('search-input-table');
         var table = document.getElementById("table-products");
@@ -194,14 +197,14 @@ const Computadora = () => {
             }
         }
     }
-/**
- * Función encargada de convertir el archivo a base64
- * @name convertToBase64
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Función encargada de convertir el archivo a base64
+     * @name convertToBase64
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -210,28 +213,28 @@ const Computadora = () => {
             reader.onerror = error => reject(error);
         });
     }
-/**
- * Maneja el cambio de los controles de input (text, number, date, textarea)
- * @name handleInputControlValue
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Maneja el cambio de los controles de input (text, number, date, textarea)
+     * @name handleInputControlValue
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const handleInputControlValue = async (e) => {
         const file = e.target.files[0];
         const base64 = await convertToBase64(file);
         console.log(base64)
         setFactura(base64)
     }
-/**
- * Actualiza el estado del mantenimiento de la computadora
- * @name updateMaintenanceStatus
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Actualiza el estado del mantenimiento de la computadora
+     * @name updateMaintenanceStatus
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const updateMaintenanceStatus = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "assignment/receive/" + id, {
@@ -239,7 +242,7 @@ const Computadora = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ FacturaMantenimiento: factura })
+                body: JSON.stringify({ FacturaMantenimiento: factura, PrecioMantenimiento: priceRef.current })
             })
 
             const result = await response.json()
@@ -253,17 +256,18 @@ const Computadora = () => {
             alert("Ha ocurrido un error")
         }
         setShowModal(false)
+        setPrice()
         await getTableData()
         await getAllAssignmentData()
     }
-/**
- * Cambia el estado de la computadora según le sea indicado
- * @name changeComputerStatus
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Cambia el estado de la computadora según le sea indicado
+     * @name changeComputerStatus
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const changeComputerStatus = async (status) => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "machines/status/" + idRef.current, {
@@ -289,14 +293,14 @@ const Computadora = () => {
             alert(error)
         }
     }
-/**
- * Función que se encarga de actualizar el estado del equipo cuando se recibe de mantenimiento
- * @name updateReceivedFromMaitenance
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Función que se encarga de actualizar el estado del equipo cuando se recibe de mantenimiento
+     * @name updateReceivedFromMaitenance
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const updateReceivedFromMaitenance = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "machines/receivedcheck/" + idRef.current, {
@@ -314,14 +318,14 @@ const Computadora = () => {
             alert(error)
         }
     }
-/**
- * Función encargada de eliminar la asignación de la computadora
- * @name deleteAssignmentRow
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Función encargada de eliminar la asignación de la computadora
+     * @name deleteAssignmentRow
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const deleteAssignmentRow = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "assignment/" + idRef.current, {
@@ -338,14 +342,14 @@ const Computadora = () => {
             alert(error)
         }
     }
-/**
- * Función encargada de obtener los detalles de una computadora según su código
- * @name getComputerDetails
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Función encargada de obtener los detalles de una computadora según su código
+     * @name getComputerDetails
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const getComputerDetails = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "machines/" + idRef.current, {
@@ -361,28 +365,28 @@ const Computadora = () => {
             alert(error)
         }
     }
-/**
- * Función que se encarga de invocar los procesos para obtener los datos necesarios para la visualización de los datos
- * @name handleDetailsVisualization
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Función que se encarga de invocar los procesos para obtener los datos necesarios para la visualización de los datos
+     * @name handleDetailsVisualization
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const handleDetailsVisualization = async (id) => {
         setId(id)
         await getComputerDetails()
         setModalInfo(true)
     }
-/**
- * Función que se encarga de actualizar los datos de una computadora
- * @name updateComputerInfo
- * @function
- * @async
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Función que se encarga de actualizar los datos de una computadora
+     * @name updateComputerInfo
+     * @function
+     * @async
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const updateComputerInfo = async (answer, caracteristica) => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "machines/" + caracteristica, {
@@ -399,15 +403,15 @@ const Computadora = () => {
             alert(error)
         }
     }
-/**
- * Función encargada de gestionar los procesos que se llevan a cabo al actualizar un dato de una computadoras
- * @name handleUpdateProcess
- * @function
- * @async
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Función encargada de gestionar los procesos que se llevan a cabo al actualizar un dato de una computadoras
+     * @name handleUpdateProcess
+     * @function
+     * @async
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const handleUpdateProcess = async () => {
         try {
             infoRawRef.current.map((elemento) => {
@@ -421,14 +425,14 @@ const Computadora = () => {
         await getTableData()
         setModalActualizar(false)
     }
-/**
- * Obtiene la información de una computadora según su código
- * @name getComputerInfoRaw
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Obtiene la información de una computadora según su código
+     * @name getComputerInfoRaw
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const getComputerInfoRaw = async () => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "machines/update/" + idRef.current, {
@@ -455,15 +459,15 @@ const Computadora = () => {
             alert(error)
         }
     }
-/**
- * Maneja los procesos que se realizan durante la actualización de una computadora
- * @name handleUpdateCity
- * @function
- * @async
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Maneja los procesos que se realizan durante la actualización de una computadora
+     * @name handleUpdateCity
+     * @function
+     * @async
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const handleUpdateClick = async (id) => {
         setId(id)
         setModalActualizar(true);
@@ -471,27 +475,27 @@ const Computadora = () => {
         await getComputerInfoRaw();
         // console.log(infoRawRef.current)
     }
-/**
- * Función encargada de manejar los cambios en un input de tipo text, date, number o textarea
- * @name handleChangeInputValue
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Función encargada de manejar los cambios en un input de tipo text, date, number o textarea
+     * @name handleChangeInputValue
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const handleChangeInputValue = (e) => {
         var auxArray = [...infoRaw]
         auxArray[e.target.id]["Respuesta"] = e.target.value;
         setInfoRaw(auxArray);
         console.log(computerObjectRef.current)
     }
-/**
- * Maneja los estados de los controles en el modal de actualzación de datos
- * @name handleInputControlValueAct
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Maneja los estados de los controles en el modal de actualzación de datos
+     * @name handleInputControlValueAct
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const handleInputControlValueAct = async (e) => {
         const file = e.target.files[0];
         const base64 = await convertToBase64(file);
@@ -501,14 +505,14 @@ const Computadora = () => {
         console.log(computerObjectRef.current)
         console.log(e)
     }
-/**
- * Función encargada de responder a los cambios cuando el select cambia de opción
- * @name handleSelectHasChanged
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Función encargada de responder a los cambios cuando el select cambia de opción
+     * @name handleSelectHasChanged
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const handleSelectHasChanged = (e) => {
         var auxArray = [...infoRaw]
         auxArray[e.key]["Respuesta"] = e.value;
@@ -517,14 +521,14 @@ const Computadora = () => {
         console.log(e)
         //console.log(e)
     }
-/**
- * Función encargada de desplegar el control adecuado según sea el tipo en la base de datos
- * @name showControls
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Función encargada de desplegar el control adecuado según sea el tipo en la base de datos
+     * @name showControls
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const showControls = (item, index) => {
         var req = item.Requerido.data[0];
         if (req == 1) req = true; else req = false;
@@ -603,14 +607,14 @@ const Computadora = () => {
                 )
         }
     }
-/**
- * Función encargada de traer los tipos de datos de la base de datos
- * @name getOptions
- * @function
- * @memberof Computadoras
- * @inner
- * @return {void}
-*/
+    /**
+     * Función encargada de traer los tipos de datos de la base de datos
+     * @name getOptions
+     * @function
+     * @memberof Computadoras
+     * @inner
+     * @return {void}
+    */
     const getOptions = async (id) => {
         try {
             const response = await fetch(process.env.REACT_APP_HOME + "control/options/" + 1, {
@@ -636,12 +640,12 @@ const Computadora = () => {
         }
     }
 
-
-
     return (
         <>
             {
-                loading ? <></> :
+                loading ? <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", width: "100vw", height: "100vh" }}>
+                    <Loader type="spinner-circle" bgColor={"#000"} title={"Cargando..."} color={'#000'} size={100} />
+                </div> :
                     <>
                         <NavigationWindow />
                         <NavPageContainer
@@ -656,6 +660,8 @@ const Computadora = () => {
                                     <p>DETALLES DE RECIBIMIENTO</p>
                                     <div className='app-hr' />
                                     <p>FECHA DE RECIBIMIENTO: {new Date().toLocaleDateString()}</p>
+                                    <p>Precio del Mantenimiento: </p>
+                                    <input className='app-input-text' type="number" step={0.01} value={price} onChange={(e) => setPrice(e.target.value)} />
                                     <p>FACTURA: </p>
                                     <input type={"file"} onChange={handleInputControlValue} />
                                 </Modal.Body>
@@ -785,13 +791,14 @@ const Computadora = () => {
                                                     <tr>
                                                         <th>Id</th>
                                                         <th>Equipo</th>
+                                                        <th>Monto mantenimientos</th>
                                                         <th>Estado</th>
                                                         <th>Acciones</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     {
-                                                        tableData ? tableData.map(ele => {
+                                                        tableDataRef.current ? tableDataRef.current.map(ele => {
                                                             return (
                                                                 <tr>
                                                                     <td>
@@ -799,6 +806,9 @@ const Computadora = () => {
                                                                     </td>
                                                                     <td>
                                                                         {ele.equipo}
+                                                                    </td>
+                                                                    <td style={{ textAlign: "center" }}>
+                                                                        L. {ele.total}
                                                                     </td>
                                                                     <td style={{ display: "flex", justifyContent: "center" }}>
                                                                         {

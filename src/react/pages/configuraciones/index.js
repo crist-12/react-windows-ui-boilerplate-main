@@ -8,9 +8,6 @@
 import { NavPageContainer, NavPageContainerRight, ColorPickerItem, ColorPickerPalette, LinkCompound } from 'react-windows-ui'
 import React, { useEffect, createContext } from 'react'
 import NavigationWindow from '../../components/Navigation'
-
-import MasterPage from '../../components/MasterPage'
-import { Link } from 'react-router-dom'
 import { useHistory } from 'react-router-dom'
 import { useMasterState, setThemeColor } from '../../stores/MasterStore'
 import { useAuthState } from '../../stores/AuthStore'

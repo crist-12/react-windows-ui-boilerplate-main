@@ -11,8 +11,9 @@ import NavigationWindow from '../../components/Navigation'
 import { useAuthState } from '../../stores/AuthStore'
 import { useMasterState } from '../../stores/MasterStore'
 import useState from 'react-usestateref';
-import { VictoryPie, VictoryContainer } from 'victory';
+import { VictoryPie } from 'victory';
 import "../home/index.css";
+import Loader from "react-js-loader";
 import logorv from "../../assets/rvlogo.png"
 const Palette = require('nice-color-palettes/200');
 
@@ -137,7 +138,9 @@ const Home = () => {
               </div>
             </NavPageContainer>
           </>
-          : <></>}
+          : <div style={{display: "flex", flex: 1, alignItems: "center", justifyContent: "center", width: "100vw", height: "100vh"}}>
+             <Loader type="spinner-circle" bgColor={"#000"} title={"Cargando..."} color={'#000'} size={100} />
+          </div>}
     </>
   );
 }

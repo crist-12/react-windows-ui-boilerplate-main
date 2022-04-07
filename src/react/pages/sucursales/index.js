@@ -13,6 +13,7 @@ import MaterialTable from 'material-table'
 import Modal from '../../components/Modal';
 import useState from 'react-usestateref'
 import Select from 'react-select'
+import Loader from 'react-js-loader';
 import "../sucursales/index.css"
 
 const Sucursal = () => {
@@ -35,46 +36,47 @@ const Sucursal = () => {
   }, [])
 
 
-/**
- * Registra una nueva sucursal
- * @function addItem
- * @memberof Sucursales
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Registra una nueva sucursal
+   * @function addItem
+   * @memberof Sucursales
+   * @async
+   * @return void
+   * @inner
+   */
   const addItem = async () => {
-    if(defaultNameRef.current?.length > 0 && selectedCity){
-    try {
-      setLoading(true)
-      const response = await fetch(process.env.REACT_APP_HOME + "sucursales", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ "NombreSucursal": defaultNameRef.current, "IdCiudad": selectedCity })
-      })
-      await getItems()
-      setLoading(false)
-      setAddModal(false)
-      setDefaultName()
-      setDefaultValue()
-      alert("La categoria se guardo exitosamente")
-    } catch (error) {
-      alert("Ocurrio un error al guardar la categoria")
-    }}else{
+    if (defaultNameRef.current?.length > 0 && selectedCity) {
+      try {
+        setLoading(true)
+        const response = await fetch(process.env.REACT_APP_HOME + "sucursales", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ "NombreSucursal": defaultNameRef.current, "IdCiudad": selectedCity })
+        })
+        await getItems()
+        setLoading(false)
+        setAddModal(false)
+        setDefaultName("")
+        setDefaultValue()
+        alert("La categoria se guardo exitosamente")
+      } catch (error) {
+        alert("Ocurrio un error al guardar la categoria")
+      }
+    } else {
       alert("Asegurate de llenar todos los campos")
     }
   }
 
-/**
- * Obtiene un listado con los datos de las sucursales
- * @function getItems
- * @memberof Sucursales
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Obtiene un listado con los datos de las sucursales
+   * @function getItems
+   * @memberof Sucursales
+   * @async
+   * @return void
+   * @inner
+   */
   const getItems = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "sucursales", {
@@ -94,14 +96,14 @@ const Sucursal = () => {
       console.log(error)
     }
   }
-/**
- * Obtiene un listado con los datos de las ciudades
- * @function getCities
- * @memberof Sucursales
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Obtiene un listado con los datos de las ciudades
+   * @function getCities
+   * @memberof Sucursales
+   * @async
+   * @return void
+   * @inner
+   */
   const getCities = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "city", {
@@ -133,14 +135,14 @@ const Sucursal = () => {
     }
   }
 
-/**
- * Filtra los datos de las columnas de la tabla
- * @function searchTableAll
- * @memberof Sucursales
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Filtra los datos de las columnas de la tabla
+   * @function searchTableAll
+   * @memberof Sucursales
+   * @async
+   * @return void
+   * @inner
+   */
   const searchTableAll = () => {
     var searchBox = document.getElementById('search-input-table');
     var table = document.getElementById("table-products");
@@ -157,14 +159,14 @@ const Sucursal = () => {
       }
     }
   }
-/**
- * Gestiona los procesos e inicializaciones necesarias para actualizar una sucursal
- * @function handleUpdateSucursal
- * @memberof Sucursales
- * @async
- * @return void
- * @inner
- */
+  /**
+   * Gestiona los procesos e inicializaciones necesarias para actualizar una sucursal
+   * @function handleUpdateSucursal
+   * @memberof Sucursales
+   * @async
+   * @return void
+   * @inner
+   */
   const handleUpdateSucursal = (element) => {
     setShowModal(true);
     const objCity = {
@@ -176,14 +178,14 @@ const Sucursal = () => {
     setDefaultValue(objCity);
   }
 
- /**
- * Actualiza los datos de una sucursal
- * @function updateSucursalData
- * @memberof Sucursales
- * @async
- * @return void
- * @inner
- */
+  /**
+  * Actualiza los datos de una sucursal
+  * @function updateSucursalData
+  * @memberof Sucursales
+  * @async
+  * @return void
+  * @inner
+  */
   const updateSucursalData = async () => {
     try {
       setLoading(true)
@@ -200,10 +202,10 @@ const Sucursal = () => {
       setShowModal(false)
       setLoading(false)
       alert("La sucursal se actualizó exitosamente");
-      setDefaultName()
+      setDefaultName("")
       setDefaultValue()
     } catch (error) {
-      alert("Ocurrio un error al actualizar la sucursal "+error)
+      alert("Ocurrio un error al actualizar la sucursal " + error)
     }
   }
 
@@ -211,7 +213,9 @@ const Sucursal = () => {
   return (
     <>
       {
-        loading ? <></> :
+        loading ? <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", width: "100vw", height: "100vh" }}>
+          <Loader type="spinner-circle" bgColor={"#000"} title={"Cargando..."} color={'#000'} size={100} />
+        </div> :
           <>
             <NavigationWindow />
             <NavPageContainer
@@ -301,12 +305,12 @@ const Sucursal = () => {
               <div className="app-hr"></div>
               <div style={{ display: "flex", flex: 1, marginRight: "30px", flexDirection: "column" }}>
                 <div style={{ marginTop: "15px", display: "flex" }}>
-                  <div style={{flex: 1}}>
-                  <label>Buscar</label>
-                  <input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
+                  <div style={{ flex: 1 }}>
+                    <label>Buscar</label>
+                    <input className='app-input-text' id="search-input-table" placeholder='Buscar...' style={{ marginLeft: "20px" }} onKeyUp={searchTableAll} />
                   </div>
-                  <div style={{flex: 1, justifyContent: "flex-end", display: "flex"}}>
-                  <button className='app-button primary animate' onClick={()=> setAddModal(true)}>Nueva Sucursal</button>
+                  <div style={{ flex: 1, justifyContent: "flex-end", display: "flex" }}>
+                    <button className='app-button primary animate' onClick={() => setAddModal(true)}>Nueva Sucursal</button>
                   </div>
                 </div>
                 <table style={{ width: '100%' }} className="styled-table" id="table-products">

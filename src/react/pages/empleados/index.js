@@ -9,8 +9,8 @@ import { NavPageContainer } from 'react-windows-ui'
 import React, { useEffect } from 'react'
 import NavigationWindow from '../../components/Navigation'
 import { Dialog, Button } from 'react-windows-ui'
-import MaterialTable from 'material-table'
 import "../empleados/index.css"
+import Loader from 'react-js-loader'
 import Select from 'react-select'
 import Modal from '../../components/Modal';
 import useState from 'react-usestateref'
@@ -46,18 +46,18 @@ const Empleado = () => {
     getAreas()
   }, [])
 
-  
-/**
- * Maneja el cambio para añadir un nuevo empleado.
- * @name addItem
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+
+  /**
+   * Maneja el cambio para añadir un nuevo empleado.
+   * @name addItem
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const addItem = async () => {
-      if (employeeName && selectedArea && selectedSucursal) {
-        if (validarEmail(employeeEmail)) {
+    if (employeeName && selectedArea && selectedSucursal) {
+      if (validarEmail(employeeEmail)) {
         try {
           setLoading(true)
           const response = await fetch(process.env.REACT_APP_HOME + "employee", {
@@ -69,24 +69,26 @@ const Empleado = () => {
           })
           alert("El empleado se guardó exitosamente")
           await getEmployeesData()
+          setEmployeeEmail("")
+          setEmployeeName("")
           setModalAdd(false)
         } catch (error) {
           alert("Ocurrio un error al guardar el empleado")
         }
-      } 
-    }else {
+      }
+    } else {
       alert("Asegúrate de llenar todos los datos.")
     }
   }
 
-/**
- * Función que valida que el correo electrónico sea una entrada válida.
- * @name validarEmail
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+  /**
+   * Función que valida que el correo electrónico sea una entrada válida.
+   * @name validarEmail
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const validarEmail = (valor) => {
     if (/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(valor)) {
       return true;
@@ -96,14 +98,14 @@ const Empleado = () => {
     }
   }
 
-/**
- * Maneja los datos de los empleados que se encuentran en la base de datos.
- * @name getEmployeesData
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+  /**
+   * Maneja los datos de los empleados que se encuentran en la base de datos.
+   * @name getEmployeesData
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const getEmployeesData = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "employee", {
@@ -119,20 +121,20 @@ const Empleado = () => {
       // setLoading(true)
       //console.log(result)
       //setListEmployees(response)
-    setLoading(true);
-    setLoading(false);
+      setLoading(true);
+      setLoading(false);
     } catch (error) {
       console.log(error)
     }
   }
-/**
- * Maneja un listado de las áreas registradas en la base de datos.
- * @name getAreas
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+  /**
+   * Maneja un listado de las áreas registradas en la base de datos.
+   * @name getAreas
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const getAreas = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "area", {
@@ -159,14 +161,14 @@ const Empleado = () => {
       console.log(error)
     }
   }
-/**
- * Maneja los datos de las sucursales que se encuentran en la base de datos.
- * @name getAllSucursales
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+  /**
+   * Maneja los datos de las sucursales que se encuentran en la base de datos.
+   * @name getAllSucursales
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const getAllSucursales = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "sucursales/all", {
@@ -190,14 +192,14 @@ const Empleado = () => {
       console.log(error)
     }
   }
-/**
- * Tabla que se encarga de filtrar los datos de la tabla
- * @name searchTableAll
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+  /**
+   * Tabla que se encarga de filtrar los datos de la tabla
+   * @name searchTableAll
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const searchTableAll = () => {
     var searchBox = document.getElementById('search-input-table');
     var table = document.getElementById("table-products");
@@ -214,14 +216,14 @@ const Empleado = () => {
       }
     }
   }
-/**
- * Maneja y cambia el estado de los empleados
- * @name handleEntityStatus
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+  /**
+   * Maneja y cambia el estado de los empleados
+   * @name handleEntityStatus
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const handleEntityStatus = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "employee/changestatus/" + keyEditRef.current, {
@@ -239,26 +241,26 @@ const Empleado = () => {
       alert("Ocurrio un error al cambiar el estado de la entidad " + error)
     }
   }
-/**
- * Maneja el modal para dar de baja el empleado
- * @name handleChangeStatus
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+  /**
+   * Maneja el modal para dar de baja el empleado
+   * @name handleChangeStatus
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const handleChangeStatus = async (e) => {
     setModalCancel(true);
     setKeyEdit(e.target.id);
   }
-/**
- * Maneja los procesos necesarios para actualizar los datos del empleado
- * @name handleActualizarStatus
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+  /**
+   * Maneja los procesos necesarios para actualizar los datos del empleado
+   * @name handleActualizarStatus
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const handleActualizarStatus = async (e) => {
     setModalActualizar(true);
     setKeyEdit(e.target.id);
@@ -281,14 +283,14 @@ const Empleado = () => {
     setDefaultSucursal(objSucursal);
     setSelectedSucursal(objSucursal.value);
   }
-/**
- * Maneja los datos de las ciudades registradas en la base de datos
- * @name getCities
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+  /**
+   * Maneja los datos de las ciudades registradas en la base de datos
+   * @name getCities
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const getCities = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "city", {
@@ -311,14 +313,14 @@ const Empleado = () => {
       console.log(error)
     }
   }
-/**
- * Maneja las sucursales filtradas por la ciudad seleccionada
- * @name getSucursalesByCity
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+  /**
+   * Maneja las sucursales filtradas por la ciudad seleccionada
+   * @name getSucursalesByCity
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const getSucursalesByCity = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "sucursales/" + selectedCityRef.current, {
@@ -341,14 +343,14 @@ const Empleado = () => {
       console.log(error)
     }
   }
-/**
- * Actualiza los datos del empleado
- * @name handleUpdateEmployee
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+  /**
+   * Actualiza los datos del empleado
+   * @name handleUpdateEmployee
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const handleUpdateEmployee = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_HOME + "employee/" + keyEditRef.current, {
@@ -376,40 +378,40 @@ const Empleado = () => {
       alert("Ocurrio un error al actualizar el empleado " + error)
     }
   }
-/**
- * Maneja el cambio en el input del nombre del empleado
- * @name handleInputNameChange
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+  /**
+   * Maneja el cambio en el input del nombre del empleado
+   * @name handleInputNameChange
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const handleInputNameChange = async (e) => {
     var auxArray = [...listEmployee];
     auxArray[e.target.id].NombreEmpleado = e.target.value;
     setListEmployees(auxArray);
   }
-/**
- * Manejo de cambio en el input del email del empleado
- * @name handleInputEmailChange
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+  /**
+   * Manejo de cambio en el input del email del empleado
+   * @name handleInputEmailChange
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const handleInputEmailChange = async (e) => {
     var auxArray = [...listEmployee];
     auxArray[e.target.id].Email = e.target.value;
     setListEmployees(auxArray);
   }
-/**
- * Maneja el cambio de estado en el empleado
- * @name handleInputEstadoChange
- * @function
- * @memberof Empleados
- * @inner
- * @return {void}
-*/
+  /**
+   * Maneja el cambio de estado en el empleado
+   * @name handleInputEstadoChange
+   * @function
+   * @memberof Empleados
+   * @inner
+   * @return {void}
+  */
   const handleInputEstadoChange = async (e) => {
     var auxArray = [...listEmployee];
     var value = listEmployeeRef.current[e.target.id]?.EstadoEmpleado?.data[0];
@@ -422,7 +424,9 @@ const Empleado = () => {
   return (
     <>
       {
-        loading ? <></> :
+        loading ? <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", width: "100vw", height: "100vh" }}>
+          <Loader type="spinner-circle" bgColor={"#000"} title={"Cargando..."} color={'#000'} size={100} />
+        </div> :
           <>
             <NavigationWindow />
             <NavPageContainer

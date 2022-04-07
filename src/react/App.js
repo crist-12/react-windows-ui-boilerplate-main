@@ -23,9 +23,6 @@ import Mantenimiento from './pages/mantenimientos'
 
 
 const App = () => {
-  
-
-
   return (
     <Router>
       <Switch>

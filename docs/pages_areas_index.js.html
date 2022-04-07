@@ -137,7 +137,7 @@ const Area = () => {
         await getAreasData()
         setAddModal(false)
         setLoading(false)
-        setDefaultName()
+        setDefaultName("")
         alert("El area se guardo exitosamente")
       } catch (error) {
         alert("Ocurrio un error al guardar el area")
@@ -172,7 +172,7 @@ const Area = () => {
         await getAreasData()
         setShowModal(false)
         setLoading(false)
-        setDefaultName()
+        setDefaultName("")
         alert("El area se actualizó exitosamente")
       } catch (error) {
         alert("Ocurrio un error al actualizar la categoria")

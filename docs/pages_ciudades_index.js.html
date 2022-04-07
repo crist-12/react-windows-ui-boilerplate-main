@@ -135,7 +135,7 @@ const Ciudad = () => {
         await getCitiesData()
         setAddModal(false)
         setLoading(false)
-        setDefaultName()
+        setDefaultName("")
         alert("La categoria se guardo exitosamente")
       } catch (error) {
         alert("Ocurrio un error al guardar la categoria")
@@ -167,7 +167,7 @@ const Ciudad = () => {
         await getCitiesData()
         setShowModal(false)
         setLoading(false)
-        setDefaultName()
+        setDefaultName("")
         alert("La categoria se actualizó exitosamente")
       } catch (error) {
         alert("Ocurrio un error al actualizar la categoria")
